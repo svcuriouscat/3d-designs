@@ -1,2 +1,3 @@
-# 3d-printer-designs
-Designs for maintaining the boat using wonders of 3D printing
+# 3D printer designs
+
+Designs for maintaining your boat or RV using wonders of 3D printing
