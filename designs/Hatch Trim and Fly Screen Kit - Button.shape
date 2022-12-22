@@ -1,0 +1,75 @@
+// ShapeScript document
+
+detail 128
+
+define DIAMETER       16     // mm
+define INNERDIAMETER  14     // mm
+define HEIGHT          5     // mm
+define INNERHEIGHT     4     // mm
+define EDGERADIUS      2     // mm
+
+define EDGE {
+    difference {
+        cylinder {
+            size DIAMETER EDGERADIUS/2
+            position 0 EDGERADIUS/4
+            color 0 1 2
+        }
+
+        cylinder {
+            size DIAMETER-EDGERADIUS EDGERADIUS/2
+            position 0 EDGERADIUS/4
+            color 0 1 2
+        }
+
+        extrude {
+            circle {
+                size EDGERADIUS
+            }
+            along circle {
+                size DIAMETER - EDGERADIUS
+                orientation 0 0 0.5
+            }
+        }
+    }
+}
+
+define LOCK {
+    cylinder {
+        color 1 0 1
+        size 1 4 1
+        orientation 0 0 0.5
+        position 7.2 -2
+    }
+}
+
+define CAP {
+    // Base
+    difference {
+        difference {
+            cylinder {
+                size DIAMETER HEIGHT
+            }
+            cylinder {
+                color 1 0 1
+                size INNERDIAMETER INNERHEIGHT
+                position 0 -((HEIGHT - INNERHEIGHT) / 2)
+            }
+        }
+        
+        EDGE {
+            position 0 HEIGHT/2-EDGERADIUS/2
+        }
+    }
+
+    // Locks
+    for i in 1 to 3 {
+        LOCK {
+            orientation 0 i*(2/3)
+        }
+    }
+}
+
+CAP {
+    orientation 0 0 1.5
+}

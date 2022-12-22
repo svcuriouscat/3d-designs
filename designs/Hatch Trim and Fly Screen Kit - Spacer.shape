@@ -1,0 +1,154 @@
+// ShapeScript document
+
+detail 128
+
+// Global
+define DIAMETER        13.90  // mm
+define HEIGHT           9.25  // mm
+define HOLEDIAMETER     5     // mm
+// Top
+define TOPDIAMETER      DIAMETER
+define TOPHEIGHT        1.5   // mm
+define TOPEDGERADIUS    0.5   // mm
+// Mid
+define MIDDIAMETER     12.75  // mm
+define MIDHEIGHT        2     // mm
+// Low
+define LOWDIAMETER      8.90  // mm
+define LOWHEIGHT        5.75  // mm
+define LOWEDGERADIUS    0.5   // mm
+define LOWEDGEDIAMETER  0.5   // mm
+
+define TOP {
+    difference {
+        cylinder {
+            color 1 0 1
+            size TOPDIAMETER TOPHEIGHT
+        }
+
+        // Top edge
+        group {
+            position 0 TOPHEIGHT/2-TOPEDGERADIUS/2
+
+            difference {
+                color 1 0 1
+
+                cylinder {
+                    size TOPDIAMETER TOPEDGERADIUS/2
+                    position 0 TOPEDGERADIUS/4
+                    color 0 1 2
+                }
+
+                cylinder {
+                    size TOPDIAMETER-TOPEDGERADIUS TOPEDGERADIUS/2
+                    position 0 TOPEDGERADIUS/4
+                    color 0 1 2
+                }
+
+                extrude {
+                    circle {
+                        size TOPEDGERADIUS
+                    }
+                    along circle {
+                        size TOPDIAMETER - TOPEDGERADIUS
+                        orientation 0 0 0.5
+                    }
+                }
+            }
+        }
+    }
+}
+
+define MID {
+    cylinder {
+        size MIDDIAMETER MIDHEIGHT
+    }
+}
+
+define LOW {
+    difference {
+        cylinder {
+            color 0 1 1
+            size LOWDIAMETER LOWHEIGHT
+        }
+
+        // Friction reduction cutout
+        cylinder {
+            size LOWDIAMETER-1 0.2
+            position 0 -LOWHEIGHT/2+0.2/2
+        }
+    }
+
+    // Smooth transition to mid
+    difference {
+        color 0 0 1
+        position 0 LOWHEIGHT/2-LOWEDGEDIAMETER
+
+        cylinder {
+            position 0 LOWEDGEDIAMETER/2
+            size LOWDIAMETER+LOWEDGEDIAMETER*2 LOWEDGEDIAMETER
+        }
+
+        extrude {
+            square {
+                size LOWEDGEDIAMETER*2
+                orientation 0.25
+            }
+            along circle {
+                size LOWDIAMETER+LOWEDGEDIAMETER/2 + LOWEDGEDIAMETER+LOWEDGEDIAMETER/2
+                orientation 0 0 0.5
+            }
+        }
+    }
+}
+
+define SPACER {
+    // Dimensions visual
+    //cylinder {
+    //    opacity 0.2
+    //    size DIAMETER HEIGHT
+    //}
+
+    difference {
+        group {
+            TOP {
+                position 0 HEIGHT/2-TOPHEIGHT/2
+            }
+            MID {
+                position 0 HEIGHT/2-MIDHEIGHT/2-TOPHEIGHT
+            }
+            LOW {
+                position 0 HEIGHT/2-LOWHEIGHT/2-TOPHEIGHT-MIDHEIGHT
+            }
+        }
+
+        // Cut hole in the middle
+        cylinder {
+            color 1 0 0
+            size HOLEDIAMETER HEIGHT
+        }
+
+        // Cut socket for screw's head
+        cylinder {
+            color 0 1 0
+            size 9.8 0.2
+            position 0 HEIGHT/2-0.2/2
+        }
+        loft {
+            color 1 1 0
+            position 0 9.8/2-0.2*2.375
+            circle {
+                size 9.8
+            }
+            translate 0 0 (9.8-5)/2
+            circle {
+                size HOLEDIAMETER
+            }
+            orientation 0 0 1.5
+        }
+    }
+}
+
+SPACER {
+    orientation 0 0 1.5
+}
