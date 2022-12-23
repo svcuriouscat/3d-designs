@@ -1,0 +1,205 @@
+// ShapeScript document
+
+detail 128
+
+// Global
+define HEIGHT           9.75  // mm
+define WIDTH           16     // mm
+define LENGTH          30     // mm
+define HOLEDIAMETER     9.2   // mm
+// Top
+define TOPHEIGHT        4.2   // mm
+define TOPLENGTH       13.5   // mm
+define TOPWIDTH         4     // mm
+define TOPEDGERADIUS    1     // mm
+// Mid
+define MIDHEIGHT        2     // mm
+define MIDWIDTH         WIDTH
+define MIDLENGTH        LENGTH
+// Low
+define LOWDIAMETER     WIDTH
+define LOWDIAMETERBIG  18     // mm
+define LOWHEIGHT        3.5   // mm
+
+define TOP {
+    group {
+        difference {
+            group {
+                cylinder {
+                    size TOPWIDTH TOPHEIGHT
+                    position 0 0 TOPLENGTH/2-TOPWIDTH/2
+                }
+                cube {
+                    size TOPWIDTH TOPHEIGHT TOPLENGTH - TOPWIDTH
+                }
+                cylinder {
+                    size TOPWIDTH TOPHEIGHT
+                    position 0 0 -(TOPLENGTH/2-TOPWIDTH/2)
+                }
+            }
+
+            difference {
+                group {
+                    position 0 TOPHEIGHT/2-TOPEDGERADIUS/2
+
+                    cylinder {
+                        size TOPWIDTH TOPEDGERADIUS
+                        position 0 0 TOPLENGTH/2-TOPWIDTH/2
+                    }
+                    cube {
+                        size TOPWIDTH TOPEDGERADIUS TOPLENGTH-TOPWIDTH
+                    }
+                    cylinder {
+                        size TOPWIDTH TOPEDGERADIUS
+                        position 0 0 -(TOPLENGTH/2-TOPWIDTH/2)
+                    }
+                }
+                group {
+                    position 0 TOPHEIGHT/2-TOPEDGERADIUS/2
+
+                    cylinder {
+                        size TOPWIDTH-TOPEDGERADIUS*2 TOPEDGERADIUS
+                        position 0 0 TOPLENGTH/2-TOPWIDTH/2
+                    }
+                    cube {
+                        size TOPWIDTH-TOPEDGERADIUS*2 TOPEDGERADIUS TOPLENGTH-TOPWIDTH
+                    }
+                    cylinder {
+                        size TOPWIDTH-TOPEDGERADIUS*2 TOPEDGERADIUS
+                        position 0 0 -(TOPLENGTH/2-TOPWIDTH/2)
+                    }
+                }
+            }
+        }
+
+        // Smooth edge
+        extrude {
+            circle {
+                size TOPEDGERADIUS*2
+            }
+            along circle {
+                size TOPWIDTH/2
+            }
+            orientation 0 0 0.5
+            position 0 TOPHEIGHT/2-TOPEDGERADIUS -(TOPLENGTH/2-TOPWIDTH/2)
+        }
+        cylinder {
+            size TOPEDGERADIUS*2 TOPLENGTH-TOPWIDTH
+            orientation 0.5 0 0.5
+            position -TOPEDGERADIUS TOPHEIGHT/2-TOPEDGERADIUS
+        }
+        cylinder {
+            size TOPEDGERADIUS*2 TOPLENGTH-TOPWIDTH
+            orientation 0.5 0 0.5
+            position TOPEDGERADIUS TOPHEIGHT/2-TOPEDGERADIUS
+        }
+        extrude {
+            circle {
+                size TOPEDGERADIUS*2
+            }
+            along circle {
+                size TOPWIDTH/2
+            }
+            orientation 0 0 0.5
+            position 0 TOPHEIGHT/2-TOPEDGERADIUS TOPLENGTH/2-TOPWIDTH/2
+        }
+    }
+}
+
+define MID {
+    group {
+        cylinder {
+            size MIDWIDTH MIDHEIGHT
+            position 0 0 LENGTH/2-MIDWIDTH/2
+        }
+        cube {
+            size MIDWIDTH MIDHEIGHT LENGTH-MIDWIDTH
+        }
+        cylinder {
+            size MIDWIDTH MIDHEIGHT
+            position 0 0 -(LENGTH/2-MIDWIDTH/2)
+        }
+    }
+}
+
+define LOW {
+    intersection {
+        cylinder {
+            size LOWDIAMETERBIG LOWHEIGHT
+        }
+
+        union {
+            cylinder {
+                size LOWDIAMETER LOWHEIGHT
+            }
+            cube {
+                size LOWDIAMETER LOWHEIGHT LOWDIAMETERBIG/2
+                position 0 0 -LOWDIAMETERBIG/4
+            }
+        }
+    }
+}
+
+define LOCKTAB {
+    // Dimensions visual
+    //cube {
+    //    opacity 0.2
+    //    size WIDTH HEIGHT LENGTH
+    //}
+
+    difference {
+        group {
+            MID {
+                position 0 HEIGHT/2-MIDHEIGHT/2-TOPHEIGHT
+            }
+            TOP {
+                position 0 HEIGHT/2-TOPHEIGHT/2 -LENGTH/2+TOPLENGTH/2
+            }
+            LOW {
+                position 0 HEIGHT/2-LOWHEIGHT/2-TOPHEIGHT-MIDHEIGHT LENGTH/2-LOWDIAMETER/2
+            }
+
+            // Locking bumps
+            intersection {
+                cube {
+                    size WIDTH LOWHEIGHT LENGTH
+                    position 0 HEIGHT/2-LOWHEIGHT/2-TOPHEIGHT-MIDHEIGHT 
+                }
+                union {
+                    sphere {
+                        size 3.5
+                        position 3.5+0.8 0 -LENGTH/2+3.5-0.8
+                    }
+                    sphere {
+                        size 3.5
+                        position -(3.5+0.8) 0 -LENGTH/2+3.5-0.8
+                    }
+                }
+            }
+        }
+
+        // Cut hole in the middle
+        cylinder {
+            color 0 1 1
+            size HOLEDIAMETER HEIGHT
+            position 0 0 LENGTH/2-WIDTH/2
+        }
+
+        loft {
+            color 0 0 1
+            position 0 MIDHEIGHT/2-0.3 LENGTH/2-WIDTH/2
+            circle {
+                size HOLEDIAMETER+0.7*2
+            }
+            translate 0 0 0.7
+            circle {
+                size HOLEDIAMETER
+            }
+            orientation 0 0 1.5
+        }
+    }
+}
+
+LOCKTAB {
+    orientation 0 0 1.5
+}
