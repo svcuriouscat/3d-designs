@@ -1,0 +1,54 @@
+// ShapeScript document
+
+detail 256
+
+define BASETHICKNESS   2    // mm
+define BASEHEIGHT     14    // mm
+define BASEWIDTH      20    // mm
+define HOLEDIAMETER    9.6  // mm
+define CHAMBERLENGTH  24    // mm
+define CHAMBERWALL     1.2  // mm
+
+define BASE {
+    union {
+        cylinder {
+            size BASEHEIGHT BASETHICKNESS 
+            orientation 0.5 0 0.5
+            position BASEWIDTH/4
+        }
+        cube {
+            size BASEWIDTH/2 BASEHEIGHT BASETHICKNESS
+        }
+        cylinder {
+            size BASEHEIGHT BASETHICKNESS 
+            orientation 0.5 0 0.5
+            position -BASEWIDTH/4
+        }
+    }
+}
+
+define CHAMBER {
+    difference {
+        cylinder {
+            size CHAMBERWALL+HOLEDIAMETER+CHAMBERWALL CHAMBERLENGTH 
+            orientation 0.5 0 0.5
+        }
+        cylinder {
+            size HOLEDIAMETER CHAMBERLENGTH 
+            orientation 0.5 0 0.5
+        }
+    }
+}
+
+define MC4DUSTCAPMALE {
+    union {
+        BASE
+        CHAMBER {
+            position 0 0 CHAMBERLENGTH/2+BASETHICKNESS/2
+        }
+    }
+}
+
+MC4DUSTCAPMALE {
+    opacity 0.6
+}
