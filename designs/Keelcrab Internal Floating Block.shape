@@ -1,0 +1,61 @@
+// ShapeScript document
+
+detail 128
+
+define BLOCKRADIUS            70     // mm
+define BLOCKHEIGHT            25     // mm
+define METALBRACKETTHICKNESS   2     // mm
+define METALBRACKETGAP        20     // mm
+define PINSIZE                 5     // mm
+
+define BASE {
+    difference {
+        cylinder {
+            size BLOCKRADIUS BLOCKHEIGHT    
+        }
+
+        difference {
+            cube {
+                size METALBRACKETTHICKNESS BLOCKRADIUS BLOCKRADIUS
+            }
+            cube {
+                size METALBRACKETTHICKNESS BLOCKRADIUS METALBRACKETGAP
+            }
+        }
+    }
+}
+
+define HALFBASE {
+    difference {
+        BASE
+
+        cube {
+            size BLOCKRADIUS/2 BLOCKHEIGHT BLOCKRADIUS
+            position BLOCKRADIUS/4 0 0
+        }
+    }
+}
+
+define MALE {
+    HALFBASE
+
+    cube {
+        size BLOCKRADIUS/2 PINSIZE PINSIZE
+    }
+}
+
+define FEMALE {
+    difference {
+        HALFBASE
+
+        cube {
+            size BLOCKRADIUS/2 PINSIZE+0.5 PINSIZE+0.5
+        }
+    }
+}
+
+// FEMALE {
+MALE {
+    opacity 0.8
+    orientation 0 0 1.5
+}
