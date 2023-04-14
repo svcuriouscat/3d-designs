@@ -1,15 +1,16 @@
 // ShapeScript document
 
+// MC4 Dust Cap - For Female
+
 detail 256
 
-define BASETHICKNESS        2     // mm
+define BASETHICKNESS        1.4   // mm
 define BASEHEIGHT          14     // mm
 define BASEWIDTH           20     // mm
 define CYLINDERLENGTH       4     // mm
 define CYLINDERDIAMETER     9.2   // mm
-define CYLINDERGROVESIZE    1.68  // mm
-define CYLINDERGROVEDEPTH   0.96  // mm
-define BUMPSDIAMETER        0.56  // mm
+define CYLINDERGROVESIZE    2     // mm
+define CYLINDERGROVEDEPTH   1     // mm
 
 define BASE {
     union {
@@ -48,25 +49,12 @@ define CYLINDER {
     }
 }
 
-define BUMP {
-    detail 16
-    sphere {
-        size BUMPSDIAMETER
-        position CYLINDERDIAMETER/2
-    }
-}
-
 define MC4DUSTCAPFEMALE {
     union {
         BASE
+
         CYLINDER {
             position 0 0 CYLINDERLENGTH/2+BASETHICKNESS/2
-        }
-        for i in 1 to 4 {
-            BUMP {
-                position 0 0 CYLINDERLENGTH+BASETHICKNESS/2-(CYLINDERLENGTH-CYLINDERGROVESIZE)/2/2
-                orientation 0.5*i+0.25
-            }
         }
     }
 }

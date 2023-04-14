@@ -1,13 +1,15 @@
 // ShapeScript document
 
+// MC4 Dust Cap - For Male
+
 detail 256
 
-define BASETHICKNESS   2    // mm
+define BASETHICKNESS   1.4  // mm
 define BASEHEIGHT     14    // mm
 define BASEWIDTH      20    // mm
-define HOLEDIAMETER    9.6  // mm
+define HOLEDIAMETER   10.2  // mm
 define CHAMBERLENGTH  24    // mm
-define CHAMBERWALL     1.2  // mm
+define CHAMBERWALL     0.8  // mm
 
 define BASE {
     union {
