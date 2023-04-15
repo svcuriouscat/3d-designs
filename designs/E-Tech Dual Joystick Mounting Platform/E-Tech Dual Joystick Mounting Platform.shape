@@ -1,0 +1,273 @@
+// ShapeScript document
+
+// E-Tech Dual Joystick Mounting Platform
+
+detail 64
+
+// define JOYSTICKWIDTH                  117    // mm
+define JOYSTICKHEIGHT                  24    // mm
+define JOYSTICKSCREWHOLEDISTANCE       85    // mm
+define JOYSTICKSCREWHOLEDIAMETER        6    // mm (M6-1.0)
+define JOYSTICKSCREWHOLESLOTDIAMETER   14
+define JOYSTICKSCREWHOLESLOTDEPTH       6
+define JOYSTICKCABLEOPENINGLENGTH      20
+define JOYSTICKCABLEOPENINGWIDTH       30
+define PLATFORMHEIGHT                  10    // mm
+define PLATFORMWIDTH                  107
+define PLATFORMLENGTH                 137    // mm
+define PLATFORMSCREWHOLEDISTANCEX      92
+define PLATFORMSCREWHOLEDISTANCEY     105
+define PLATFORMSCREWHOLEDIAMETER        5    // mm (10-24)
+define PLATFORMSCREWHOLESLOTDIAMETER    9
+define PLATFORMSCREWHOLESLOTDEPTH       3
+
+define PLATFORMCORNER {
+    union {
+        sphere {
+            size PLATFORMHEIGHT
+        }
+        cylinder {
+            position 0  -(PLATFORMHEIGHT / 4)  0
+            size PLATFORMHEIGHT PLATFORMHEIGHT/2
+        }
+    }
+}
+
+define PLATFORMSCREWHOLESLOT {
+    lathe path {
+        point 0  -PLATFORMSCREWHOLESLOTDEPTH
+        point PLATFORMSCREWHOLEDIAMETER/2  -PLATFORMSCREWHOLESLOTDEPTH
+        point PLATFORMSCREWHOLESLOTDIAMETER/2  -1
+        point PLATFORMSCREWHOLESLOTDIAMETER/2  0
+        point 0  0
+    }
+}
+
+define PLATFORM {
+    difference {
+        // Base
+        union {
+            // Lower layer
+            group {
+                position 0 -(PLATFORMHEIGHT/4)
+
+                cube {
+                    size PLATFORMLENGTH - PLATFORMHEIGHT  PLATFORMHEIGHT / 2  PLATFORMWIDTH
+                }
+                cube {
+                    size PLATFORMLENGTH  PLATFORMHEIGHT / 2  PLATFORMWIDTH - PLATFORMHEIGHT
+                }
+            }
+
+            // Upper layer
+            cube {
+                position 0 PLATFORMHEIGHT/4
+                size PLATFORMLENGTH - PLATFORMHEIGHT  PLATFORMHEIGHT / 2  PLATFORMWIDTH - PLATFORMHEIGHT
+            }
+
+            // Corners
+            group {
+                // Lower-right
+                PLATFORMCORNER {
+                    position (PLATFORMLENGTH / 2 - PLATFORMHEIGHT / 2)  0  (PLATFORMWIDTH / 2 - PLATFORMHEIGHT / 2)
+                }
+                // Lower-left
+                PLATFORMCORNER {
+                    position -(PLATFORMLENGTH / 2 - PLATFORMHEIGHT / 2)  0  (PLATFORMWIDTH / 2 - PLATFORMHEIGHT / 2)
+                }
+                // Upper-right
+                PLATFORMCORNER {
+                    position (PLATFORMLENGTH / 2 - PLATFORMHEIGHT / 2)  0  -(PLATFORMWIDTH / 2 - PLATFORMHEIGHT / 2)
+                }
+                // Upper-left
+                PLATFORMCORNER {
+                    position -(PLATFORMLENGTH / 2 - PLATFORMHEIGHT / 2)  0  -(PLATFORMWIDTH / 2 - PLATFORMHEIGHT / 2)
+                }
+            }
+
+            // Smooth edges
+            group {
+                // Upper
+                cylinder {
+                    size PLATFORMHEIGHT  (PLATFORMWIDTH - PLATFORMHEIGHT)
+                    orientation 0.5  0  0.5
+                    position -(PLATFORMLENGTH / 2 - PLATFORMHEIGHT / 2)
+                }
+                // Lower
+                cylinder {
+                    size PLATFORMHEIGHT (PLATFORMWIDTH - PLATFORMHEIGHT)
+                    orientation 0.5 0 0.5
+                    position (PLATFORMLENGTH / 2 - PLATFORMHEIGHT / 2)
+                }
+                // Left
+                cylinder {
+                    size PLATFORMHEIGHT  (PLATFORMLENGTH - PLATFORMHEIGHT)
+                    orientation 0  0.5  0.5
+                    position 0  0  (PLATFORMWIDTH / 2 - PLATFORMHEIGHT / 2)
+                }
+                // Right
+                cylinder {
+                    size PLATFORMHEIGHT  (PLATFORMLENGTH - PLATFORMHEIGHT)
+                    orientation 0  0.5  0.5
+                    position 0  0  -(PLATFORMWIDTH / 2 - PLATFORMHEIGHT / 2)
+                }
+            }
+
+            // Flat area where joystick touches the platform
+            group {
+                cube {
+                    size JOYSTICKHEIGHT  PLATFORMHEIGHT  PLATFORMWIDTH
+                }
+
+                // Upper smooth corners
+                difference {
+                    position 0.99
+
+                    cube {
+                        size PLATFORMHEIGHT/2  PLATFORMHEIGHT  PLATFORMWIDTH
+                        position -JOYSTICKHEIGHT/2-PLATFORMHEIGHT/4
+                    }
+                    // Upper-left
+                    extrude {
+                        circle {
+                            size PLATFORMHEIGHT
+                        }
+                        along circle {
+                            orientation 0  0.5
+                            position -JOYSTICKHEIGHT/2-PLATFORMHEIGHT/2  0  PLATFORMWIDTH/2-PLATFORMHEIGHT/2
+                            size PLATFORMHEIGHT*2
+                        }
+                    }
+                    // Upper-right
+                    extrude {
+                        circle {
+                            size PLATFORMHEIGHT
+                        }
+                        along circle {
+                            orientation 0  0.5
+                            position -JOYSTICKHEIGHT/2-PLATFORMHEIGHT/2  0  -PLATFORMWIDTH/2+PLATFORMHEIGHT/2
+                            size PLATFORMHEIGHT*2
+                        }
+                    }
+                }
+                // Lower smooth corners
+                difference {
+                    position -0.99
+
+                    cube {
+                        size PLATFORMHEIGHT/2  PLATFORMHEIGHT  PLATFORMWIDTH
+                        position JOYSTICKHEIGHT/2+PLATFORMHEIGHT/4
+                    }
+                    // Lower-left
+                    extrude {
+                        circle {
+                            size PLATFORMHEIGHT*1
+                        }
+                        along circle {
+                            orientation 0  0.5
+                            position JOYSTICKHEIGHT/2+PLATFORMHEIGHT/2  0  PLATFORMWIDTH/2-PLATFORMHEIGHT/2
+                            size PLATFORMHEIGHT*2
+                        }
+                    }
+                    // Lower-right
+                    extrude {
+                        circle {
+                            size PLATFORMHEIGHT
+                        }
+                        along circle {
+                            orientation 0  0.5
+                            position JOYSTICKHEIGHT/2+PLATFORMHEIGHT/2  0  -PLATFORMWIDTH/2+PLATFORMHEIGHT/2
+                            size PLATFORMHEIGHT*2
+                        }
+                    }
+                }
+            }
+        }
+
+        // Screw holes
+        group {
+            // Upper-left
+            cylinder {
+                size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
+                position -(PLATFORMSCREWHOLEDISTANCEY / 2)  0  (PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+            PLATFORMSCREWHOLESLOT {
+                position -(PLATFORMSCREWHOLEDISTANCEY / 2)  (PLATFORMHEIGHT / 2)  (PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+            // Upper-right
+            cylinder {
+                size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
+                position -(PLATFORMSCREWHOLEDISTANCEY / 2)  0  -(PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+            PLATFORMSCREWHOLESLOT {
+                position -(PLATFORMSCREWHOLEDISTANCEY / 2)  (PLATFORMHEIGHT / 2)  -(PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+            // Lower-left
+            cylinder {
+                size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
+                position (PLATFORMSCREWHOLEDISTANCEY / 2)  0  (PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+            PLATFORMSCREWHOLESLOT {
+                position (PLATFORMSCREWHOLEDISTANCEY / 2)  (PLATFORMHEIGHT / 2)  (PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+            // Lower-right
+            cylinder {
+                size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
+                position (PLATFORMSCREWHOLEDISTANCEY / 2)  0  -(PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+            PLATFORMSCREWHOLESLOT {
+                position (PLATFORMSCREWHOLEDISTANCEY / 2)  (PLATFORMHEIGHT / 2)  -(PLATFORMSCREWHOLEDISTANCEX / 2)
+            }
+        }
+
+        // Cable holes
+        union {
+            cube {
+                size JOYSTICKCABLEOPENINGLENGTH  PLATFORMHEIGHT  JOYSTICKCABLEOPENINGLENGTH/2
+            }
+            cylinder {
+                size JOYSTICKCABLEOPENINGLENGTH  PLATFORMHEIGHT
+                position 0  0  (JOYSTICKCABLEOPENINGLENGTH / 2 - JOYSTICKCABLEOPENINGWIDTH / 2)
+            }
+            cylinder {
+                size JOYSTICKCABLEOPENINGLENGTH  PLATFORMHEIGHT
+                position 0  0  -(JOYSTICKCABLEOPENINGLENGTH / 2 - JOYSTICKCABLEOPENINGWIDTH / 2)
+            }
+        }
+
+        // Joystick screw holes
+        group {
+            // Left
+            union {
+                // Hole
+                cylinder {
+                    size JOYSTICKSCREWHOLEDIAMETER  PLATFORMHEIGHT
+                    position 0  0  (JOYSTICKSCREWHOLEDISTANCE / 2)
+                }
+                // Slot
+                cylinder {
+                    size JOYSTICKSCREWHOLESLOTDIAMETER  JOYSTICKSCREWHOLESLOTDEPTH
+                    position 0  -(PLATFORMHEIGHT/2-JOYSTICKSCREWHOLESLOTDEPTH/2)  (JOYSTICKSCREWHOLEDISTANCE / 2)
+                }
+            }
+            // Right
+            union {
+                // Hole
+                cylinder {
+                    size JOYSTICKSCREWHOLEDIAMETER  PLATFORMHEIGHT
+                    position 0  0  -(JOYSTICKSCREWHOLEDISTANCE / 2)
+                }
+                // Slot
+                cylinder {
+                    size JOYSTICKSCREWHOLESLOTDIAMETER  JOYSTICKSCREWHOLESLOTDEPTH
+                    position 0  -(PLATFORMHEIGHT/2-JOYSTICKSCREWHOLESLOTDEPTH/2)  -(JOYSTICKSCREWHOLEDISTANCE / 2)
+                }
+            }
+        }
+    }
+}
+
+
+PLATFORM {
+    orientation 0.5  0  -0.5
+}
