@@ -1,0 +1,74 @@
+// ShapeScript document
+
+// Orbital Sander Pad Clip
+
+define BASEDIAMETER  125    // mm (125 for 5" discs, 150 for 6" discs)
+define BASEHEIGHT      3    // mm
+define HOLEDIAMETER   10    // mm
+define HOLEDISTANCE   55    // mm (55 for 5" discs, ?? for 6" discs)
+define RODDIAMETER     9.6  // mm
+define RODBASEHEIGHT  16    // mm
+
+detail 100
+
+define ROD {
+    union {
+        cylinder {
+            size RODDIAMETER RODBASEHEIGHT
+        }
+        sphere {
+            size RODDIAMETER
+            position 0  RODBASEHEIGHT/2
+        }
+    }
+}
+
+define PADCLIP {
+
+    difference {
+        // Base with rods
+        union {
+            // Base
+            difference {
+                cylinder {
+                    size BASEDIAMETER  BASEHEIGHT
+                }
+                for i in 0 to 8 {
+                    cylinder {
+                        size BASEDIAMETER/3.5  BASEHEIGHT
+                        position BASEDIAMETER/2
+                    }
+
+                    rotate 0 0.25 * i
+                }
+                cylinder {
+                    size BASEDIAMETER/3.5  BASEHEIGHT
+                }
+            }
+
+            // Rods
+            for i in 0 to 8 {
+                ROD {
+                    position HOLEDISTANCE/2+HOLEDIAMETER/2  BASEHEIGHT/2 + RODBASEHEIGHT/2
+                }
+
+                rotate 0 0.25 * i
+            }
+        }
+
+        // Holes inside of rods (to allow some airflow)
+        for i in 0 to 8 {
+            cylinder {
+                size RODDIAMETER/2.5 999
+                position HOLEDISTANCE/2+HOLEDIAMETER/2
+            }
+
+            rotate 0 0.25 * i
+        }
+    }
+    
+}
+
+PADCLIP {
+    orientation 0 0 -0.5
+}
