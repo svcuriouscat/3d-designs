@@ -1,12 +1,13 @@
 // ShapeScript document
 
 detail 128
+rotate 0 0 -0.5 // CAD
 
 define BLOCKRADIUS            70     // mm
 define BLOCKHEIGHT            25     // mm
 define METALBRACKETTHICKNESS   2     // mm
-define METALBRACKETGAP        20     // mm
-define PINSIZE                 5     // mm
+define METALBRACKETGAP        21     // mm
+define PINSIZE                METALBRACKETGAP/2
 
 define BASE {
     difference {
@@ -49,13 +50,10 @@ define FEMALE {
         HALFBASE
 
         cube {
-            size BLOCKRADIUS/2 PINSIZE+0.5 PINSIZE+0.5
+            size BLOCKRADIUS/2+0.5 PINSIZE+0.1 PINSIZE+0.1
         }
     }
 }
 
-// FEMALE {
-MALE {
-    opacity 0.8
-    orientation 0 0 1.5
-}
+//FEMALE
+MALE
