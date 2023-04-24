@@ -9,7 +9,8 @@ define HOLEDISTANCE   55    // mm (55 for 5" discs, ?? for 6" discs)
 define RODDIAMETER     9.6  // mm
 define RODBASEHEIGHT  16    // mm
 
-detail 100
+detail 128
+rotate 0 0 -0.5 // CAD mode
 
 define ROD {
     union {
@@ -55,20 +56,8 @@ define PADCLIP {
                 rotate 0 0.25 * i
             }
         }
-
-        // Holes inside of rods (to allow some airflow)
-        for i in 0 to 8 {
-            cylinder {
-                size RODDIAMETER/2.5 999
-                position HOLEDISTANCE/2+HOLEDIAMETER/2
-            }
-
-            rotate 0 0.25 * i
-        }
     }
     
 }
 
-PADCLIP {
-    orientation 0 0 -0.5
-}
+PADCLIP
