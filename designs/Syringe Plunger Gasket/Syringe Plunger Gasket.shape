@@ -1,0 +1,108 @@
+// ShapeScript document
+
+/// Syringe Plunger Gasket
+
+detail 128
+rotate 0 0 -0.5 // CAD
+
+define GASKETRADIUS                     16.2   // mm
+define GASKETHEIGHT                      9     // mm
+define GASKETCONEHEIGHT                  3     // mm
+define GASKETORINGTHICKNESS              2     // mm
+define SYRINGEGASKETCIRCLEDIAMETER      12     // mm
+define SYRINGEGASKETCIRCLELENGTH         1.25  // mm
+define SYRINGEGASKETCIRCLEBASEDIAMETER   9.25  // mm
+define SYRINGEGASKETCIRCLEBASELENGTH     3.65  // mm
+define SYRINGEGASKETCIRCLETIPDIAMETER    9
+define SYRINGEGASKETCIRCLETIPLENGTH      2.5
+
+define BASE {
+    union {
+        /// Flat ring at the bottom
+        cylinder {
+            size GASKETRADIUS 1
+            position 0 -GASKETHEIGHT/4-1/2
+        }
+
+        /// Core
+        cylinder {
+            size GASKETRADIUS-1  GASKETHEIGHT/2
+        }
+
+        /// The "o-ring"
+        extrude {
+            circle {
+                size GASKETORINGTHICKNESS
+            }
+            along circle {
+                orientation 0 0 0.5
+                size GASKETRADIUS-GASKETORINGTHICKNESS
+            }
+            position 0 -1
+        }
+
+        extrude {
+            circle {
+                size GASKETORINGTHICKNESS
+            }
+            along circle {
+                orientation 0 0 0.5
+                size GASKETRADIUS-GASKETORINGTHICKNESS
+            }
+            position 0  GASKETHEIGHT/4-GASKETORINGTHICKNESS/2
+        }
+
+        /// Tip
+        lathe path {
+            point 0  GASKETCONEHEIGHT+GASKETORINGTHICKNESS/2
+            point 5/2  GASKETCONEHEIGHT+GASKETORINGTHICKNESS/2
+            point GASKETRADIUS/2  GASKETORINGTHICKNESS/2
+            point GASKETRADIUS/2  0
+            point 0  0
+
+            position 0 GASKETHEIGHT/4-GASKETORINGTHICKNESS/2
+        }
+    }
+}
+
+define SYRINGEPLUNGERTIP {
+    union {
+        /// Circle
+        cylinder {
+            size SYRINGEGASKETCIRCLEDIAMETER  SYRINGEGASKETCIRCLELENGTH
+            position 0 SYRINGEGASKETCIRCLELENGTH/2+SYRINGEGASKETCIRCLEBASELENGTH/2
+        }
+
+        /// Shaft
+        cylinder {
+            size SYRINGEGASKETCIRCLEBASEDIAMETER  SYRINGEGASKETCIRCLEBASELENGTH
+        }
+
+        /// Angle
+        lathe path {
+            point 0  SYRINGEGASKETCIRCLELENGTH
+            point SYRINGEGASKETCIRCLEBASEDIAMETER/2  SYRINGEGASKETCIRCLELENGTH
+            point SYRINGEGASKETCIRCLEDIAMETER/2  0
+            point 0  0
+
+            position 0 -SYRINGEGASKETCIRCLEBASELENGTH/2
+        }
+
+        /// Tip
+        lathe path {
+            point 0  0
+            point SYRINGEGASKETCIRCLETIPDIAMETER/2  0
+            point 0  SYRINGEGASKETCIRCLETIPLENGTH
+
+            position 0 SYRINGEGASKETCIRCLEBASELENGTH/2+SYRINGEGASKETCIRCLELENGTH
+        }
+    }
+}
+
+difference {
+    BASE
+
+    SYRINGEPLUNGERTIP {
+        position 0 -(SYRINGEGASKETCIRCLEBASELENGTH/2)+0.4
+    }
+}
