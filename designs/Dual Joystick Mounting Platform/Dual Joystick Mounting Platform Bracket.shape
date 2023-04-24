@@ -1,0 +1,78 @@
+// ShapeScript document
+
+// E-Tech Dual Joystick Mounting Platform Bracket
+
+detail 32
+
+define BRACKETSCREWHOLEDISTANCEX   92
+define BRACKETSCREWHOLEDISTANCEY  105
+define BRACKETSCREWHOLEDIAMETER     5
+define BRACKETNUTSLOTDIAMETER      11
+define BRACKETNUTSLOTDEPTH          7
+define BRACKETWIDTH                 BRACKETSCREWHOLEDISTANCEX + BRACKETNUTSLOTDIAMETER*1.1
+define BRACKETLENGTH                BRACKETSCREWHOLEDISTANCEY + BRACKETNUTSLOTDIAMETER*1.1
+define BRACKETHEIGHT                BRACKETNUTSLOTDEPTH + 3
+define BRACKETCUTOUTSIZEX           BRACKETSCREWHOLEDISTANCEX - BRACKETNUTSLOTDIAMETER*1.1
+define BRACKETCUTOUTSIZEY           BRACKETSCREWHOLEDISTANCEY - BRACKETNUTSLOTDIAMETER*1.1
+
+define BRACKETNUTSLOT {
+    cylinder {
+        detail 6
+        size BRACKETNUTSLOTDIAMETER  BRACKETNUTSLOTDEPTH
+    }
+}
+
+define BRACKET {
+    difference {
+        // Base
+        cube {
+            size BRACKETLENGTH  BRACKETHEIGHT  BRACKETWIDTH
+        }
+
+        // Screw holes
+        group {
+            // Upper-left
+            cylinder {
+                size BRACKETSCREWHOLEDIAMETER  BRACKETHEIGHT
+                position -(BRACKETSCREWHOLEDISTANCEY / 2)  0  (BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+            BRACKETNUTSLOT {
+                position -(BRACKETSCREWHOLEDISTANCEY / 2)  (BRACKETHEIGHT / 2 - BRACKETNUTSLOTDEPTH / 2)  (BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+            // Upper-right
+            cylinder {
+                size BRACKETSCREWHOLEDIAMETER  BRACKETHEIGHT
+                position -(BRACKETSCREWHOLEDISTANCEY / 2)  0  -(BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+            BRACKETNUTSLOT {
+                position -(BRACKETSCREWHOLEDISTANCEY / 2)  (BRACKETHEIGHT / 2 - BRACKETNUTSLOTDEPTH / 2)  -(BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+            // Lower-left
+            cylinder {
+                size BRACKETSCREWHOLEDIAMETER  BRACKETHEIGHT
+                position (BRACKETSCREWHOLEDISTANCEY / 2)  0  (BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+            BRACKETNUTSLOT {
+                position (BRACKETSCREWHOLEDISTANCEY / 2)  (BRACKETHEIGHT / 2 - BRACKETNUTSLOTDEPTH / 2)  (BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+            // Lower-right
+            cylinder {
+                size BRACKETSCREWHOLEDIAMETER  BRACKETHEIGHT
+                position (BRACKETSCREWHOLEDISTANCEY / 2)  0  -(BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+            BRACKETNUTSLOT {
+                position (BRACKETSCREWHOLEDISTANCEY / 2)  (BRACKETHEIGHT / 2 - BRACKETNUTSLOTDEPTH / 2)  -(BRACKETSCREWHOLEDISTANCEX / 2)
+            }
+        }
+
+        // Cut-out for cables
+        cube {
+            size BRACKETCUTOUTSIZEY  BRACKETHEIGHT  BRACKETCUTOUTSIZEX
+        }
+    }
+}
+
+
+BRACKET {
+    orientation 0.5  0  -0.5
+}
