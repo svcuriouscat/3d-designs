@@ -1,20 +1,20 @@
 // ShapeScript document
 
-// Ahydrodynamic Paddle Blade
+/// Ahydrodynamic Paddle Blade
 
-detail 100
-rotate 0 0 -0.5 // CAD mode
+detail 128
+rotate 0 0 -0.5  /// CAD mode
 
-define SHAFTDIAMETER                      35    // mm
+define SHAFTDIAMETER                      35.5  /// mm
 define BLADESHAFTBUTTONDIAMETER            8
 define BLADESHAFTSLOTDEPTH                54
 define BLADESHAFTSLOTBUTTONHOLEPOSITION   22
-define BLADEWALLTHICKNESS                  3    // mm
+define BLADEWALLTHICKNESS                  3    /// mm
 define BLADELENGTH                       540
 define BLADEWIDTH                        270
 
 define PADDLEBLADE {
-    // Shaft connection slot
+    /// Shaft connection slot
     union {
         difference {
             difference {
@@ -66,7 +66,7 @@ define PADDLEBLADE {
         
     }
 
-    // Blade
+    /// Blade
     difference {
 
         sphere {
