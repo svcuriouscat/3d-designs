@@ -1,25 +1,49 @@
 // ShapeScript document
 
-// Orbital Sander Pad Clip
+/// Orbital Sander Pad Clip — 125mm (5")
 
-define BASEDIAMETER  125    // mm (125 for 5" discs, 150 for 6" discs)
-define BASEHEIGHT      3    // mm
-define HOLEDIAMETER   10    // mm
-define HOLEDISTANCE   55    // mm (55 for 5" discs, ?? for 6" discs)
-define RODDIAMETER     9.6  // mm
-define RODBASEHEIGHT  16    // mm
+define BASEDIAMETER          125     /// mm (125 for 5" discs, 150 for 6" discs)
+define BASEHEIGHT              3     /// mm
+define BASEHOLEDIAMETER      BASEDIAMETER / 3.5  /// mm
+define DISCHOLEDIAMETER       10     /// mm
+define DISCHOLEDISTANCE       55     /// mm (55 for 5" discs, ?? for 6" discs)
+define RODDIAMETER           DISCHOLEDIAMETER - 0.4  /// mm
+define RODLENGTH              22     /// mm
 
-detail 128
-rotate 0 0 -0.5 // CAD mode
+detail 80
+rotate 0 0 -0.5  /// CAD mode
+
+define HOLE {
+    difference {
+        cylinder {
+            size (BASEHOLEDIAMETER + BASEHEIGHT)  BASEHEIGHT
+        }
+        extrude {
+            circle {
+                size BASEHEIGHT
+            }
+            along circle {
+                orientation 0  0  0.5
+                size (BASEHOLEDIAMETER + BASEHEIGHT)
+            }
+        }
+    }
+}
 
 define ROD {
-    union {
+    difference {
         cylinder {
-            size RODDIAMETER RODBASEHEIGHT
+            size RODDIAMETER  RODLENGTH
         }
-        sphere {
-            size RODDIAMETER
-            position 0  RODBASEHEIGHT/2
+        difference {
+            cylinder {
+                size RODDIAMETER  (RODDIAMETER / 2)
+                position 0  (RODLENGTH / 2 - RODDIAMETER / 4)
+            }
+            sphere {
+                size RODDIAMETER
+                position 0  (RODLENGTH / 2 - RODDIAMETER / 2)
+            }
         }
     }
 }
@@ -27,33 +51,52 @@ define ROD {
 define PADCLIP {
 
     difference {
-        // Base with rods
+        /// Base with rods
         union {
-            // Base
+            /// Base
             difference {
-                cylinder {
-                    size BASEDIAMETER  BASEHEIGHT
-                }
-                for i in 0 to 8 {
+                union {
                     cylinder {
-                        size BASEDIAMETER/3.5  BASEHEIGHT
-                        position BASEDIAMETER/2
+                        size (BASEDIAMETER - BASEHEIGHT)  BASEHEIGHT
                     }
-
-                    rotate 0 0.25 * i
+                    /// Round outer edge
+                    extrude {
+                        circle {
+                            size BASEHEIGHT
+                        }
+                        along circle {
+                            orientation 0  0  0.5
+                            size (BASEDIAMETER - BASEHEIGHT)
+                        }
+                    }
                 }
-                cylinder {
-                    size BASEDIAMETER/3.5  BASEHEIGHT
+
+                /// Middle hole
+                HOLE
+
+                /// Cut away from the outer edge
+                union {
+                    rotate 0  0.125
+
+                    for i in 1 to 8 {
+                        HOLE {
+                            position (BASEDIAMETER / 2)
+                        }
+
+                        rotate 0  (0.25 * i)
+                    }
                 }
             }
 
-            // Rods
-            for i in 0 to 8 {
-                ROD {
-                    position HOLEDISTANCE/2+HOLEDIAMETER/2  BASEHEIGHT/2 + RODBASEHEIGHT/2
-                }
+            /// Rods
+            union {
+                for i in 1 to 8 {
+                    ROD {
+                        position (DISCHOLEDISTANCE / 2 + DISCHOLEDIAMETER / 2)  (BASEHEIGHT / 2 + RODLENGTH / 2)
+                    }
 
-                rotate 0 0.25 * i
+                    rotate 0  (0.25 * i)
+                }
             }
         }
     }
