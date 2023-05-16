@@ -33,7 +33,7 @@ define PADDLEBLADE {
                             size BLADEWALLTHICKNESS
                         }
                         along circle {
-                            orientation 0 0 0.5
+                            orientation 0  0  0.5
                             position 0  BLADESHAFTSLOTDEPTH / 2 - BLADEWALLTHICKNESS / 2  0
                             size SHAFTDIAMETER + BLADEWALLTHICKNESS
                         }
@@ -71,20 +71,20 @@ define PADDLEBLADE {
 
         sphere {
             size      BLADELENGTH   SHAFTDIAMETER * 2   BLADEWIDTH
-            orientation 0.5 0 0.5
+            orientation 0.5  0  0.5
             position  0  -(BLADELENGTH / 2 + BLADESHAFTSLOTDEPTH/2)
         }
 
         union {
             sphere {
                 size      BLADELENGTH * 3   SHAFTDIAMETER * 2   BLADEWIDTH
-                orientation 0.5 0 0.5
+                orientation 0.5  0  0.5
                 position  0  -(BLADELENGTH / 2 + BLADESHAFTSLOTDEPTH/2 + BLADELENGTH / (3 / 2))  SHAFTDIAMETER
             }
 
             sphere {
                 size      BLADELENGTH * 3   SHAFTDIAMETER * 2   BLADEWIDTH
-                orientation 0.5 0 0.5
+                orientation 0.5  0  0.5
                 position  0  -(BLADELENGTH / 2 + BLADESHAFTSLOTDEPTH/2 + BLADELENGTH / (3 / 2))  -SHAFTDIAMETER
             }
         }
