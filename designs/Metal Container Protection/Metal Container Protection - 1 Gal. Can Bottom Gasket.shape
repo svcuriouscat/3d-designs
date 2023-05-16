@@ -1,0 +1,88 @@
+// ShapeScript document
+
+/// Metal Container Protection - 1 Gal. Can Bottom Gasket
+
+detail 192
+rotate 0 0 -0.5  /// CAD mode
+
+define CANRADIUSWITHFLARE          168.2    /// mm
+define CANFLAREHEIGHT                3      /// mm
+define CANFLARETHICKNESS             1.27   /// mm
+define CANFLAREHEIGHTWITHOVERHANG    (CANFLAREHEIGHT + CANFLARETHICKNESS)  /// mm
+define CANRADIUS                     CANRADIUSWITHFLARE - CANFLARETHICKNESS * 2  /// mm
+define GASKETTHICKNESS               2      /// mm
+define GASKETHEIGHT                  (CANFLAREHEIGHTWITHOVERHANG + GASKETTHICKNESS * 2)  /// mm
+
+define CUTOUT {
+    cube {
+        size CANFLARETHICKNESS  GASKETTHICKNESS  GASKETTHICKNESS  
+        position (CANRADIUSWITHFLARE / 2 - CANFLARETHICKNESS / 2)  -(GASKETHEIGHT / 2 - GASKETTHICKNESS / 2)
+    }
+}
+
+define GASKET {
+    difference {
+        cylinder {
+            size (CANRADIUSWITHFLARE + GASKETTHICKNESS * 2)  GASKETHEIGHT
+        }
+
+        /// Hole
+        group {
+            /// Can
+            cylinder {
+                size CANRADIUS  (GASKETTHICKNESS + CANFLAREHEIGHTWITHOVERHANG)
+                position 0  (GASKETHEIGHT / 2 - (GASKETTHICKNESS + CANFLAREHEIGHTWITHOVERHANG) / 2)
+            }
+
+            // Middle (flare)
+            difference {
+                cylinder {
+                    size CANRADIUSWITHFLARE  (CANFLAREHEIGHTWITHOVERHANG / 2)
+                    position 0  (CANFLAREHEIGHTWITHOVERHANG / 2 / 2)
+                }
+                difference {
+                    cylinder {
+                        size CANRADIUSWITHFLARE  (CANFLAREHEIGHTWITHOVERHANG / 4)
+                        position 0  (CANFLAREHEIGHTWITHOVERHANG / 2 - (CANFLAREHEIGHTWITHOVERHANG / 4 / 2))
+                    }
+                    cylinder {
+                        size CANRADIUS  (CANFLAREHEIGHTWITHOVERHANG / 4)
+                        position 0  (CANFLAREHEIGHTWITHOVERHANG / 2 - (CANFLAREHEIGHTWITHOVERHANG / 4 / 2))
+                    }
+                    extrude {
+                        circle {
+                            size CANFLARETHICKNESS*2
+                        }
+                        along circle {
+                            orientation 0  0  0.5
+                            position 0  (CANFLAREHEIGHTWITHOVERHANG / 2) - (CANFLARETHICKNESS)
+                            size CANRADIUS
+                        }
+                    }
+                }
+            }
+            cylinder {
+                size CANRADIUSWITHFLARE  (CANFLAREHEIGHTWITHOVERHANG / 2)
+                position 0  -(CANFLAREHEIGHTWITHOVERHANG / 2 / 2)
+            }
+
+            /// Bottom
+            cylinder {
+                size (CANRADIUS - GASKETTHICKNESS * 2)  GASKETTHICKNESS
+                position 0  -(GASKETHEIGHT / 2 - GASKETTHICKNESS / 2)
+            }
+        }
+
+        /// Cutouts to avoid trapping moisture around the rim and not leave any rust marks
+        union {
+            for i in 1 to 90 {
+                CUTOUT {
+                    orientation 0  1/45*i
+                }
+            }
+        }
+    }
+}
+
+GASKET {
+}
