@@ -1,0 +1,140 @@
+// ShapeScript document
+
+/// Portlight Flyscreen - Lewmar Atlantic Size 32
+
+detail 128
+rotate 0  0  -0.5  /// CAD mode
+
+// Border
+define BORDERHEIGHT             117     /// mm
+define BORDERWIDTH              317     /// mm
+define BORDERTHICKNESS            4.65  /// mm
+/// Mounting bracket
+define BRACKETHEIGHT            124.5   /// mm
+define BRACKETWIDTH             325     /// mm
+define BRACKETBASETHICKNESS       1.4   /// mm
+define BRACKETSIZEHORIZ          18     /// mm
+define BRACKETSIZEVERT           16     /// mm
+
+define BORDERSHAPE {
+    union {
+        cylinder {
+            size BORDERHEIGHT  BORDERTHICKNESS  BORDERHEIGHT
+            position (BORDERWIDTH / 2 - BORDERHEIGHT / 2)
+        }
+        cube {
+            size (BORDERWIDTH - BORDERHEIGHT)  BORDERTHICKNESS  BORDERHEIGHT
+        }
+        cylinder {
+            size BORDERHEIGHT  BORDERTHICKNESS  BORDERHEIGHT
+            position -(BORDERWIDTH / 2 - BORDERHEIGHT / 2)
+        }
+    }
+}
+
+define CUTOUT {
+    union {
+        cylinder {
+            size (BORDERHEIGHT - BORDERTHICKNESS * 2)  (BORDERTHICKNESS)  (BORDERHEIGHT - BORDERTHICKNESS * 2)
+            position (BORDERWIDTH / 2 - BORDERHEIGHT / 2)
+        }
+        cube {
+            size (BORDERWIDTH - BORDERHEIGHT)  (BORDERTHICKNESS)  (BORDERHEIGHT - BORDERTHICKNESS * 2)
+        }
+        cylinder {
+            size (BORDERHEIGHT - BORDERTHICKNESS * 2)  (BORDERTHICKNESS)  (BORDERHEIGHT - BORDERTHICKNESS * 2)
+            position -(BORDERWIDTH / 2 - BORDERHEIGHT / 2)
+        }
+    }
+}
+
+define BRACKET {
+    intersection {
+        /// Base
+        difference {
+            union {
+                cube {
+                    size BRACKETBASETHICKNESS  BRACKETBASETHICKNESS  BRACKETBASETHICKNESS
+                }
+                cube {
+                    size BRACKETWIDTH  BRACKETBASETHICKNESS  BRACKETHEIGHT
+                    position 0  -(BORDERTHICKNESS / 2 - BRACKETBASETHICKNESS / 2)
+                }
+            }
+
+            /// Cut out hole in the middle (for the border)
+            BORDERSHAPE
+        }
+
+        /// Levers
+        union {
+            /// Horizontal
+            cube {
+                size BRACKETWIDTH  BORDERTHICKNESS  BRACKETSIZEHORIZ
+            }
+            /// Vertical
+            group {
+                /// Left
+                cube {
+                    size BRACKETSIZEVERT  BORDERTHICKNESS  BRACKETHEIGHT
+                    position -(BORDERWIDTH / 4)
+                }
+                /// Right
+                cube {
+                    size BRACKETSIZEVERT  BORDERTHICKNESS  BRACKETHEIGHT
+                    position (BORDERWIDTH / 4)
+                }
+            }
+        }
+    }
+}
+
+define BORDER {
+    difference {
+        BORDERSHAPE
+
+        CUTOUT
+    }
+}
+
+define GRILL {
+    difference {
+        CUTOUT
+
+        /// Angled cutouts (horizontal)
+        union {
+            for i in -10 to 10 {
+                cube {
+                    size BORDERWIDTH  2
+                    orientation 0  0  0.2
+                    position 0  0  (i * 2.45 * 2)
+                }
+            }
+        }
+    }
+
+    /// Vertical lines
+    intersection {
+        CUTOUT
+
+        union {
+            for i in -45 to 45 {
+                cube {
+                    size 0.4  (BORDERTHICKNESS)  (BORDERHEIGHT - BORDERTHICKNESS * 2)
+                    position (i * 3.375)
+                }
+            }
+        }
+    }
+}
+
+define PORTLIGHTFLYSCREEN {
+    union {
+        BRACKET
+        BORDER
+        GRILL
+    }
+}
+
+PORTLIGHTFLYSCREEN {
+}
