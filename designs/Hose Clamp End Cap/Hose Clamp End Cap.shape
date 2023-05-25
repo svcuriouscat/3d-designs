@@ -1,0 +1,120 @@
+// ShapeScript document
+
+/// Hose Clamp End Cap
+
+detail 80
+rotate 0  0  -0.5  /// CAD mode
+
+/// Hose clamp
+define HOSECLAMPWIDTH       14.2    /// mm (14.2 for ??, 12.7 for 1/2", 7.9 for 8mm, )
+define HOSECLAMPTHICKNESS    0.7    /// mm (0.7 for ??, 0.6 for 1/2", 0.5 for 8mm, )
+/// End cap
+define ENDCAPWALLTHICKNESS   1.1    /// mm (1.1 for ??, 1 for 1/2", 0.6 for 8mm)
+
+/// Auto-calculated
+define ENDCAPTHICKNESS      (HOSECLAMPTHICKNESS + ENDCAPWALLTHICKNESS * 2)  /// mm
+define ENDCAPWIDTH          (HOSECLAMPWIDTH + ENDCAPWALLTHICKNESS * 2)  /// mm
+define ENDCAPLENGTH         (HOSECLAMPWIDTH + ENDCAPWALLTHICKNESS)  /// mm
+define ENDCAPCORNERRADIUS   (ENDCAPWALLTHICKNESS * 2.2)  /// mm
+
+define ENDCAP {
+    difference {
+        /// Base
+        union {
+            /// Mid section
+            group {
+                /// Thickness
+                cube {
+                    size (ENDCAPTHICKNESS)  (ENDCAPLENGTH - ENDCAPCORNERRADIUS / 2)  (ENDCAPWIDTH - ENDCAPCORNERRADIUS)
+                    position 0  -(ENDCAPCORNERRADIUS / 4)
+                }
+                /// Width
+                cube {
+                    size (ENDCAPTHICKNESS - ENDCAPCORNERRADIUS)  (ENDCAPLENGTH - ENDCAPCORNERRADIUS / 2)  (ENDCAPWIDTH)
+                    position 0  -(ENDCAPCORNERRADIUS / 4)
+                }
+                /// Length
+                cube {
+                    size (ENDCAPTHICKNESS - ENDCAPCORNERRADIUS)  (ENDCAPLENGTH)  (ENDCAPWIDTH - ENDCAPCORNERRADIUS)
+                }
+            }
+            /// Corners
+            group {
+                sphere {
+                    size  ENDCAPCORNERRADIUS
+                    position (ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                }
+                sphere {
+                    size  ENDCAPCORNERRADIUS
+                    position -(ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                }
+                sphere {
+                    size  ENDCAPCORNERRADIUS
+                    position -(ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  -(ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                }
+                sphere {
+                    size  ENDCAPCORNERRADIUS
+                    position (ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  -(ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                }
+            }
+            /// Edges
+            group {
+                /// Front
+                group {
+                    cylinder {
+                        orientation 0.5
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPTHICKNESS - ENDCAPCORNERRADIUS)
+                        position 0  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                    }
+                    cylinder {
+                        orientation 0.5
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPTHICKNESS - ENDCAPCORNERRADIUS)
+                        position 0  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  -(ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                    }
+                }
+                group {
+                    cylinder {
+                        orientation 0  0  0.5
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPWIDTH - ENDCAPCORNERRADIUS)
+                        position (ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  0
+                    }
+                    cylinder {
+                        orientation 0  0  0.5
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPWIDTH - ENDCAPCORNERRADIUS)
+                        position -(ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  (ENDCAPLENGTH / 2 - ENDCAPCORNERRADIUS / 2)  0
+                    }
+                }
+                /// Sides
+                group {
+                    cylinder {
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPLENGTH - ENDCAPCORNERRADIUS / 2)
+                        position (ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  -(ENDCAPCORNERRADIUS / 4) (ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                    }
+                    cylinder {
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPLENGTH - ENDCAPCORNERRADIUS / 2)
+                        position -(ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  -(ENDCAPCORNERRADIUS / 4) (ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                    }
+                    cylinder {
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPLENGTH - ENDCAPCORNERRADIUS / 2)
+                        position (ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  -(ENDCAPCORNERRADIUS / 4) -(ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                    }
+                    cylinder {
+                        size (ENDCAPCORNERRADIUS)  (ENDCAPLENGTH - ENDCAPCORNERRADIUS / 2)
+                        position -(ENDCAPTHICKNESS / 2 - ENDCAPCORNERRADIUS / 2)  -(ENDCAPCORNERRADIUS / 4) -(ENDCAPWIDTH / 2 - ENDCAPCORNERRADIUS / 2)
+                    }
+                }
+            }
+        }
+
+        /// Cutout
+        cube {
+            size (HOSECLAMPTHICKNESS)  (HOSECLAMPWIDTH)  (HOSECLAMPWIDTH)
+            position 0  -(ENDCAPWALLTHICKNESS / 2)
+        }
+    }
+}
+
+ENDCAP {
+    opacity 0.5
+}
+
