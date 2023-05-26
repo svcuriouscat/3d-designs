@@ -1,0 +1,52 @@
+// ShapeScript document
+
+/// Soft Face Hammer Tip
+
+detail 256
+rotate 0  0  -0.5  /// CAD mode
+
+/// Hammer tip
+define HAMMERTIPDIAMETER   25.4   /// mm
+define HAMMERTIPLENGTH     18     /// mm
+/// Bolt
+define BOLTDIAMETER         8.2   /// mm
+define BOLTLENGTH          11.8   /// mm
+define BOLTCAPLENGTH        5     /// mm
+define BOLTCAPDIAMETER     14.2   /// mm
+define BOLTTHREADLENGTH     6     /// mm (how much the bolt sticks out of the tip)
+
+define BOLT {
+    union {
+        /// Thread
+        cylinder {
+            size BOLTDIAMETER  BOLTLENGTH
+        }
+        /// Cap
+        cylinder {
+            detail 6
+            size BOLTCAPDIAMETER  BOLTCAPLENGTH
+            position 0  (BOLTLENGTH / 2 + BOLTCAPLENGTH / 2)
+        }
+    }
+}
+
+define HAMMERTIP {
+    difference {
+        cylinder {
+            size HAMMERTIPDIAMETER  HAMMERTIPLENGTH
+        }
+
+        BOLT {
+            position 0  -(HAMMERTIPLENGTH / 2 + BOLTLENGTH / 2 - (BOLTLENGTH - BOLTTHREADLENGTH))
+        }
+    }
+}
+
+HAMMERTIP {
+    opacity 0.5
+}
+
+cylinder {
+    size BOLTDIAMETER  0.2
+    position 0  -(HAMMERTIPLENGTH / 2 + BOLTTHREADLENGTH + 0.2 / 2)
+}
