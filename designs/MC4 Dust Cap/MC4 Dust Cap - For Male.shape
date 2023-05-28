@@ -1,56 +1,78 @@
 // ShapeScript document
 
-// MC4 Dust Cap - For Male
+/// MC4 Protective Cover - For Male
 
 detail 256
+rotate 0  0  -0.5  /// CAD mode
 
-define BASETHICKNESS   1.4  // mm
-define BASEHEIGHT     14    // mm
-define BASEWIDTH      20    // mm
-define HOLEDIAMETER   10.2  // mm
-define CHAMBERLENGTH  24    // mm
-define CHAMBERWALL     0.8  // mm
+/// Base
+define BASETHICKNESS        1.4    /// mm
+define BASEHEIGHT          13      /// mm
+define BASEWIDTH           19      /// mm
+/// Chamber
+define HOLEDIAMETER        10      /// mm
+define CHAMBERLENGTH       24      /// mm
+/// Slots for locking tabs
+define SLOTLENGTH           7      /// mm
+define SLOTTHICKNESS        2.2    /// mm
+define SLOTWIDTH            7      /// mm
+define SLOTSINNERDISTANCE  11.5    /// mm
+define SLOTSCUTOUTSLENGTH   4      /// mm
 
 define BASE {
-    union {
+    intersection {
         cylinder {
-            size BASEHEIGHT BASETHICKNESS 
-            orientation 0.5 0 0.5
-            position BASEWIDTH/4
+            size BASEWIDTH  1
         }
         cube {
-            size BASEWIDTH/2 BASEHEIGHT BASETHICKNESS
-        }
-        cylinder {
-            size BASEHEIGHT BASETHICKNESS 
-            orientation 0.5 0 0.5
-            position -BASEWIDTH/4
+            size (BASEWIDTH)  1  (BASEHEIGHT)
         }
     }
 }
 
-define CHAMBER {
+define MC4PROTECTIONFORMALE {
     difference {
-        cylinder {
-            size CHAMBERWALL+HOLEDIAMETER+CHAMBERWALL CHAMBERLENGTH 
-            orientation 0.5 0 0.5
+        BASE {
+            size 1  (CHAMBERLENGTH + BASETHICKNESS)
         }
         cylinder {
-            size HOLEDIAMETER CHAMBERLENGTH 
-            orientation 0.5 0 0.5
+            size HOLEDIAMETER  CHAMBERLENGTH
+            position 0  (BASETHICKNESS / 2)
+        }
+
+        /// Slots
+        cube {
+            size SLOTTHICKNESS  SLOTLENGTH  SLOTWIDTH
+            position (SLOTSINNERDISTANCE / 2 + SLOTTHICKNESS / 2)  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 + BASETHICKNESS / 2)
+        }
+        cube {
+            size SLOTTHICKNESS  SLOTLENGTH  SLOTWIDTH
+            position -(SLOTSINNERDISTANCE / 2 + SLOTTHICKNESS / 2)  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 + BASETHICKNESS / 2)
+        }
+
+        /// Side cutouts
+        cube {
+            size ((BASEWIDTH - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            position (SLOTSINNERDISTANCE / 2 + ((BASEWIDTH - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 + BASETHICKNESS / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
+        }
+        cube {
+            size ((BASEWIDTH - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            position -(SLOTSINNERDISTANCE / 2 + ((BASEWIDTH - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 + BASETHICKNESS / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
+        }
+
+        /// Side cutouts
+        cube {
+            size ((BASEWIDTH - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            orientation 0.25
+            position (SLOTSINNERDISTANCE / 2 + ((BASEWIDTH - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 + BASETHICKNESS / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
+        }
+        cube {
+            size ((BASEWIDTH - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            orientation -0.25
+            position -(SLOTSINNERDISTANCE / 2 + ((BASEWIDTH - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 + BASETHICKNESS / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
         }
     }
 }
 
-define MC4DUSTCAPMALE {
-    union {
-        BASE
-        CHAMBER {
-            position 0 0 CHAMBERLENGTH/2+BASETHICKNESS/2
-        }
-    }
-}
-
-MC4DUSTCAPMALE {
-    opacity 0.6
+MC4PROTECTIONFORMALE {
 }

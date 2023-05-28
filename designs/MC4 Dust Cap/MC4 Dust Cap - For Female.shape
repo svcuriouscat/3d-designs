@@ -1,31 +1,30 @@
 // ShapeScript document
 
-// MC4 Dust Cap - For Female
+/// MC4 Protective Cover - For Female
 
 detail 256
+rotate 0  0  -0.5  /// CAD mode
 
-define BASETHICKNESS        1.4   // mm
-define BASEHEIGHT          14     // mm
-define BASEWIDTH           20     // mm
-define CYLINDERLENGTH       4     // mm
-define CYLINDERDIAMETER     9.2   // mm
-define CYLINDERGROVESIZE    2     // mm
-define CYLINDERGROVEDEPTH   1     // mm
+/// Base
+define BASETHICKNESS        1.4   /// mm
+define BASEHEIGHT          13     /// mm
+define BASEWIDTH           19     /// mm
+/// Cylinder
+define CYLINDERLENGTH       4     /// mm
+define CYLINDERDIAMETER     9.2   /// mm
+define CYLINDERGROVESIZE    1.5   /// mm
+define CYLINDERGROVEDEPTH   1     /// mm
+/// Locks
+define LOCKSLENGTH         11     /// mm
+define LOCKSOUTERDISTANCE  15.9   /// mm
 
 define BASE {
-    union {
+    intersection {
         cylinder {
-            size BASEHEIGHT BASETHICKNESS 
-            orientation 0.5 0 0.5
-            position BASEWIDTH/4
+            size BASEWIDTH  1
         }
         cube {
-            size BASEWIDTH/2 BASEHEIGHT BASETHICKNESS
-        }
-        cylinder {
-            size BASEHEIGHT BASETHICKNESS 
-            orientation 0.5 0 0.5
-            position -BASEWIDTH/4
+            size (BASEWIDTH)  1  (BASEHEIGHT)
         }
     }
 }
@@ -33,32 +32,72 @@ define BASE {
 define CYLINDER {
     difference {
         cylinder {
-            size CYLINDERDIAMETER CYLINDERLENGTH 
-            orientation 0.5 0 0.5
+            size CYLINDERDIAMETER  CYLINDERLENGTH 
         }
         difference {
             cylinder {
-                size CYLINDERDIAMETER CYLINDERGROVESIZE 
-                orientation 0.5 0 0.5
+                size CYLINDERDIAMETER  CYLINDERGROVESIZE 
             }
             cylinder {
-                size CYLINDERDIAMETER-CYLINDERGROVEDEPTH-CYLINDERGROVEDEPTH CYLINDERGROVESIZE 
-                orientation 0.5 0 0.5
+                size (CYLINDERDIAMETER - CYLINDERGROVEDEPTH - CYLINDERGROVEDEPTH)  CYLINDERGROVESIZE 
             }
         }
     }
 }
 
-define MC4DUSTCAPFEMALE {
-    union {
-        BASE
+define LOCKS {
+    difference {
+        group {
+            cube {
+                size 1.3  LOCKSLENGTH  6.56
+                position ((LOCKSOUTERDISTANCE - 1.3) / 2)  (LOCKSLENGTH / 2 + BASETHICKNESS / 2)
+            }
+            cube {
+                size 2.5  4  6.56
+                position ((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.6)  (LOCKSLENGTH / 2 + BASETHICKNESS / 2 + LOCKSLENGTH / 2 - 4 / 2)
+            }
+        }
 
-        CYLINDER {
-            position 0 0 CYLINDERLENGTH/2+BASETHICKNESS/2
+        cube {
+            size 2.5  8  6.56
+            orientation -0.175
+            position (((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.0) + 1.9)  (LOCKSLENGTH / 2 + BASETHICKNESS / 2 + LOCKSLENGTH / 2 - 4 / 2)
+        }
+    }
+
+    difference {
+        group {
+            cube {
+                size 1.3  LOCKSLENGTH  6.56
+                position -((LOCKSOUTERDISTANCE - 1.3) / 2)  (LOCKSLENGTH / 2 + BASETHICKNESS / 2)
+            }
+            cube {
+                size 2.5  4  6.56
+                position -((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.6)  (LOCKSLENGTH / 2 + BASETHICKNESS / 2 + LOCKSLENGTH / 2 - 4 / 2)
+            }
+        }
+
+        cube {
+            size 2.5  8  6.56
+            orientation 0.175
+            position -(((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.0) + 1.9)  (LOCKSLENGTH / 2 + BASETHICKNESS / 2 + LOCKSLENGTH / 2 - 4 / 2)
         }
     }
 }
 
-MC4DUSTCAPFEMALE {
-    opacity 0.6
+define MC4PROTECTIVECAPFEMALE {
+    union {
+        BASE {
+            size 1  BASETHICKNESS
+        }
+
+        CYLINDER {
+            position 0 (CYLINDERLENGTH / 2 + BASETHICKNESS / 2)
+        }
+
+        LOCKS
+    }
+}
+
+MC4PROTECTIVECAPFEMALE {
 }
