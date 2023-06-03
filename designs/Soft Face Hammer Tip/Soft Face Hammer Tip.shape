@@ -2,30 +2,30 @@
 
 /// Soft Face Hammer Tip
 
-detail 256
+detail 1024
 rotate 0  0  -0.5  /// CAD mode
 
 /// Hammer tip
-define HAMMERTIPDIAMETER   25.4   /// mm
-define HAMMERTIPLENGTH     18     /// mm
-/// Bolt
-define BOLTDIAMETER         8.2   /// mm
-define BOLTLENGTH          11.8   /// mm
-define BOLTCAPLENGTH        5     /// mm
-define BOLTCAPDIAMETER     14.2   /// mm
-define BOLTTHREADLENGTH     6     /// mm (how much the bolt sticks out of the tip)
+define HAMMERTIPDIAMETER    25.4   /// mm (1")
+define HAMMERTIPLENGTH      19.05  /// mm (3/4")
+/// Bolt (M8, 12mm long)
+define BOLTSHAFTDIAMETER     8.2   /// mm
+define BOLTSHAFTLENGTH      11.8   /// mm
+define BOLTCAPLENGTH         5     /// mm
+define BOLTCAPDIAMETER      14.2   /// mm
+define BOLTEXPOSUREDLENGTH   6     /// mm (how much the bolt's shaft sticks out)
 
 define BOLT {
     union {
         /// Thread
         cylinder {
-            size BOLTDIAMETER  BOLTLENGTH
+            size BOLTSHAFTDIAMETER  BOLTSHAFTLENGTH
         }
         /// Cap
         cylinder {
             detail 6
             size BOLTCAPDIAMETER  BOLTCAPLENGTH
-            position 0  (BOLTLENGTH / 2 + BOLTCAPLENGTH / 2)
+            position 0  (BOLTSHAFTLENGTH / 2 + BOLTCAPLENGTH / 2)
         }
     }
 }
@@ -37,7 +37,7 @@ define HAMMERTIP {
         }
 
         BOLT {
-            position 0  -(HAMMERTIPLENGTH / 2 + BOLTLENGTH / 2 - (BOLTLENGTH - BOLTTHREADLENGTH))
+            position 0  -(HAMMERTIPLENGTH / 2 + BOLTSHAFTLENGTH / 2 - (BOLTSHAFTLENGTH - BOLTEXPOSUREDLENGTH))
         }
     }
 }
@@ -46,7 +46,8 @@ HAMMERTIP {
     opacity 0.5
 }
 
+/// Elevator pad
 cylinder {
-    size BOLTDIAMETER  0.2
-    position 0  -(HAMMERTIPLENGTH / 2 + BOLTTHREADLENGTH + 0.2 / 2)
+    size BOLTSHAFTDIAMETER  0.2
+    position 0  -(HAMMERTIPLENGTH / 2 + BOLTEXPOSUREDLENGTH + 0.2 / 2)
 }
