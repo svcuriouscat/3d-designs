@@ -1,0 +1,317 @@
+// ShapeScript document
+
+/// Catamaran Electric Propulsion System — Starboard Motor
+/// Motor: E-Tech 10WG
+
+detail 64
+rotate 0  0  -0.5  /// CAD mode
+
+/// Rails
+define RAILLENGTH     614     /// mm
+define RAILLEGSIZE     64     /// mm
+define RAILTHICKNESS    5     /// mm
+/// Motor
+define MOTORBODYDIAMETER   206.5   /// mm
+define MOTORBODYLENGTH     448     /// mm
+define MOTORSHAFTLENGTH     60     /// mm
+define MOTORSHAFTDIAMETER   35     /// mm
+/// Brackets
+define BRACKETLEGSIZE         40     /// mm
+define BRACKETTHICKNESS        4     /// mm
+// define BRACKETWIDTH       500     /// mm (E-Tech's length)
+define BRACKETWIDTH          350     /// mm
+define BRACKETHEIGHT         272     /// mm
+define BRACKETHOLESDISTANCE  300     /// mm (varies slightly per bracket, 299–304)
+/// Anti-vibration mount
+define ANTIVIBRATIONMOUNTHEIGHT               40     /// mm
+define ANTIVIBRATIONMOUNTBASEPLATELENGTH     120     /// mm
+define ANTIVIBRATIONMOUNTBASEPLATEWIDTH       60     /// mm
+define ANTIVIBRATIONMOUNTBASEPLATETHICKNESS    3     /// mm
+define ANTIVIBRATIONMOUNTSCREWHOLEWIDTH       13.85  /// mm
+define ANTIVIBRATIONMOUNTSCREWHOLELENGTH      11     /// mm
+define ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE   100     /// mm
+/// Coupling
+define COUPLINGDIAMETER                      101.6   /// mm
+
+/// L-Shaped stainless steel angle (2.5" x 2.5" x 24", 0.1875" thickness)
+/// https://www.onlinemetals.com/en/buy/stainless-steel/2-5-x-2-5-x-0-1875-stainless-angle-316-316l/pid/2169
+define RAIL {
+    color 100  100  100
+
+    difference {
+        /// Shape
+        cube {
+            size RAILLEGSIZE  RAILLENGTH
+        }
+        cube {
+            size (RAILLEGSIZE - RAILTHICKNESS)  RAILLENGTH
+            position (RAILTHICKNESS / 2)  0  -(RAILTHICKNESS / 2)
+        }
+
+        /// Round top edge
+        difference {
+            cube {
+                size RAILTHICKNESS  RAILLENGTH  RAILTHICKNESS / 2
+                position 0  0  -(RAILTHICKNESS / 4)
+            }
+            cylinder {
+                size RAILTHICKNESS  RAILLENGTH
+            }
+
+            position -(RAILLEGSIZE / 2 - RAILTHICKNESS / 2)  0  -(RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+        }
+
+        /// Round bottom edge
+        difference {
+            cube {
+                size (RAILTHICKNESS / 2)  RAILLENGTH  RAILTHICKNESS
+                position (RAILTHICKNESS / 4)
+            }
+            cylinder {
+                size RAILTHICKNESS  RAILLENGTH
+            }
+
+            position (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)  0  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+        }
+        
+
+        /// Screw holes
+        group {
+            cylinder {
+                size 10  RAILTHICKNESS
+                orientation 0  0  0.5
+                position 0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+            }
+            cylinder {
+                size 10  RAILTHICKNESS
+                orientation 0  0  0.5
+                position 0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+            }
+
+            position 0  244
+        }
+        group {
+            cylinder {
+                size 10  RAILTHICKNESS
+                orientation 0  0  0.5
+                position 0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+            }
+            cylinder {
+                size 10  RAILTHICKNESS
+                orientation 0  0  0.5
+                position 0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+            }
+
+            position 0  -244
+        }
+    }
+}
+
+/// The electric motor
+/// https://starboats.eu/electric-drives/e-tech-wg-inboard-engines/
+define MOTOR {
+    color 0  0  1
+
+    union {
+        /// Body
+        cylinder {
+            size MOTORBODYDIAMETER  MOTORBODYLENGTH
+        }
+
+        /// Shaft
+        cylinder {
+            color 100  100  100
+
+            size MOTORSHAFTDIAMETER  MOTORSHAFTLENGTH
+
+            position 0  (MOTORBODYLENGTH / 2 + MOTORSHAFTLENGTH / 2)
+        }
+
+        /// Bump in the back
+        cylinder {
+            size 100  24
+            position 0  -(MOTORBODYLENGTH / 2 + 24 / 2)
+        }
+    }
+}
+
+define BRACKETRAIL {
+    color 100  100  100
+
+    difference {
+        /// Shape
+        cube {
+            size BRACKETLEGSIZE  1
+        }
+        cube {
+            size (BRACKETLEGSIZE - BRACKETTHICKNESS)  1
+            position (BRACKETTHICKNESS / 2)  0  -(BRACKETTHICKNESS / 2)
+        }
+
+        /// Round top edge
+        difference {
+            cube {
+                size BRACKETTHICKNESS  1  BRACKETTHICKNESS / 2
+                position 0  0  -(BRACKETTHICKNESS / 4)
+            }
+            cylinder {
+                size BRACKETTHICKNESS
+            }
+
+            position -(BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)  0  -(BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+        }
+
+        /// Round bottom edge
+        difference {
+            cube {
+                size (BRACKETTHICKNESS / 2)  1  BRACKETTHICKNESS
+                position (BRACKETTHICKNESS / 4)
+            }
+            cylinder {
+                size BRACKETTHICKNESS
+            }
+
+            position (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)  0  (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+        }
+    }
+}
+
+/// Stainless steel brackets bolted to both ends of the motor
+define BRACKET {
+    rotate 0.5
+
+    union {
+        /// Horizontal
+        difference {
+            BRACKETRAIL {
+                size 1  BRACKETWIDTH
+                orientation 1
+            }
+
+            /// Holes
+            cylinder {
+                orientation 0  0  0.5
+                size 12  BRACKETTHICKNESS
+                position 0  (BRACKETHOLESDISTANCE / 2)  (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+            }
+            cylinder {
+                orientation 0  0  0.5
+                size 12  BRACKETTHICKNESS
+                position 0  -(BRACKETHOLESDISTANCE / 2)  (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+            }
+        }
+
+        /// Vertical (right)
+        BRACKETRAIL {
+            size 1  BRACKETHEIGHT
+            orientation 0.5  0  0.5
+            position 0  (115 / 2 + BRACKETLEGSIZE / 2)  (BRACKETHEIGHT / 2 + BRACKETLEGSIZE / 2)
+        }
+
+        /// Vertical (left)
+        BRACKETRAIL {
+            size 1  BRACKETHEIGHT
+            orientation 1  0  0.5
+            position 0  -(115 / 2 + BRACKETLEGSIZE / 2)  (BRACKETHEIGHT / 2 + BRACKETLEGSIZE / 2)
+        }
+    }
+}
+
+define ANTIVIBRATIONMOUNT {
+    color 200  200  200
+
+    union {
+        /// Core
+        cube {
+            size 60  80  ANTIVIBRATIONMOUNTHEIGHT
+        }
+
+        /// Base plate
+        difference {
+            cube {
+                size 60  120  3
+            }
+
+            /// Screw holes
+            cylinder {
+                size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTBASEPLATETHICKNESS
+                orientation 0  0  0.5
+                position 0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+            }
+            cylinder {
+                size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTBASEPLATETHICKNESS
+                orientation 0  0  0.5
+                position 0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+            }
+
+            position 0  0  (ANTIVIBRATIONMOUNTHEIGHT / 2 - ANTIVIBRATIONMOUNTBASEPLATETHICKNESS / 2)
+        }
+
+        /// Central screw
+        cylinder {
+            color 125  125  125
+            orientation 0  0  0.5
+            size 12  70
+            position 0  0  -(ANTIVIBRATIONMOUNTHEIGHT / 2 + 70 / 2)
+        }
+
+        /// Nut
+        cylinder {
+            color 125  125  125
+            size 31.35  10
+            detail 6
+            orientation 0  0  0.5
+            position 0  0  -(ANTIVIBRATIONMOUNTHEIGHT / 2 + 10 / 2)
+        }
+    }
+}
+
+define MOTORWITHBRACKETS {
+    MOTOR
+
+    /// Brackets
+    group {
+        /// Front bracket
+        BRACKET {
+            position 0  (MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2)
+        }
+
+        /// Back bracket
+        BRACKET {
+            orientation 1
+            position 0  -(MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2)
+        }
+
+        /// Move up
+        // position 0  0  -(BRACKETHEIGHT / 2 + BRACKETLEGSIZE / 2 + (BRACKETHEIGHT - MOTORBODYDIAMETER) / 2 + 14) /// E-Tech's position
+        position 0  0  -(BRACKETHEIGHT / 2 + BRACKETLEGSIZE / 2 + (BRACKETHEIGHT - MOTORBODYDIAMETER) / 2 - 100) /// My own alignment
+    }
+
+    /// Anti-vibration mounts
+    ANTIVIBRATIONMOUNT {
+        position 150  244  -20
+    }
+    ANTIVIBRATIONMOUNT {
+        position -150  244  -20
+    }
+    ANTIVIBRATIONMOUNT {
+        position 150  -244  -20
+    }
+    ANTIVIBRATIONMOUNT {
+        position -150  -244  -20
+    }
+}
+
+//////////////////////////////////////////////////////////////////////
+
+MOTORWITHBRACKETS {
+    
+}
+RAIL {
+    position (BRACKETHOLESDISTANCE / 2)  0  (RAILLEGSIZE / 2) /// TODO
+    orientation 1  1
+}
+RAIL {
+    position -(BRACKETHOLESDISTANCE / 2)  0  (RAILLEGSIZE / 2) /// TODO
+    orientation 0  1
+}
