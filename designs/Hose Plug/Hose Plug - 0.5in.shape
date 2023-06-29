@@ -1,0 +1,64 @@
+// ShapeScript document
+
+/// Hose Plug — 1/2"
+
+detail 90
+rotate 0  0  -0.5  /// CAD
+
+define HOSEINTDIAM     12.7     /// mm
+define CAPLEN          (HOSEINTDIAM / 4)  /// mm
+define BARBDIAM        13.95    /// mm
+define BARBLEN         5.08     /// mm
+define PLUGSTEMLENGTH  BARBLEN  * 6     /// mm (needs to be long enough for 1–2 clamps)
+
+define BARB {
+    lathe path {
+        point 0  BARBLEN
+        point BARBDIAM/2  BARBLEN
+        point HOSEINTDIAM/2  0
+        point 0  0
+    }
+}
+
+define CAP {
+    cylinder {
+        detail 6
+        size (HOSEINTDIAM * 1.3)  (CAPLEN)
+    }
+}
+
+define PLUG {
+    union {
+        /// Core
+        cylinder {
+            size HOSEINTDIAM  PLUGSTEMLENGTH
+        }
+
+        /// Barbs
+        union {
+            BARB {
+                position 0  0
+            }
+            BARB {
+                position 0  -(BARBLEN)
+            }
+            BARB {
+                position 0  -(BARBLEN * 2)
+            }
+            BARB {
+                position 0  -(BARBLEN * 3)
+            }
+
+            position 0  -(PLUGSTEMLENGTH / 2 - (BARBLEN * 4 / 2) - BARBLEN)
+        }
+
+        /// Cap
+        CAP {
+            position 0  (PLUGSTEMLENGTH / 2 + (CAPLEN / 2))
+        }
+    }
+}
+
+PLUG {
+    color 75  75  75
+}
