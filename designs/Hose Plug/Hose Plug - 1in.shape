@@ -2,14 +2,15 @@
 
 /// Hose Plug — 1"
 
-detail 90
+detail 200
 rotate 0  0  -0.5  /// CAD
 
-define HOSEINTDIAM     25.4     /// mm
+define HOSEINTDIAM     25.4    /// mm
 define CAPLEN          (HOSEINTDIAM / 4)  /// mm
-define BARBDIAM        27.9      /// mm
-define BARBLEN         10.16     /// mm
-define PLUGSTEMLENGTH  BARBLEN  * 6     /// mm (needs to be long enough for 1–2 clamps)
+define CAPDIAM         (HOSEINTDIAM * 1.3)
+define BARBDIAM        27.95   /// mm
+define BARBLEN         7.2     /// mm
+define PLUGSTEMLENGTH  BARBLEN * 6     /// mm (needs to be long enough for 1–2 clamps)
 
 define BARB {
     lathe path {
@@ -21,9 +22,23 @@ define BARB {
 }
 
 define CAP {
-    cylinder {
-        detail 6
-        size (HOSEINTDIAM * 1.3)  (CAPLEN)
+    difference {
+        cylinder {
+            detail 6
+            size CAPDIAM  CAPLEN
+        }
+
+        extrude {
+            circle {
+                size CAPDIAM - HOSEINTDIAM
+            }
+            along circle {
+                orientation 0  0  0.5
+                size (HOSEINTDIAM + (CAPDIAM - HOSEINTDIAM))
+            }
+
+            position 0  -(CAPLEN / 2)
+        }
     }
 }
 

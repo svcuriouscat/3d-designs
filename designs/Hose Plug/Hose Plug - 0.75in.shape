@@ -1,15 +1,15 @@
 // ShapeScript document
 
-/// Hose Plug — 1/2"
+/// Hose Plug — 3/4"
 
 detail 200
 rotate 0  0  -0.5  /// CAD
 
-define HOSEINTDIAM     12.7     /// mm
+define HOSEINTDIAM     14.64     /// mm
 define CAPLEN          (HOSEINTDIAM / 4)  /// mm
 define CAPDIAM         (HOSEINTDIAM * 1.3)
-define BARBDIAM        13.95    /// mm
-define BARBLEN         5.08     /// mm
+define BARBDIAM        16.28    /// mm
+define BARBLEN         5.30     /// mm
 define PLUGSTEMLENGTH  BARBLEN  * 6     /// mm (needs to be long enough for 1–2 clamps)
 
 define BARB {
@@ -62,6 +62,9 @@ define PLUG {
             }
             BARB {
                 position 0  -(BARBLEN * 3)
+            }
+            BARB {
+                position 0  -(BARBLEN * 4)
             }
 
             position 0  -(PLUGSTEMLENGTH / 2 - (BARBLEN * 4 / 2) - BARBLEN)
