@@ -1,0 +1,144 @@
+// ShapeScript document
+
+/// Fender Board — Holed Joiner
+
+detail 100
+rotate 0  0  -0.5  /// CAD mode
+
+define INCH                   25.4        /// mm
+define FENDERBOARDTHICKNESS   1 * INCH    /// mm
+define FENDERBOARDHEIGHT      6 * INCH    /// mm
+define LINETHICKNESS          0.5 * INCH  /// mm
+
+define HOLE {
+    union {
+        cylinder {
+            size LINETHICKNESS  (FENDERBOARDHEIGHT * 2)
+            orientation 0  0  0.5
+        }
+
+        /// Top
+        difference {
+            cylinder {
+                size FENDERBOARDTHICKNESS  FENDERBOARDTHICKNESS / 4
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2 / 2 / 2)
+                orientation 0  0  0.5
+            }
+
+            intersection {
+                cylinder {
+                    size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT / 2)
+                    orientation 0.5
+                    position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+                }
+
+                extrude {
+                    circle {
+                        size (FENDERBOARDTHICKNESS - LINETHICKNESS)
+                    }
+                    along circle {
+                        size (FENDERBOARDTHICKNESS)
+                        position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2 / 2)
+                    }
+                }
+            }
+        }
+
+        /// Bottom
+        difference {
+            cylinder {
+                size FENDERBOARDTHICKNESS  FENDERBOARDTHICKNESS / 4
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2 / 2 / 2)
+                orientation 0  0  0.5
+            }
+
+            intersection {
+                cylinder {
+                    size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT / 2)
+                    orientation 0.5
+                    position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+                }
+
+                extrude {
+                    circle {
+                        size (FENDERBOARDTHICKNESS - LINETHICKNESS)
+                    }
+                    along circle {
+                        size (FENDERBOARDTHICKNESS)
+                        position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2 / 2)
+                    }
+                }
+            }
+        }
+    }
+}
+
+define FENDERBOARDHOLEDJOINER {
+    difference {
+        /// Body
+        union {
+            cube {
+                size (FENDERBOARDHEIGHT / 4)  (FENDERBOARDTHICKNESS)  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+            }
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT / 4)
+                orientation 0.5
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT / 4)
+                orientation 0.5
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+        }
+
+        /// Hole
+        HOLE {
+        }
+
+        /// Core dimples
+        union {
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+                orientation 0  0  0.5
+                position (FENDERBOARDHEIGHT / 8 + 0.8)
+            }
+
+            /// Top
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position (FENDERBOARDHEIGHT / 8 + 0.8)  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            /// Bottom
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position (FENDERBOARDHEIGHT / 8 + 0.8)  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+        }
+        union {
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+                orientation 0  0  0.5
+                position -(FENDERBOARDHEIGHT / 8 + 0.8)
+            }
+
+            /// Top
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position -(FENDERBOARDHEIGHT / 8 + 0.8)  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            /// Bottom
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position -(FENDERBOARDHEIGHT / 8 + 0.8)  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+        }
+    }
+}
+
+FENDERBOARDHOLEDJOINER {
+    color 150  150  150
+    opacity 0.5
+}

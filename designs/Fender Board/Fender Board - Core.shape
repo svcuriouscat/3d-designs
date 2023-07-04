@@ -1,0 +1,82 @@
+// ShapeScript document
+
+/// Fender Board — Core
+
+detail 100
+rotate 0  0  -0.5  /// CAD mode
+
+define INCH                    25.4        /// mm
+define FENDERBOARDTHICKNESS    1 * INCH    /// mm
+define FENDERBOARDHEIGHT       6 * INCH    /// mm
+define LINETHICKNESS           0.5 * INCH  /// mm
+define CORELENGTH            252           /// mm
+
+define FENDERBOARDCORE {
+    union {
+        /// Body
+        union {
+            cube {
+                size (CORELENGTH - FENDERBOARDTHICKNESS)  (FENDERBOARDTHICKNESS)  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+            }
+            cylinder {
+                size FENDERBOARDTHICKNESS  (CORELENGTH - FENDERBOARDTHICKNESS)
+                orientation 0.5
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+            cylinder {
+                size FENDERBOARDTHICKNESS  (CORELENGTH - FENDERBOARDTHICKNESS)
+                orientation 0.5
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+        }
+
+        union {
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+                orientation 0  0  0.5
+                position 0
+            }
+
+            /// Top
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            /// Bottom
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            position (CORELENGTH / 2 - FENDERBOARDTHICKNESS / 2)
+        }
+
+        union {
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+                orientation 0  0  0.5
+                position 0
+            }
+
+            /// Top
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            /// Bottom
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            position -(CORELENGTH / 2 - FENDERBOARDTHICKNESS / 2)
+        }
+    }
+}
+
+FENDERBOARDCORE {
+    color 150  150  150
+    opacity 0.5
+}

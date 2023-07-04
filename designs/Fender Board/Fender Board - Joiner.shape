@@ -1,0 +1,81 @@
+// ShapeScript document
+
+/// Fender Board — Joiner
+
+detail 100
+rotate 0  0  -0.5  /// CAD mode
+
+define INCH                   25.4        /// mm
+define FENDERBOARDTHICKNESS   1 * INCH    /// mm
+define FENDERBOARDHEIGHT      6 * INCH    /// mm
+define LINETHICKNESS          0.5 * INCH  /// mm
+
+define FENDERBOARDJOINER {
+    difference {
+        /// Body
+        union {
+            cube {
+                size (FENDERBOARDHEIGHT / 8 + 4.8)  (FENDERBOARDTHICKNESS)  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+            }
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT / 8 + 4.8)
+                orientation 0.5
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT / 8 + 4.8)
+                orientation 0.5
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+        }
+
+        /// Core dimples
+        union {
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+                orientation 0  0  0.5
+                position 0
+            }
+
+            /// Top
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            /// Bottom
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            position (FENDERBOARDHEIGHT / 12 + 0.4)
+        }
+        union {
+            cylinder {
+                size FENDERBOARDTHICKNESS  (FENDERBOARDHEIGHT - FENDERBOARDTHICKNESS)
+                orientation 0  0  0.5
+                position 0
+            }
+
+            /// Top
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  -(FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            /// Bottom
+            sphere {
+                size FENDERBOARDTHICKNESS
+                position 0  0  (FENDERBOARDHEIGHT / 2 - FENDERBOARDTHICKNESS / 2)
+            }
+
+            position -(FENDERBOARDHEIGHT / 12 + 0.4)
+        }
+    }
+}
+
+FENDERBOARDJOINER {
+    color 150  150  150
+    opacity 0.5
+}
