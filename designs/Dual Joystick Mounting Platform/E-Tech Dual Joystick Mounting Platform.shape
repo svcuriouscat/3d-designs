@@ -1,8 +1,8 @@
 // ShapeScript document
 
-// E-Tech Dual Joystick Mounting Platform
+// Dual Joystick Mounting Platform — E-Tech
 
-detail 64
+detail 128
 
 // define JOYSTICKWIDTH                  117    // mm
 define JOYSTICKHEIGHT                  24    // mm
@@ -113,13 +113,13 @@ define PLATFORM {
                 }
             }
 
-            // Flat area where joystick touches the platform
+            /// Flat area where joystick touches the platform
             group {
                 cube {
                     size JOYSTICKHEIGHT  PLATFORMHEIGHT  PLATFORMWIDTH
                 }
 
-                // Upper smooth corners
+                /// Upper smooth corners
                 difference {
                     position 0.99
 
@@ -150,7 +150,7 @@ define PLATFORM {
                         }
                     }
                 }
-                // Lower smooth corners
+                /// Lower smooth corners
                 difference {
                     position -0.99
 
@@ -158,7 +158,7 @@ define PLATFORM {
                         size PLATFORMHEIGHT/2  PLATFORMHEIGHT  PLATFORMWIDTH
                         position JOYSTICKHEIGHT/2+PLATFORMHEIGHT/4
                     }
-                    // Lower-left
+                    /// Lower-left
                     extrude {
                         circle {
                             size PLATFORMHEIGHT*1
@@ -169,7 +169,7 @@ define PLATFORM {
                             size PLATFORMHEIGHT*2
                         }
                     }
-                    // Lower-right
+                    /// Lower-right
                     extrude {
                         circle {
                             size PLATFORMHEIGHT
@@ -184,9 +184,9 @@ define PLATFORM {
             }
         }
 
-        // Screw holes
+        /// Screw holes
         group {
-            // Upper-left
+            /// Upper-left
             cylinder {
                 size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
                 position -(PLATFORMSCREWHOLEDISTANCEY / 2)  0  (PLATFORMSCREWHOLEDISTANCEX / 2)
@@ -194,7 +194,7 @@ define PLATFORM {
             PLATFORMSCREWHOLESLOT {
                 position -(PLATFORMSCREWHOLEDISTANCEY / 2)  (PLATFORMHEIGHT / 2)  (PLATFORMSCREWHOLEDISTANCEX / 2)
             }
-            // Upper-right
+            /// Upper-right
             cylinder {
                 size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
                 position -(PLATFORMSCREWHOLEDISTANCEY / 2)  0  -(PLATFORMSCREWHOLEDISTANCEX / 2)
@@ -202,7 +202,7 @@ define PLATFORM {
             PLATFORMSCREWHOLESLOT {
                 position -(PLATFORMSCREWHOLEDISTANCEY / 2)  (PLATFORMHEIGHT / 2)  -(PLATFORMSCREWHOLEDISTANCEX / 2)
             }
-            // Lower-left
+            /// Lower-left
             cylinder {
                 size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
                 position (PLATFORMSCREWHOLEDISTANCEY / 2)  0  (PLATFORMSCREWHOLEDISTANCEX / 2)
@@ -210,7 +210,7 @@ define PLATFORM {
             PLATFORMSCREWHOLESLOT {
                 position (PLATFORMSCREWHOLEDISTANCEY / 2)  (PLATFORMHEIGHT / 2)  (PLATFORMSCREWHOLEDISTANCEX / 2)
             }
-            // Lower-right
+            /// Lower-right
             cylinder {
                 size PLATFORMSCREWHOLEDIAMETER  PLATFORMHEIGHT
                 position (PLATFORMSCREWHOLEDISTANCEY / 2)  0  -(PLATFORMSCREWHOLEDISTANCEX / 2)
