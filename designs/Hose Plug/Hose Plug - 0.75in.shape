@@ -11,6 +11,7 @@ define CAPDIAM         (HOSEINTDIAM * 1.3)
 define BARBDIAM        16.28    /// mm
 define BARBLEN         5.30     /// mm
 define PLUGSTEMLENGTH  BARBLEN  * 6     /// mm (needs to be long enough for 1–2 clamps)
+define HOLEDIAMETER    5
 
 define BARB {
     lathe path {
@@ -43,36 +44,41 @@ define CAP {
 }
 
 define PLUG {
-    union {
-        /// Core
-        cylinder {
-            size HOSEINTDIAM  PLUGSTEMLENGTH
-        }
-
-        /// Barbs
+    difference {
         union {
-            BARB {
-                position 0  0
-            }
-            BARB {
-                position 0  -(BARBLEN)
-            }
-            BARB {
-                position 0  -(BARBLEN * 2)
-            }
-            BARB {
-                position 0  -(BARBLEN * 3)
-            }
-            BARB {
-                position 0  -(BARBLEN * 4)
+            /// Core
+            cylinder {
+                size HOSEINTDIAM  PLUGSTEMLENGTH
             }
 
-            position 0  -(PLUGSTEMLENGTH / 2 - (BARBLEN * 4 / 2) - BARBLEN)
+            /// Barbs
+            union {
+                BARB {
+                    position 0  0
+                }
+                BARB {
+                    position 0  -(BARBLEN)
+                }
+                BARB {
+                    position 0  -(BARBLEN * 2)
+                }
+                BARB {
+                    position 0  -(BARBLEN * 3)
+                }
+
+                position 0  -(PLUGSTEMLENGTH / 2 - (BARBLEN * 4 / 2) - BARBLEN)
+            }
+
+            /// Cap
+            CAP {
+                position 0  (PLUGSTEMLENGTH / 2 + (CAPLEN / 2))
+            }
         }
 
-        /// Cap
-        CAP {
-            position 0  (PLUGSTEMLENGTH / 2 + (CAPLEN / 2))
+        cylinder {
+            orientation 0  0  0.5
+            size HOLEDIAMETER  BARBDIAM
+            position 0  PLUGSTEMLENGTH / 2.5
         }
     }
 }
