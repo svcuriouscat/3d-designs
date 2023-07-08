@@ -1,0 +1,104 @@
+// ShapeScript document
+
+/// MC4 Protective Cover - For Male
+
+detail 320
+rotate 0  0  -0.5  /// CAD mode
+
+/// Base
+define BASELENGTH          10     /// mm
+define BASEHEIGHT          13     /// mm
+define BASEDIAMETER        19     /// mm
+define BASEHOLEDIAMETER     5     /// mm
+/// Chamber
+define CHAMBERDIAMETER     BASEDIAMETER
+define HOLEDIAMETER        10     /// mm
+define CHAMBERLENGTH       24     /// mm
+/// Slots for locking tabs
+define SLOTLENGTH           7     /// mm
+define SLOTTHICKNESS        2.2   /// mm
+define SLOTWIDTH            7     /// mm
+define SLOTSINNERDISTANCE  11.5   /// mm
+define SLOTSCUTOUTSLENGTH   4     /// mm
+
+define BASE {
+    difference {
+        intersection {
+            cylinder {
+                size BASEDIAMETER  BASELENGTH
+            }
+            cube {
+                size BASEDIAMETER  BASELENGTH  BASEHEIGHT
+            }
+        }
+
+        cylinder {
+            size BASEHOLEDIAMETER  BASEHEIGHT
+            orientation 0  0  0.5
+        }
+    }
+}
+
+define CHAMBER {
+    difference {
+        intersection {
+            cylinder {
+                size CHAMBERDIAMETER  CHAMBERLENGTH
+            }
+            cube {
+                size CHAMBERDIAMETER  CHAMBERLENGTH  BASEHEIGHT
+            }
+        }
+
+        /// Middle hole
+        cylinder {
+            size HOLEDIAMETER  CHAMBERLENGTH
+        }
+
+        /// Slots
+        cube {
+            size SLOTTHICKNESS  SLOTLENGTH  SLOTWIDTH
+            position (SLOTSINNERDISTANCE / 2 + SLOTTHICKNESS / 2)  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2)
+        }
+        cube {
+            size SLOTTHICKNESS  SLOTLENGTH  SLOTWIDTH
+            position -(SLOTSINNERDISTANCE / 2 + SLOTTHICKNESS / 2)  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2)
+        }
+
+        /// Side cutouts
+        cube {
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            position (SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
+        }
+        cube {
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            position -(SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
+        }
+
+        /// Side cutouts
+        cube {
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            orientation 0.25
+            position (SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
+        }
+        cube {
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            orientation -0.25
+            position -(SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
+        }
+    }
+}
+
+define MC4PROTECTIONFORMALE {
+    union {
+        CHAMBER {
+        }
+        BASE {
+            position 0  -(CHAMBERLENGTH / 2 + BASELENGTH / 2)
+        }
+    }
+}
+
+MC4PROTECTIONFORMALE {
+    opacity 0.5
+}

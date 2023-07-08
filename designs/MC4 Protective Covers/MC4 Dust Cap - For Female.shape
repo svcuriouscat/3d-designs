@@ -1,0 +1,139 @@
+// ShapeScript document
+
+/// MC4 Protective Cover - For Female
+
+detail 320
+rotate 0  0  -0.5  /// CAD mode
+
+/// Base
+define BASELENGTH       10     /// mm
+define BASEHEIGHT          13     /// mm
+define BASEDIAMETER        19     /// mm
+define BASEHOLEDIAMETER     5     /// mm
+/// Cylinder
+define CYLINDERLENGTH       4     /// mm
+define CYLINDERDIAMETER     9.2   /// mm
+define CYLINDERGROVESIZE    1.5   /// mm
+define CYLINDERGROVEDEPTH   1     /// mm
+/// Shaft
+define SHAFTLENGTH         18     /// mm
+define SHAFTDIAMETER        8     /// mm
+define SHAFTWIDTH           7     /// mm
+define SHAFTHOLEDIAMETER    5     /// mm
+/// Locks
+define LOCKSLENGTH         11     /// mm
+define LOCKSOUTERDISTANCE  15.9   /// mm
+
+define BASE {
+    difference {
+        intersection {
+            cylinder {
+                size BASEDIAMETER  BASELENGTH
+            }
+            cube {
+                size BASEDIAMETER  BASELENGTH  BASEHEIGHT
+            }
+        }
+
+        cylinder {
+            size BASEHOLEDIAMETER  BASEHEIGHT
+            orientation 0  0  0.5
+        }
+    }
+}
+
+define CYLINDER {
+    difference {
+        cylinder {
+            size CYLINDERDIAMETER  CYLINDERLENGTH 
+        }
+        difference {
+            cylinder {
+                size CYLINDERDIAMETER  CYLINDERGROVESIZE 
+            }
+            cylinder {
+                size (CYLINDERDIAMETER - CYLINDERGROVEDEPTH - CYLINDERGROVEDEPTH)  CYLINDERGROVESIZE 
+            }
+        }
+    }
+}
+
+define LOCKS {
+    difference {
+        group {
+            cube {
+                size 1.3  LOCKSLENGTH  6.56
+                position ((LOCKSOUTERDISTANCE - 1.3) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2)
+            }
+            cube {
+                size 2.5  4  6.56
+                position ((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.6)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
+            }
+        }
+
+        cube {
+            size 2.5  8  6.56
+            orientation -0.175
+            position (((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.0) + 1.9)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
+        }
+    }
+
+    difference {
+        group {
+            cube {
+                size 1.3  LOCKSLENGTH  6.56
+                position -((LOCKSOUTERDISTANCE - 1.3) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2)
+            }
+            cube {
+                size 2.5  4  6.56
+                position -((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.6)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
+            }
+        }
+
+        cube {
+            size 2.5  8  6.56
+            orientation 0.175
+            position -(((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.0) + 1.9)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
+        }
+    }
+}
+
+define SHAFT {
+    difference {
+        intersection {
+            cylinder {
+                size SHAFTDIAMETER  SHAFTLENGTH
+            }
+
+            cube {
+                size SHAFTWIDTH  SHAFTLENGTH  SHAFTDIAMETER
+            }
+        }
+
+        cylinder {
+            size SHAFTHOLEDIAMETER  SHAFTLENGTH
+        }
+    }
+}
+
+define MC4PROTECTIVECAPFEMALE {
+    union {
+        BASE {
+        }
+
+        CYLINDER {
+            position 0  (BASELENGTH / 2 + CYLINDERLENGTH / 2)
+        }
+
+        SHAFT {
+            position 0  (BASELENGTH / 2 + CYLINDERLENGTH + SHAFTLENGTH / 2)
+        }
+
+        LOCKS {
+        }
+    }
+}
+
+MC4PROTECTIVECAPFEMALE {
+    opacity 0.5
+}
