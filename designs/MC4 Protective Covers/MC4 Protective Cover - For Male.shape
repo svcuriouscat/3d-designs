@@ -6,10 +6,10 @@ detail 320
 rotate 0  0  -0.5  /// CAD mode
 
 /// Base
-define BASELENGTH          10     /// mm
-define BASEHEIGHT          13     /// mm
+define BASELENGTH           5     /// mm
+define BASEHEIGHT          11     /// mm
 define BASEDIAMETER        19     /// mm
-define BASEHOLEDIAMETER     5     /// mm
+define BASEHOLEDIAMETER     3     /// mm
 /// Chamber
 define CHAMBERDIAMETER     BASEDIAMETER
 define HOLEDIAMETER        10     /// mm
@@ -33,7 +33,7 @@ define BASE {
         }
 
         cylinder {
-            size BASEHOLEDIAMETER  BASEHEIGHT
+            size BASEHOLEDIAMETER  BASEDIAMETER
             orientation 0  0  0.5
         }
     }
@@ -67,22 +67,22 @@ define CHAMBER {
 
         /// Side cutouts
         cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEDIAMETER
             position (SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
         }
         cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEDIAMETER
             position -(SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
         }
 
         /// Side cutouts
         cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEDIAMETER
             orientation 0.25
             position (SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
         }
         cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEHEIGHT
+            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEDIAMETER
             orientation -0.25
             position -(SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
         }
@@ -101,4 +101,7 @@ define MC4PROTECTIONFORMALE {
 
 MC4PROTECTIONFORMALE {
     opacity 0.5
+
+    /// Flip vertically
+    orientation  1
 }

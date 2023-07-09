@@ -6,23 +6,27 @@ detail 320
 rotate 0  0  -0.5  /// CAD mode
 
 /// Base
-define BASELENGTH       10     /// mm
-define BASEHEIGHT          13     /// mm
+define BASELENGTH           5     /// mm
+define BASEHEIGHT          11     /// mm
 define BASEDIAMETER        19     /// mm
-define BASEHOLEDIAMETER     5     /// mm
+define BASEHOLEDIAMETER     3     /// mm
 /// Cylinder
 define CYLINDERLENGTH       4     /// mm
 define CYLINDERDIAMETER     9.2   /// mm
 define CYLINDERGROVESIZE    1.5   /// mm
 define CYLINDERGROVEDEPTH   1     /// mm
+/// Locks
+define LOCKSTHICKNESS       1.5   /// mm
+define LOCKSWIDTH           6.65  /// mm
+define LOCKSLENGTH         11     /// mm
+define LOCKSOUTERDISTANCE  15.9   /// mm
+define LOCKSTABLENGTH       3.84  /// mm
+define LOCKTABTHICKNESS     2     /// mm
 /// Shaft
-define SHAFTLENGTH         18     /// mm
+define SHAFTLENGTH         (LOCKSLENGTH - CYLINDERLENGTH)     /// mm
 define SHAFTDIAMETER        8     /// mm
 define SHAFTWIDTH           7     /// mm
 define SHAFTHOLEDIAMETER    5     /// mm
-/// Locks
-define LOCKSLENGTH         11     /// mm
-define LOCKSOUTERDISTANCE  15.9   /// mm
 
 define BASE {
     difference {
@@ -58,48 +62,56 @@ define CYLINDER {
     }
 }
 
-define LOCKS {
+define LOCK {
     difference {
         group {
             cube {
-                size 1.3  LOCKSLENGTH  6.56
-                position ((LOCKSOUTERDISTANCE - 1.3) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2)
+                size LOCKSTHICKNESS  LOCKSLENGTH  LOCKSWIDTH
             }
             cube {
-                size 2.5  4  6.56
-                position ((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.6)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
+                size LOCKTABTHICKNESS  LOCKSTABLENGTH  LOCKSWIDTH
+                position ((LOCKTABTHICKNESS - LOCKSTHICKNESS) / 2)  (LOCKSLENGTH / 2 - LOCKSTABLENGTH / 2)
             }
         }
 
         cube {
-            size 2.5  8  6.56
+            size 2.5  8  LOCKSWIDTH
             orientation -0.175
-            position (((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.0) + 1.9)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
-        }
-    }
-
-    difference {
-        group {
-            cube {
-                size 1.3  LOCKSLENGTH  6.56
-                position -((LOCKSOUTERDISTANCE - 1.3) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2)
-            }
-            cube {
-                size 2.5  4  6.56
-                position -((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.6)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
-            }
-        }
-
-        cube {
-            size 2.5  8  6.56
-            orientation 0.175
-            position -(((LOCKSOUTERDISTANCE - 1.3) / 2 + 0.0) + 1.9)  (LOCKSLENGTH / 2 + BASELENGTH / 2 + LOCKSLENGTH / 2 - 4 / 2)
+            position (1.9)  (LOCKSLENGTH / 2 - 4 / 2)
         }
     }
 }
 
+define LOCKS {
+    LOCK {
+        position ((LOCKSOUTERDISTANCE - 1.6) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2) - 0.025
+        orientation 0.01
+    }
+
+    LOCK {
+        position -((LOCKSOUTERDISTANCE - 1.6) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2) - 0.025
+        orientation -0.01  1
+    }
+
+    /// Visual aid
+    cube {
+        opacity 0.3
+        color 1  0  0
+        size 15.5  LOCKSTHICKNESS  LOCKSWIDTH
+        size 0
+        position 0  (BASELENGTH / 2 + LOCKSTHICKNESS / 2)
+    }
+    cube {
+        opacity 0.3
+        color 1  0  0
+        size 17  LOCKSTHICKNESS  LOCKSWIDTH
+        size 0
+        position 0  (BASELENGTH / 2 + LOCKSTHICKNESS / 2 + LOCKSLENGTH / 1.5)
+    }
+}
+
 define SHAFT {
-    difference {
+    //difference {
         intersection {
             cylinder {
                 size SHAFTDIAMETER  SHAFTLENGTH
@@ -110,10 +122,10 @@ define SHAFT {
             }
         }
 
-        cylinder {
-            size SHAFTHOLEDIAMETER  SHAFTLENGTH
-        }
-    }
+        //cylinder {
+        //    size SHAFTHOLEDIAMETER  SHAFTLENGTH
+        //}
+    //}
 }
 
 define MC4PROTECTIVECAPFEMALE {
@@ -136,4 +148,7 @@ define MC4PROTECTIVECAPFEMALE {
 
 MC4PROTECTIVECAPFEMALE {
     opacity 0.5
+
+    /// Lay on a side
+    // orientation 0.5  0.5
 }
