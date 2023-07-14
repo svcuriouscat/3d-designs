@@ -32,7 +32,7 @@ define COUPLINGDIAMETER                      101.6     /// mm
 define FLOORHATCHWIDTH                       350       /// mm
 define FLOORHATCHLENGTH                      760       /// mm
 /// Rails
-define RAILLENGTH                            614       /// mm (24" + bonus extra length)
+define RAILLENGTH                            610       /// mm (24" + bonus extra length)
 define RAILLEGSIZE                            63.5     /// mm (2-1/2", 2.5")
 define RAILTHICKNESS                           4.7652  /// mm (3/16", 0.1875")
 define RAILANTIVIBRATIONMOUNTSCREWHOLESIZE     9.525   /// mm (3/8")
