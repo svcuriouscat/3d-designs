@@ -5,9 +5,12 @@
 detail 200
 rotate 0  0  -0.5  /// CAD
 
+/// Hose
 define HOSEINTDIAM     14.64     /// mm
-define CAPLEN          (HOSEINTDIAM / 4)  /// mm
-define CAPDIAM         (HOSEINTDIAM * 1.3)
+/// Cap
+define CAPLEN          (HOSEINTDIAM / 2)  /// mm
+define CAPDIAM         (HOSEINTDIAM * 2)
+/// Misc
 define BARBDIAM        16.28    /// mm
 define BARBLEN         5.30     /// mm
 define PLUGSTEMLENGTH  BARBLEN  * 6     /// mm (needs to be long enough for 1–2 clamps)
@@ -26,7 +29,8 @@ define CAP {
     difference {
         cylinder {
             detail 6
-            size CAPDIAM  CAPLEN
+            size CAPDIAM  CAPLEN * 1.5
+            position 0  CAPLEN / 4
         }
 
         extrude {
@@ -38,7 +42,7 @@ define CAP {
                 size (HOSEINTDIAM + (CAPDIAM - HOSEINTDIAM))
             }
 
-            position 0  -(CAPLEN / 2)
+            position 0  -((CAPDIAM - HOSEINTDIAM) / 2 - CAPLEN / 2)
         }
     }
 }
