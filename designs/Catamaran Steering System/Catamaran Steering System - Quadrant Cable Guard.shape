@@ -1,0 +1,33 @@
+// ShapeScript document
+
+/// Catamaran Steering System — Quadrant Cable Guard
+
+detail 99
+rotate 0  0  -0.5  /// CAD mode
+
+define ONEINCHINMM               25.4
+define PI                         3.14159265359
+
+/// Quadrant
+define QUADRANTDIAMETER         400    /// mm
+define QUADRANTTHICKNESS         25
+/// Cable guard
+define CABLEGUARDWIDTH          ONEINCHINMM * 0.75
+
+define QUADRANT {
+    difference {
+        cylinder {
+            size QUADRANTDIAMETER  25
+        }
+    }
+}
+
+define CABLEGUARD {
+    cube {
+        size CABLEGUARDWIDTH  QUADRANTTHICKNESS
+    }
+}
+
+QUADRANT
+CABLEGUARD {
+}

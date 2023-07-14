@@ -1,0 +1,95 @@
+// ShapeScript document
+
+/// Rudder Quadrant Bumper - Port
+
+detail 128
+rotate 0  0  -0.5  /// CAD
+
+define PI                         3.14159265359
+
+/// Quadrant
+define QUADRANTDIAMETER         400    /// mm
+define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI
+define QUADRANTSTOPHEIGHT        30    /// mm
+define QUADRANTSTOPWIDTH         80    /// mm
+define QUADRANTSTOPOUTERLENGTH  375    /// mm
+/// Screw
+define SCREWDIAMETER              9.8  /// mm (3/8")
+
+define FULLCIRCLE {
+    difference {
+        cylinder {
+            size QUADRANTDIAMETER  QUADRANTSTOPHEIGHT
+        }
+
+        cylinder {
+            size (400 - QUADRANTSTOPWIDTH * 2)  QUADRANTSTOPHEIGHT
+        }
+    }
+}
+
+define YOUWILLNEVERBEAFULLCIRCLE {
+    cube {
+        size (QUADRANTDIAMETER)  (QUADRANTSTOPHEIGHT)  (QUADRANTDIAMETER / 2)
+        position  0 0 -(QUADRANTDIAMETER / 4)
+    }
+}
+
+define SCREWHOLE {
+    cylinder {
+        size SCREWDIAMETER  QUADRANTSTOPHEIGHT
+        position 0  0  (QUADRANTDIAMETER / 2 - QUADRANTSTOPWIDTH / 2)
+    }
+}
+
+define CABLEGUARDCUTOUT {
+    cube {
+        size 30  5  45
+        position 0  (-QUADRANTSTOPHEIGHT / 2 + 5 / 2)  (400 / 2 - 45 / 2)
+    }
+}
+
+define WEIGHTCUTOUT {
+    cylinder {
+        size (QUADRANTSTOPWIDTH / 2)  QUADRANTSTOPHEIGHT
+        position 0  0  (QUADRANTDIAMETER / 2 - QUADRANTSTOPWIDTH / 2)
+    }
+}
+
+define BUMPER {
+    difference {
+        FULLCIRCLE
+
+        YOUWILLNEVERBEAFULLCIRCLE {
+            orientation 0  (0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
+        }
+        YOUWILLNEVERBEAFULLCIRCLE {
+            orientation 0 -(0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
+        }
+
+        SCREWHOLE {
+            orientation 0 (0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
+        }
+        SCREWHOLE {
+            orientation 0 -(0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
+        }
+
+        /// Reduce part's weight
+        //WEIGHTCUTOUT {
+        //    orientation 0 0.1
+        //}
+        //WEIGHTCUTOUT {
+        //}
+        //WEIGHTCUTOUT {
+        //    orientation 0 -0.1
+        //}
+
+        CABLEGUARDCUTOUT {
+            orientation 0 (0.5-(QUADRANTSTOPOUTERLENGTH/QUADRANTCIRCUMFERENCE))-0.0333
+        }
+    }
+}
+
+BUMPER {
+    opacity 0.5
+}

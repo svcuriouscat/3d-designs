@@ -1,0 +1,68 @@
+// ShapeScript document
+
+/// Catamaran Steering System — Quadrant Mending Plate
+
+detail 99
+rotate 0  0  -0.5  /// CAD mode
+
+/// Mending plate
+define MENDINGPLATEWIDTH             53.5   /// mm
+define MENDINGPLATETHICKNESS          6     /// mm
+define MENDINGPLATELENGTH            37.5   /// mm
+/// Screw slot
+define SCREWDIAMETER                  6.2   /// mm
+define SCREWCONELENGTH                5     /// mm
+define SCREWHEADDIAMETER             12.2   /// mm
+define SCREWSLOTCONEBORDERTHICKNESS   1     /// mm
+
+define SCREWSLOT {
+    lathe path {
+        point 0  -MENDINGPLATETHICKNESS
+        point (SCREWHEADDIAMETER / 2)  -MENDINGPLATETHICKNESS
+        point (SCREWHEADDIAMETER / 2)  -(MENDINGPLATETHICKNESS - SCREWSLOTCONEBORDERTHICKNESS)
+        point (SCREWDIAMETER / 2)  (SCREWCONELENGTH - MENDINGPLATETHICKNESS)
+        point (SCREWDIAMETER / 2)  0
+        point 0  0
+
+        orientation 1
+        position 0 -(MENDINGPLATETHICKNESS / 2)
+    }
+}
+
+
+define MENDINGPLATE {
+    difference {
+        /// Base
+        cube {
+            size MENDINGPLATEWIDTH  MENDINGPLATETHICKNESS  MENDINGPLATELENGTH
+        }
+
+        /// Round edge on one side
+        difference {
+            cube {
+                size MENDINGPLATEWIDTH  MENDINGPLATETHICKNESS  MENDINGPLATETHICKNESS
+            }
+            cylinder {
+                orientation 0.5
+                size (MENDINGPLATETHICKNESS * 2)  MENDINGPLATEWIDTH
+                position 0  -(MENDINGPLATETHICKNESS / 2)  (MENDINGPLATETHICKNESS / 2)
+            }
+
+            position 0  0  -(MENDINGPLATELENGTH / 2 - MENDINGPLATETHICKNESS / 2)
+        }
+
+        /// Screw slots
+        SCREWSLOT {
+            position 0  0  -10
+        }
+        SCREWSLOT {
+            position -17.5  0  10
+        }
+        SCREWSLOT {
+            position 17.5  0  10
+        }
+    }
+}
+
+MENDINGPLATE {
+}

@@ -1,0 +1,25 @@
+// ShapeScript document
+
+/// Catamaran Rudders — Bearing Bushing
+
+detail 1024
+rotate 0  0  -0.5  /// CAD mode
+
+define LENGTH         100      /// mm
+define DIAMETER       100      /// mm
+define WALLTHICKNESS    9.1    /// mm (the metal bearing on the shaft is 82.2mm in diameter)
+
+define BUSHING {
+    color 200  200  200
+
+    difference {
+        cylinder {
+            size DIAMETER  LENGTH
+        }
+        cylinder {
+            size (DIAMETER - (WALLTHICKNESS * 2))  LENGTH
+        }
+    }   
+}
+
+BUSHING

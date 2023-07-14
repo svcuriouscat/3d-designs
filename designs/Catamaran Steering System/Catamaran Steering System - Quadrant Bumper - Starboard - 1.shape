@@ -1,0 +1,100 @@
+// ShapeScript document
+
+/// Rudder Quadrant Bumper - Starboard 1
+
+detail 128
+rotate 0 0 -0.5 /// CAD
+
+define PI                         3.14159265359
+define QUADRANTDIAMETER         400    /// mm
+define QUADRANTCIRCUMFERENCE      QUADRANTDIAMETER*3.14
+define QUADRANTSTOPHEIGHT        35    /// mm
+define QUADRANTSTOPWIDTH         80    /// mm
+define QUADRANTSTOPOUTERLENGTH  145    /// mm
+define SCREWDIAMETER              8.4  /// mm (5/16")
+
+define FULLCIRCLE {
+    difference {
+        cylinder {
+            size QUADRANTDIAMETER  QUADRANTSTOPHEIGHT
+        }
+
+        cylinder {
+            size 400-QUADRANTSTOPWIDTH*2  QUADRANTSTOPHEIGHT
+        }
+    }
+}
+
+define YOUWILLNEVERBEAFULLCIRCLE {
+    cube {
+        size QUADRANTDIAMETER  QUADRANTSTOPHEIGHT  QUADRANTDIAMETER/2
+        position 0  0  -QUADRANTDIAMETER/4
+    }
+}
+
+define SCREWHOLE1 {
+    union {
+        cylinder {
+            size SCREWDIAMETER  QUADRANTSTOPHEIGHT
+            position 0  0  QUADRANTDIAMETER/2
+        }
+        cylinder {
+            detail 6
+            size 14.5  8
+            orientation 0  0.55
+            position 0  QUADRANTSTOPHEIGHT/2-8/2  QUADRANTDIAMETER/2
+        }
+    }
+}
+
+define SCREWHOLE2 {
+    union {
+        cylinder {
+            size SCREWDIAMETER  QUADRANTSTOPHEIGHT
+            position 0  0  QUADRANTDIAMETER/2
+        }
+        cylinder {
+            detail 6
+            size 14.5  8
+            orientation 0  0.1
+            position 0  QUADRANTSTOPHEIGHT/2-8/2  QUADRANTDIAMETER/2
+        }
+    }
+}
+
+define NUTHOLE {
+    cylinder {
+        size 24  QUADRANTSTOPHEIGHT
+        position 0  0  QUADRANTDIAMETER/2
+    }
+}
+
+define BUMPER {
+    difference {
+        FULLCIRCLE
+
+        YOUWILLNEVERBEAFULLCIRCLE {
+            orientation 0  (0.5-(QUADRANTSTOPOUTERLENGTH/QUADRANTCIRCUMFERENCE))
+        }
+        YOUWILLNEVERBEAFULLCIRCLE {
+            orientation 0  -(0.5-(QUADRANTSTOPOUTERLENGTH/QUADRANTCIRCUMFERENCE))
+        }
+
+        /// Screws
+        SCREWHOLE1 {
+            orientation 0  0+0.050
+            position 0  0  -6-50
+        }
+        SCREWHOLE2 {
+            orientation 0 0-0.045
+            position 0  0  -5-21
+        }
+
+        NUTHOLE {
+            orientation 0 0-0.015
+            position 0  0  0-58
+        }
+    }
+}
+
+BUMPER
