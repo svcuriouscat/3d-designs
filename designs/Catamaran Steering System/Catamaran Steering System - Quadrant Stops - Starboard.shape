@@ -1,0 +1,135 @@
+// ShapeScript document
+
+/// Catamaran Steering System - Quadrant Stops - Starboard
+
+detail 256
+rotate 0  0  -0.5  /// CAD
+
+define PI                         3.14159265359
+/// Quadrant
+define QUADRANTDIAMETER         400    /// mm
+define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI  /// mm
+/// Fastners
+define SCREWDIAMETER              9.8  /// mm (3/8")
+/// Stops
+define STOPHEIGHT                35    /// mm
+define STOPWIDTH                 80    /// mm
+define STOP1RADIALLENGTH        110    /// mm (radial length of first stop)
+define STOP2RADIALLENGTH        145    /// mm (radial length of first stop)
+define STOPSRADIALDISTANCE      265    /// mm (radial distance between two stops)
+define STOPBRACKETTHICKNESS       6    /// mm (aluminum bracket attached to the hull)
+
+// import "scans/quadrant-stbd.stl"
+
+define FULLCIRCLE {
+    difference {
+        cylinder {
+            size QUADRANTDIAMETER  STOPHEIGHT
+        }
+
+        cylinder {
+            size 400-STOPWIDTH*2  STOPHEIGHT
+        }
+    }
+}
+
+define YOUWILLNEVERBEAFULLCIRCLE {
+    cube {
+        size QUADRANTDIAMETER  STOPHEIGHT  QUADRANTDIAMETER/2
+        position 0  0  -QUADRANTDIAMETER/4
+    }
+}
+
+define SCREWHOLE {
+    cylinder {
+        size SCREWDIAMETER  STOPHEIGHT
+        position 0  0  QUADRANTDIAMETER/2
+    }
+}
+
+define NUTHOLE {
+    cylinder {
+        size 24  STOPHEIGHT
+        position 0  0  QUADRANTDIAMETER/2
+    }
+}
+
+define CURVATURE {
+    cylinder {
+        size STOP1RADIALLENGTH  STOPHEIGHT
+        position 0 0 QUADRANTDIAMETER / 2 - STOP1RADIALLENGTH / 2
+    }
+}
+
+define STOP1 {
+    difference {
+        union {
+            difference {
+                FULLCIRCLE
+
+                YOUWILLNEVERBEAFULLCIRCLE {
+                    orientation 0 (0.5 - (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+                }
+                YOUWILLNEVERBEAFULLCIRCLE {
+                    orientation 0 -(0.5 - (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+                }
+            }
+
+            //CURVATURE {
+            //    orientation 0 0.04
+            //}
+        }
+
+        /// Screwholes
+        SCREWHOLE {
+            orientation 0 0+0.05
+            position 10 0 -15
+        }
+        SCREWHOLE {
+            orientation 0 0-0.05
+            position -3 0 -22
+        }
+    }
+}
+
+define STOP2 {
+    difference {
+        FULLCIRCLE {
+        }
+
+        YOUWILLNEVERBEAFULLCIRCLE {
+            orientation 0  (0.5 - (STOP2RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+        }
+        YOUWILLNEVERBEAFULLCIRCLE {
+            orientation 0  -(0.5 - (STOP2RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+        }
+
+        /// Screws
+        SCREWHOLE {
+            orientation 0  0+0.050
+            position 0  0  -6-50
+        }
+        SCREWHOLE {
+            orientation 0 0-0.045
+            position 0  0  -5-21
+        }
+
+        /// Nuts
+        NUTHOLE {
+            orientation 0 0-0.015
+            position 0  0  0-58
+        }
+    }
+}
+
+STOP1 {
+    orientation 0  ((STOPSRADIALDISTANCE + (STOPBRACKETTHICKNESS / 2)) / QUADRANTCIRCUMFERENCE + (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+}
+STOP2 {
+    orientation 0  -((STOPSRADIALDISTANCE + (STOPBRACKETTHICKNESS / 2)) / QUADRANTCIRCUMFERENCE + (STOP2RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+}
+
+////////////////////////
+
+print("Total quadrant circumference: " QUADRANTCIRCUMFERENCE " mm")
+print("Rudder turn angle:" 360 * ((STOPSRADIALDISTANCE + STOPBRACKETTHICKNESS) / QUADRANTCIRCUMFERENCE) " deg")

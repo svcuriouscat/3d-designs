@@ -1,20 +1,21 @@
 // ShapeScript document
 
-/// Rudder Quadrant Bumper - Port
+/// Catamaran Steering System - Quadrant Stops - Port
 
-detail 128
+detail 256
 rotate 0  0  -0.5  /// CAD
 
 define PI                         3.14159265359
-
 /// Quadrant
 define QUADRANTDIAMETER         400    /// mm
 define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI
 define QUADRANTSTOPHEIGHT        30    /// mm
 define QUADRANTSTOPWIDTH         80    /// mm
-define QUADRANTSTOPOUTERLENGTH  375    /// mm
-/// Screw
+define QUADRANTSTOPOUTERLENGTH  380    /// mm (radial)
+/// Screws
 define SCREWDIAMETER              9.8  /// mm (3/8")
+/// Stops
+define STOPDISTANCE             265    /// mm (total radial distance between the bumper's ends and the center of the quadrant)
 
 define FULLCIRCLE {
     difference {
@@ -91,5 +92,11 @@ define BUMPER {
 }
 
 BUMPER {
-    opacity 0.5
+//    opacity 0.5
 }
+
+////////////
+
+print("Total quadrant circumference: " QUADRANTCIRCUMFERENCE " mm")
+print("Rudder turn angle: " 360 * (STOPDISTANCE / QUADRANTCIRCUMFERENCE) " deg")
+print("Rudder turn angle 2: " 360 * (((QUADRANTCIRCUMFERENCE / 2) - QUADRANTSTOPOUTERLENGTH) / QUADRANTCIRCUMFERENCE) " deg")
