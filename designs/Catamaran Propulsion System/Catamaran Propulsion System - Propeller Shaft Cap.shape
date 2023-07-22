@@ -1,0 +1,54 @@
+// ShapeScript document
+
+/// Catamaran Electric Propulsion System — Propeller Shaft Cap
+/// This part is used as a prop for 3D scanning
+
+detail 199
+
+rotate 0  0  -0.5  /// CAD mode
+
+/// Shaft
+define SHAFTDEPTH                50      /// mm (how deep the shaft will go into the coupling)
+/// Shaft key
+define SHAFTDIAMETER             28.575  /// mm (1-1/8")
+define SHAFTKEYWIDTH              6.4    /// mm
+define SHAFTKEYHEIGHT             3      /// mm
+define SHAFTKEYLENGTH            20      /// mm
+/// Coupling (all-metal coupling that came with my E-Tech motor)
+define COUPLINGTOTALLENGTH      142      /// mm
+define COUPLINGMOTORSHAFTDEPTH   50
+define COUPLINGPROPSHAFTDEPTH    85
+define COUPLINGSHAFTSGAP        (COUPLINGTOTALLENGTH - COUPLINGMOTORSHAFTDEPTH - COUPLINGPROPSHAFTDEPTH)  /// mm
+/// Cap
+define CAPLENGTH                (COUPLINGPROPSHAFTDEPTH + COUPLINGSHAFTSGAP)  /// mm
+define CAPWIDTH                  35      /// mm (equal to the diameter of the motor's shaft)
+
+define CAP {
+    difference {
+        /// Base
+        union {
+            cylinder {
+                size CAPWIDTH  CAPLENGTH
+            }
+        }
+
+        /// Shaft + Key
+        union {
+            /// Shaft
+            cylinder {
+                size (SHAFTDIAMETER + 0.3)  SHAFTDEPTH
+                position 0  ((CAPLENGTH - SHAFTDEPTH) / 2)
+            }
+
+            /// Key
+            cube {
+                size 0 // (SHAFTKEYWIDTH + 0.8)  (SHAFTDEPTH)  (SHAFTKEYHEIGHT)
+                position 0  ((CAPLENGTH - SHAFTDEPTH) / 2)  -(SHAFTDIAMETER / 2 + SHAFTKEYHEIGHT / 2 - 0.4)
+            }
+        }
+    }
+}
+
+CAP {
+    opacity 0.5
+}

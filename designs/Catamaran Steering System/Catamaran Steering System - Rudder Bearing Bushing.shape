@@ -1,30 +1,119 @@
 // ShapeScript document
 
 /// Catamaran Steering System — Rudder Bearing Bushing
+/// Originally made out of PTFE or acetal (or something similar)
 
 detail 1024
 rotate 0  0  -0.5  /// CAD mode
 
 /// Hull
-define HULLSOCKETDIAMETER     101.0    /// mm
+define HULLSOCKETDIAMETER     102.2    /// mm
 /// Rudder
 define RUDDERBEARINGDIAMETER   82.2    /// mm
 /// Bushing
 define BUSHINGLENGTH          100      /// mm
-define BUSHINGDIAMETER        HULLSOCKETDIAMETER      /// mm
-define BUSHINGINNERDIAMETER   RUDDERBEARINGDIAMETER + 0.8    /// mm
+define BUSHINGDIAMETER        (HULLSOCKETDIAMETER)  /// mm
+define BUSHINGINNERDIAMETER   (RUDDERBEARINGDIAMETER + 0.8)  /// mm
+define BUSHINGCORNERRADIUS      1      /// mm
 
 define BUSHING {
     color 200  200  200
 
     difference {
+        /// Base
         cylinder {
             size BUSHINGDIAMETER  BUSHINGLENGTH
         }
+    
+        /// Inner
         cylinder {
             size BUSHINGINNERDIAMETER  BUSHINGLENGTH
         }
-    }   
+    }
+}
+
+define BUSHINGROUNDED {
+    color 200  200  200
+    
+    union {
+        /// Base
+        difference {
+            union {
+                difference {
+                    cylinder {
+                        size BUSHINGDIAMETER  BUSHINGLENGTH - BUSHINGCORNERRADIUS
+                    }
+
+                    cylinder {
+                        size BUSHINGINNERDIAMETER  BUSHINGLENGTH
+                    }
+                }
+
+                difference {
+                    cylinder {
+                        size BUSHINGDIAMETER - BUSHINGCORNERRADIUS  BUSHINGLENGTH
+                    }
+
+                    cylinder {
+                        size BUSHINGINNERDIAMETER + BUSHINGCORNERRADIUS  BUSHINGLENGTH
+                    }
+                }
+            }
+        }
+
+        /// Top outer
+        union {
+            extrude {
+                circle {
+                    size BUSHINGCORNERRADIUS
+                }
+                along circle {
+                    orientation 0  0  0.5
+                    position 0  BUSHINGLENGTH / 2 - BUSHINGCORNERRADIUS / 2
+                    size BUSHINGDIAMETER - BUSHINGCORNERRADIUS
+                }
+            }
+        }
+        /// Top inner
+        union {
+            extrude {
+                circle {
+                    size BUSHINGCORNERRADIUS
+                }
+                along circle {
+                    orientation 0  0  0.5
+                    position 0  BUSHINGLENGTH / 2 - BUSHINGCORNERRADIUS / 2
+                    size BUSHINGINNERDIAMETER + BUSHINGCORNERRADIUS
+                }
+            }
+        }
+        /// Bottom outer
+        union {
+            extrude {
+                circle {
+                    size BUSHINGCORNERRADIUS
+                }
+                along circle {
+                    orientation 0  0  0.5
+                    position 0  -(BUSHINGLENGTH / 2 - BUSHINGCORNERRADIUS / 2)
+                    size BUSHINGDIAMETER - BUSHINGCORNERRADIUS
+                }
+            }
+        }
+        /// Bottom inner
+        union {
+            extrude {
+                circle {
+                    size BUSHINGCORNERRADIUS
+                }
+                along circle {
+                    orientation 0  0  0.5
+                    position 0  -(BUSHINGLENGTH / 2 - BUSHINGCORNERRADIUS / 2)
+                    size BUSHINGINNERDIAMETER + BUSHINGCORNERRADIUS
+                }
+            }
+        }
+    }
 }
 
 BUSHING {

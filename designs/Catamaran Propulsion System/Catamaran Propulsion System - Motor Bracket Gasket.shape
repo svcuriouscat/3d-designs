@@ -1,0 +1,61 @@
+// ShapeScript document
+
+/// Catamaran Electric Propulsion System - Motor Bracket Gasket
+/// Intended to protect paint on the motor's aluminum housing
+/// Originally designed for E-Tech 10WG
+
+detail 100
+rotate 0  0  -0.5  /// CAD mode
+
+/// Motor
+define MOTORBODYDIAMETER  206.5    /// mm
+/// Bracket
+define BRACKETWIDTH        38    /// mm
+define BRACKETDISTANCE     117    /// mm
+/// Fasteners
+define SCREWHOLEDIAMETER   10    /// mm
+/// Gasket
+define GASKETWIDTH          0.4  /// mm
+
+define GASKET {
+    intersection {
+        /// Motor
+        difference {
+            cylinder {
+                color 0  0  1
+                opacity 0.25
+                size MOTORBODYDIAMETER  GASKETWIDTH
+            }
+
+            /// Screw holes
+            union {
+                cylinder {
+                    size SCREWHOLEDIAMETER  GASKETWIDTH
+                    position ((BRACKETDISTANCE + BRACKETWIDTH) / 2)-4  0  -40.5
+                }
+                    cylinder {
+                        size SCREWHOLEDIAMETER  GASKETWIDTH
+                        position ((BRACKETDISTANCE + BRACKETWIDTH) / 2)+4  0  -21
+                    }
+                    cylinder {
+                        size SCREWHOLEDIAMETER  GASKETWIDTH
+                        position ((BRACKETDISTANCE + BRACKETWIDTH) / 2)+4  0  21
+                    }
+                cylinder {
+                    size SCREWHOLEDIAMETER  GASKETWIDTH
+                    position ((BRACKETDISTANCE + BRACKETWIDTH) / 2)-4  0  40.5
+                }
+            }
+        }
+
+        /// Bracket
+        cube {
+            opacity 0.25
+            size BRACKETWIDTH  GASKETWIDTH  MOTORBODYDIAMETER
+            position ((BRACKETDISTANCE + BRACKETWIDTH) / 2)
+        }
+    }
+}
+
+GASKET {
+}

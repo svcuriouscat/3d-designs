@@ -2,24 +2,29 @@
 
 /// Catamaran Steering System - Quadrant Stops - Starboard
 
-detail 256
-rotate 0  0  -0.5  /// CAD
+detail 255
+rotate 0  0  -0.5  /// CAD mode
 
 define PI                         3.14159265359
+/// Rudder
+define RUDDERTURNANGLE           75    /// degrees
 /// Quadrant
 define QUADRANTDIAMETER         400    /// mm
 define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI  /// mm
-/// Fastners
-define SCREWDIAMETER              9.8  /// mm (3/8")
+/// Fasteners
+define SCREWDIAMETER              9.45  /// mm (3/8")
 /// Stops
 define STOPHEIGHT                35    /// mm
 define STOPWIDTH                 80    /// mm
-define STOP1RADIALLENGTH        110    /// mm (radial length of first stop)
-define STOP2RADIALLENGTH        145    /// mm (radial length of first stop)
-define STOPSRADIALDISTANCE      265    /// mm (radial distance between two stops)
-define STOPBRACKETTHICKNESS       6    /// mm (aluminum bracket attached to the hull)
+define STOP1RADIALLENGTH        125    /// mm (radial length of first stop)
+define STOP2RADIALLENGTH        125    /// mm (radial length of first stop)
+define STOPSRADIALDISTANCE      QUADRANTCIRCUMFERENCE * (RUDDERTURNANGLE / 360)  /// mm (radial distance between two stops)
+/// Middle stopper
+define MIDDLESTOPPERTHICKNESS     8    /// mm (thickness of aluminum L-bracket attached to the hull)
 
-// import "scans/quadrant-stbd.stl"
+define SCAN {
+    import "scans/quadrant-stbd.stl"
+}
 
 define FULLCIRCLE {
     difference {
@@ -28,66 +33,61 @@ define FULLCIRCLE {
         }
 
         cylinder {
-            size 400-STOPWIDTH*2  STOPHEIGHT
+            size (QUADRANTDIAMETER - STOPWIDTH * 2)  STOPHEIGHT
         }
     }
 }
 
 define YOUWILLNEVERBEAFULLCIRCLE {
     cube {
-        size QUADRANTDIAMETER  STOPHEIGHT  QUADRANTDIAMETER/2
-        position 0  0  -QUADRANTDIAMETER/4
+        size (QUADRANTDIAMETER)  (STOPHEIGHT)  (QUADRANTDIAMETER / 2)
+        position 0  0  -(QUADRANTDIAMETER / 4)
     }
 }
 
 define SCREWHOLE {
     cylinder {
-        size SCREWDIAMETER  STOPHEIGHT
-        position 0  0  QUADRANTDIAMETER/2
+        color 100  0  0
+        size (SCREWDIAMETER + 0.6)  (STOPHEIGHT)
+        position 0  0  (QUADRANTDIAMETER / 2)
     }
 }
 
 define NUTHOLE {
     cylinder {
-        size 24  STOPHEIGHT
-        position 0  0  QUADRANTDIAMETER/2
+        color 100  0  0
+        size 25.4  (STOPHEIGHT)
+        position 0  0  (QUADRANTDIAMETER / 2)
     }
 }
 
 define CURVATURE {
     cylinder {
-        size STOP1RADIALLENGTH  STOPHEIGHT
-        position 0 0 QUADRANTDIAMETER / 2 - STOP1RADIALLENGTH / 2
+        size (STOPWIDTH)  STOPHEIGHT
+        position (QUADRANTDIAMETER / 2 - STOPWIDTH / 2)
     }
 }
 
 define STOP1 {
-    difference {
-        union {
-            difference {
-                FULLCIRCLE
+    union {
+        difference {
+            FULLCIRCLE
 
-                YOUWILLNEVERBEAFULLCIRCLE {
-                    orientation 0 (0.5 - (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
-                }
-                YOUWILLNEVERBEAFULLCIRCLE {
-                    orientation 0 -(0.5 - (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
-                }
+            YOUWILLNEVERBEAFULLCIRCLE {
+                orientation 0  (0.5 - (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+            }
+            YOUWILLNEVERBEAFULLCIRCLE {
+                orientation 0  -(0.5 - (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
             }
 
-            //CURVATURE {
-            //    orientation 0 0.04
-            //}
+            /// Cut off a little bit more for the curvature
+            YOUWILLNEVERBEAFULLCIRCLE {
+                orientation 0  -0.5
+            }
         }
 
-        /// Screwholes
-        SCREWHOLE {
-            orientation 0 0+0.05
-            position 10 0 -15
-        }
-        SCREWHOLE {
-            orientation 0 0-0.05
-            position -3 0 -22
+        CURVATURE {
+            orientation 0  0.5
         }
     }
 }
@@ -103,33 +103,66 @@ define STOP2 {
         YOUWILLNEVERBEAFULLCIRCLE {
             orientation 0  -(0.5 - (STOP2RADIALLENGTH / QUADRANTCIRCUMFERENCE))
         }
-
-        /// Screws
-        SCREWHOLE {
-            orientation 0  0+0.050
-            position 0  0  -6-50
-        }
-        SCREWHOLE {
-            orientation 0 0-0.045
-            position 0  0  -5-21
-        }
-
-        /// Nuts
-        NUTHOLE {
-            orientation 0 0-0.015
-            position 0  0  0-58
-        }
     }
 }
 
-STOP1 {
-    orientation 0  ((STOPSRADIALDISTANCE + (STOPBRACKETTHICKNESS / 2)) / QUADRANTCIRCUMFERENCE + (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
-}
-STOP2 {
-    orientation 0  -((STOPSRADIALDISTANCE + (STOPBRACKETTHICKNESS / 2)) / QUADRANTCIRCUMFERENCE + (STOP2RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+/// Stop 1
+difference {
+    STOP1 {
+        // size 0
+        color 0  1  0
+        opacity 0.75
+        orientation 0  ((STOPSRADIALDISTANCE + (MIDDLESTOPPERTHICKNESS / 2)) / QUADRANTCIRCUMFERENCE + (STOP1RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+    }
+
+    /// Screwholes
+    SCREWHOLE {
+        position -145.75 0 -131.5
+    }
+    SCREWHOLE {
+        position -124.5 0 -76
+    }
 }
 
-////////////////////////
+/// Stop 2
+difference {
+    STOP2 {
+        // size 0
+        color 0  1  0
+        opacity 0.75
+        orientation 0  -((STOPSRADIALDISTANCE + (MIDDLESTOPPERTHICKNESS / 2)) / QUADRANTCIRCUMFERENCE + (STOP2RADIALLENGTH / QUADRANTCIRCUMFERENCE))
+    }
+
+    /// Screws
+    SCREWHOLE {
+        position 105.5  0  -95
+    }
+    SCREWHOLE {
+        position 163.75  0  -133.25
+    }
+
+    /// Nuts
+    NUTHOLE {
+        position 127.5  0  -134.5
+    }
+}
+
+/// Quadrant's scan
+SCAN {
+    opacity 0.5
+    size 0
+    orientation 0  0  -0.5
+}
+/// Reference for aligning the scan
+cube {
+    color 0  1  1
+    opacity 0.5
+    size 0 // 52  104
+}
+
+//////////////////////////////////////////////////////////////////////////////
 
 print("Total quadrant circumference: " QUADRANTCIRCUMFERENCE " mm")
-print("Rudder turn angle:" 360 * ((STOPSRADIALDISTANCE + STOPBRACKETTHICKNESS) / QUADRANTCIRCUMFERENCE) " deg")
+print("Rudder turn angle: " 360 * (STOPSRADIALDISTANCE / QUADRANTCIRCUMFERENCE) " deg")
+print("Middle stopper thickness: " MIDDLESTOPPERTHICKNESS " mm")
+print("Radial distance between two stops: " (STOPSRADIALDISTANCE + MIDDLESTOPPERTHICKNESS) " mm")

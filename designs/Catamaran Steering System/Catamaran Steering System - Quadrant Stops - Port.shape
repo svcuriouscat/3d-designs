@@ -6,97 +6,134 @@ detail 256
 rotate 0  0  -0.5  /// CAD
 
 define PI                         3.14159265359
+/// Rudder
+define RUDDERTURNANGLE           75    /// degrees
 /// Quadrant
 define QUADRANTDIAMETER         400    /// mm
 define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI
-define QUADRANTSTOPHEIGHT        30    /// mm
-define QUADRANTSTOPWIDTH         80    /// mm
-define QUADRANTSTOPOUTERLENGTH  380    /// mm (radial)
-/// Screws
+/// Fasteners
 define SCREWDIAMETER              9.8  /// mm (3/8")
 /// Stops
-define STOPDISTANCE             265    /// mm (total radial distance between the bumper's ends and the center of the quadrant)
+define STOPHEIGHT        30    /// mm
+define STOPWIDTH         80    /// mm
+define STOPRADIALLENGTH  (QUADRANTCIRCUMFERENCE / 2 - (QUADRANTCIRCUMFERENCE * (75 / 360)))  /// mm
+/// Cable guard
+define CABLEGUARDHEIGHTTHICKNESS     8
+define CABLEGUARDWIDTH              20
+define CABLEGUARDLENGTH             40
+
+define SCAN {
+    import "scans/quadrant-port.stl"
+}
 
 define FULLCIRCLE {
     difference {
         cylinder {
-            size QUADRANTDIAMETER  QUADRANTSTOPHEIGHT
+            size QUADRANTDIAMETER  STOPHEIGHT
         }
 
         cylinder {
-            size (400 - QUADRANTSTOPWIDTH * 2)  QUADRANTSTOPHEIGHT
+            size (QUADRANTDIAMETER - STOPWIDTH * 2)  STOPHEIGHT
         }
     }
 }
 
 define YOUWILLNEVERBEAFULLCIRCLE {
     cube {
-        size (QUADRANTDIAMETER)  (QUADRANTSTOPHEIGHT)  (QUADRANTDIAMETER / 2)
-        position  0 0 -(QUADRANTDIAMETER / 4)
+        size (QUADRANTDIAMETER)  (STOPHEIGHT)  (QUADRANTDIAMETER / 2)
+        position 0  0  -(QUADRANTDIAMETER / 4)
     }
 }
 
 define SCREWHOLE {
     cylinder {
-        size SCREWDIAMETER  QUADRANTSTOPHEIGHT
-        position 0  0  (QUADRANTDIAMETER / 2 - QUADRANTSTOPWIDTH / 2)
+        color 100  0  0
+        size (SCREWDIAMETER + 0.6)  (STOPHEIGHT)
+        position 0  0  (QUADRANTDIAMETER / 2)
     }
 }
 
 define CABLEGUARDCUTOUT {
-    cube {
-        size 30  5  45
-        position 0  (-QUADRANTSTOPHEIGHT / 2 + 5 / 2)  (400 / 2 - 45 / 2)
+    union {
+        position 0  (-STOPHEIGHT / 2 + CABLEGUARDHEIGHTTHICKNESS / 2)  (400 / 2 - CABLEGUARDLENGTH / 2)
+
+        cube {
+            size CABLEGUARDWIDTH  CABLEGUARDHEIGHTTHICKNESS  CABLEGUARDLENGTH
+        }
+
+        cylinder {
+            size CABLEGUARDWIDTH  (STOPHEIGHT * 2)
+            position 0  0  -(CABLEGUARDLENGTH / 2 - CABLEGUARDWIDTH / 2 - 4)
+        }
     }
 }
 
 define WEIGHTCUTOUT {
     cylinder {
-        size (QUADRANTSTOPWIDTH / 2)  QUADRANTSTOPHEIGHT
-        position 0  0  (QUADRANTDIAMETER / 2 - QUADRANTSTOPWIDTH / 2)
+        size (STOPWIDTH / 2)  STOPHEIGHT
+        position 0  0  (QUADRANTDIAMETER / 2 - STOPWIDTH / 2)
     }
 }
 
-define BUMPER {
+define STOP {
     difference {
         FULLCIRCLE
 
         YOUWILLNEVERBEAFULLCIRCLE {
-            orientation 0  (0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
+            orientation 0  (0.5 - (STOPRADIALLENGTH / QUADRANTCIRCUMFERENCE))
         }
         YOUWILLNEVERBEAFULLCIRCLE {
-            orientation 0 -(0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
-        }
-
-        SCREWHOLE {
-            orientation 0 (0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
-        }
-        SCREWHOLE {
-            orientation 0 -(0.5 - (QUADRANTSTOPOUTERLENGTH / QUADRANTCIRCUMFERENCE))
+            orientation 0  -(0.5 - (STOPRADIALLENGTH / QUADRANTCIRCUMFERENCE))
         }
 
         /// Reduce part's weight
         //WEIGHTCUTOUT {
-        //    orientation 0 0.1
+        //    orientation 0  0.1
         //}
         //WEIGHTCUTOUT {
         //}
         //WEIGHTCUTOUT {
-        //    orientation 0 -0.1
+        //    orientation 0  -0.1
         //}
-
-        CABLEGUARDCUTOUT {
-            orientation 0 (0.5-(QUADRANTSTOPOUTERLENGTH/QUADRANTCIRCUMFERENCE))-0.0333
-        }
     }
 }
 
-BUMPER {
-//    opacity 0.5
+/// Stop
+difference {
+    STOP {
+        color 1  0  0
+        opacity 0.75
+    }
+
+    /// Screws
+    SCREWHOLE {
+        position -91.5  0  -64
+    }
+    SCREWHOLE {
+        position 89  0  -63
+    }
+
+    CABLEGUARDCUTOUT {
+        orientation 0  (0.5 - (STOPRADIALLENGTH / QUADRANTCIRCUMFERENCE))-0.0475
+    }
 }
 
-////////////
+/// Quadrant's scan
+SCAN {
+    opacity 0.5
+    orientation 0  0  -0.5
+    position 0  -10
+    size 0
+}
+/// Reference for aligning the scan
+cube {
+    color 0  1  1
+    opacity 0.5
+    size 0 // 52  104
+}
+
+//////////////////////////////////////////////////////////////////////////////
 
 print("Total quadrant circumference: " QUADRANTCIRCUMFERENCE " mm")
-print("Rudder turn angle: " 360 * (STOPDISTANCE / QUADRANTCIRCUMFERENCE) " deg")
-print("Rudder turn angle 2: " 360 * (((QUADRANTCIRCUMFERENCE / 2) - QUADRANTSTOPOUTERLENGTH) / QUADRANTCIRCUMFERENCE) " deg")
+print("Rudder turn angle: " 360 * (((QUADRANTCIRCUMFERENCE / 2) - STOPRADIALLENGTH) / QUADRANTCIRCUMFERENCE) " deg")
+print("Radial length of the stop: " (STOPRADIALLENGTH) " mm")
