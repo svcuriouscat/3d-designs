@@ -5,22 +5,22 @@
 detail 256
 rotate 0  0  -0.5  /// CAD
 
-define PI                         3.14159265359
+define PI                           3.14159265359
 /// Rudder
-define RUDDERTURNANGLE           75    /// degrees
+define RUDDERTURNANGLE             75      /// degrees
 /// Quadrant
-define QUADRANTDIAMETER         400    /// mm
-define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI
+define QUADRANTDIAMETER           400      /// mm
+define QUADRANTCIRCUMFERENCE       (QUADRANTDIAMETER * PI)
 /// Fasteners
-define SCREWDIAMETER              9.8  /// mm (3/8")
+define SCREWDIAMETER                9.525  /// mm (3/8")
 /// Stops
-define STOPHEIGHT        30    /// mm
-define STOPWIDTH         80    /// mm
-define STOPRADIALLENGTH  (QUADRANTCIRCUMFERENCE / 2 - (QUADRANTCIRCUMFERENCE * (75 / 360)))  /// mm
+define STOPHEIGHT                  30      /// mm
+define STOPWIDTH                   80      /// mm
+define STOPRADIALLENGTH            (QUADRANTCIRCUMFERENCE / 2 - (QUADRANTCIRCUMFERENCE * (75 / 360)))  /// mm
 /// Cable guard
-define CABLEGUARDHEIGHTTHICKNESS     8
-define CABLEGUARDWIDTH              20
-define CABLEGUARDLENGTH             40
+define CABLEGUARDHEIGHTTHICKNESS    8
+define CABLEGUARDWIDTH             20
+define CABLEGUARDLENGTH            40
 
 define SCAN {
     import "scans/quadrant-port.stl"
@@ -48,7 +48,7 @@ define YOUWILLNEVERBEAFULLCIRCLE {
 define SCREWHOLE {
     cylinder {
         color 100  0  0
-        size (SCREWDIAMETER + 0.6)  (STOPHEIGHT)
+        size (SCREWDIAMETER + 0.4)  (STOPHEIGHT)
         position 0  0  (QUADRANTDIAMETER / 2)
     }
 }

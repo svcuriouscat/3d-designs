@@ -53,16 +53,17 @@ define MENDINGPLATE {
 
         /// Screw slots
         SCREWSLOT {
-            position 0  0  (MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 25
+            position 0  0  ((MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 25)
         }
         SCREWSLOT {
-            position -15  0  (MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 6
+            position -15  0  ((MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 6)
         }
         SCREWSLOT {
-            position 15  0  (MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 6
+            position 15  0  ((MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 6)
         }
     }
 }
 
 MENDINGPLATE {
+    opacity 0.75
 }

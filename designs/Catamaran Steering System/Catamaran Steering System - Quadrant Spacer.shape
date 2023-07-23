@@ -1,15 +1,18 @@
 // ShapeScript document
 
-/// Catamaran Rudders — Quadrant Spacer
-/// These isolate the quadrant from any friction against the hull or the rudder's top bushing.
-/// Likely made out PTFE.  Needs to be something that has little friction on the surface.
+/// Catamaran Steering System — Quadrant Spacer
+/// This spacer isolates the quadrant from any friction against the hull or the rudder's top bushing.
+/// Originally made out PTFE.  Needs to be rigid, with little surface friction.
 
 detail 2048
 rotate 0 0 -0.5  /// CAD mode
 
+define INCHINMM              25.4
+/// Rudder
+define RUDDERPOSTSHAFTSIZE   50     /// mm
+/// Spacer
 define SPACERDIAMETER       100     /// mm  (bushing's radius)
-define SPACERTHICKNESS        0.25 * 25.4  /// mm  (1/4" thick on port, 3mm more on starboard)
-define RUDDERPOSTSHAFTSIZE   50.5   /// mm  (extra 0.5mm just because things shrink)
+define SPACERTHICKNESS      (0.25 * INCHINMM)  /// mm (1/4" thick on port, 3mm extra on starboard)
 
 define SPACER {
     difference {
@@ -17,9 +20,10 @@ define SPACER {
             size SPACERDIAMETER  SPACERTHICKNESS
         }
         cube {
-            size RUDDERPOSTSHAFTSIZE  SPACERTHICKNESS
+            size (RUDDERPOSTSHAFTSIZE + 0.4)  SPACERTHICKNESS
         }
     }
 }
 
-SPACER
+SPACER {
+}

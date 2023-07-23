@@ -1,0 +1,41 @@
+// ShapeScript document
+
+/// Catamaran Steering System — Quadrant Mending Plate Gasket
+/// Separates quadrant's surface from metal, to avoid scratches and dents.
+
+detail 256
+rotate 0  0  -0.5  /// CAD mode
+
+/// Mending plate
+define MENDINGPLATEWIDTH             52     /// mm
+define MENDINGPLATELENGTH            40     /// mm
+/// Screw slot
+define SCREWDIAMETER                  6.15  /// mm
+/// Gasket
+define GASKETTHICKNESS                0.2   /// mm
+
+define MENDINGPLATEGASKET {
+    difference {
+        /// Base
+        cube {
+            size MENDINGPLATEWIDTH  GASKETTHICKNESS  MENDINGPLATELENGTH
+        }
+
+        /// Screw slots
+        cylinder {
+            size SCREWDIAMETER  GASKETTHICKNESS
+            position 0  0  ((MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 25)
+        }
+        cylinder {
+            size SCREWDIAMETER  GASKETTHICKNESS
+            position -15  0  ((MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 6)
+        }
+        cylinder {
+            size SCREWDIAMETER  GASKETTHICKNESS
+            position 15  0  ((MENDINGPLATELENGTH / 2 - SCREWDIAMETER / 2) - 6)
+        }
+    }
+}
+
+MENDINGPLATEGASKET {
+}

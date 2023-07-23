@@ -7,17 +7,17 @@ rotate 0  0  -0.5  /// CAD mode
 
 define PI                         3.14159265359
 /// Rudder
-define RUDDERTURNANGLE           75    /// degrees
+define RUDDERTURNANGLE           75      /// degrees
 /// Quadrant
-define QUADRANTDIAMETER         400    /// mm
+define QUADRANTDIAMETER         400      /// mm
 define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI  /// mm
 /// Fasteners
-define SCREWDIAMETER              9.45  /// mm (3/8")
+define SCREWDIAMETER              9.525  /// mm (3/8")
 /// Stops
-define STOPHEIGHT                35    /// mm
-define STOPWIDTH                 80    /// mm
-define STOP1RADIALLENGTH        125    /// mm (radial length of first stop)
-define STOP2RADIALLENGTH        125    /// mm (radial length of first stop)
+define STOPHEIGHT                35      /// mm
+define STOPWIDTH                 80      /// mm
+define STOP1RADIALLENGTH        125      /// mm (radial length of first stop)
+define STOP2RADIALLENGTH        125      /// mm (radial length of first stop)
 define STOPSRADIALDISTANCE      QUADRANTCIRCUMFERENCE * (RUDDERTURNANGLE / 360)  /// mm (radial distance between two stops)
 /// Middle stopper
 define MIDDLESTOPPERTHICKNESS     8    /// mm (thickness of aluminum L-bracket attached to the hull)
@@ -48,7 +48,7 @@ define YOUWILLNEVERBEAFULLCIRCLE {
 define SCREWHOLE {
     cylinder {
         color 100  0  0
-        size (SCREWDIAMETER + 0.6)  (STOPHEIGHT)
+        size (SCREWDIAMETER + 0.4)  (STOPHEIGHT)
         position 0  0  (QUADRANTDIAMETER / 2)
     }
 }

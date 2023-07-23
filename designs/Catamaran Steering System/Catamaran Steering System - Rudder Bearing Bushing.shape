@@ -1,7 +1,7 @@
 // ShapeScript document
 
 /// Catamaran Steering System — Rudder Bearing Bushing
-/// Originally made out of PTFE or acetal (or something similar)
+/// Originally made out of acetal
 
 detail 1024
 rotate 0  0  -0.5  /// CAD mode
@@ -11,7 +11,7 @@ define HULLSOCKETDIAMETER     102.2    /// mm
 /// Rudder
 define RUDDERBEARINGDIAMETER   82.2    /// mm
 /// Bushing
-define BUSHINGLENGTH          100      /// mm
+define BUSHINGLENGTH          101      /// mm
 define BUSHINGDIAMETER        (HULLSOCKETDIAMETER)  /// mm
 define BUSHINGINNERDIAMETER   (RUDDERBEARINGDIAMETER + 0.8)  /// mm
 define BUSHINGCORNERRADIUS      1      /// mm
