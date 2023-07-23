@@ -1,15 +1,13 @@
 // ShapeScript document
 
-/// Dielectric Washer — M6
+/// Dielectric Washer — M6 (6mm)
 
 detail 512
 rotate 0  0  -0.5  /// CAD
 
-define THICKNESS        0.2   /// mm
-
-/// M6
-define DIAMETER_OUTER  10     /// mm
-define DIAMETER_INNER   6     /// mm
+define DIAMETER_OUTER  10       /// mm
+define DIAMETER_INNER   6       /// mm
+define THICKNESS        0.2     /// mm
 
 define WASHER {
     difference {
@@ -18,7 +16,7 @@ define WASHER {
         }
 
         cylinder {
-            size DIAMETER_INNER THICKNESS
+            size (DIAMETER_INNER + 0.4)  THICKNESS
         }
     }
 }
