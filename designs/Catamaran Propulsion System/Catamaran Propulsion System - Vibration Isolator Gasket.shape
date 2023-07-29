@@ -1,0 +1,164 @@
+// ShapeScript document
+
+/// Catamaran Propulsion System - Vibration Isolator Gasket
+/// Protects the surface and minimizes galvanic corrossion
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 64
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// Anti-vibration mount gasket
+define ANTIVIBRATIONMOUNTBASEPLATELENGTH     120.75    /// mm
+define ANTIVIBRATIONMOUNTBASEPLATEWIDTH       60.5     /// mm
+define ANTIVIBRATIONMOUNTBASEPLATETHICKNESS    3       /// mm
+define ANTIVIBRATIONMOUNTSCREWHOLEWIDTH       13.85    /// mm
+define ANTIVIBRATIONMOUNTSCREWHOLELENGTH      11       /// mm
+define ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE   100       /// mm
+define ANTIVIBRATIONMOUNTCUTOUTWIDTH          48       /// mm
+define ANTIVIBRATIONMOUNTCUTOUTLENGTH         56       /// mm
+define ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS   10       /// mm
+/// Anti-vibration mount gasket
+define ANTIVIBRATIONMOUNTGASKETTHICKNESS       0.4     /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define SCREWHOLE {
+    cylinder {
+        size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+        orientation 0  0.5
+        position ((ANTIVIBRATIONMOUNTSCREWHOLEWIDTH - ANTIVIBRATIONMOUNTSCREWHOLELENGTH) / 2)
+    }
+    cube {
+        size (ANTIVIBRATIONMOUNTSCREWHOLEWIDTH - ANTIVIBRATIONMOUNTSCREWHOLELENGTH)  (ANTIVIBRATIONMOUNTBASEPLATETHICKNESS)  (ANTIVIBRATIONMOUNTSCREWHOLELENGTH)
+    }
+    cylinder {
+        size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+        orientation 0  0.5
+        position -((ANTIVIBRATIONMOUNTSCREWHOLEWIDTH - ANTIVIBRATIONMOUNTSCREWHOLELENGTH) / 2)
+    }
+}
+
+define CUTOUT {
+    union {
+        cube {
+            size (ANTIVIBRATIONMOUNTCUTOUTWIDTH - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (ANTIVIBRATIONMOUNTCUTOUTLENGTH)
+        }
+        cube {
+            size (ANTIVIBRATIONMOUNTCUTOUTWIDTH)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (ANTIVIBRATIONMOUNTCUTOUTLENGTH - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)
+        }
+        cylinder {
+            orientation 0  0.5
+            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
+            position (ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  (ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+        }
+        cylinder {
+            orientation 0  0.5
+            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
+            position -(ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  (ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+        }
+        cylinder {
+            orientation 0  0.5
+            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
+            position (ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  -(ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+        }
+        cylinder {
+            orientation 0  0.5
+            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
+            position -(ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  -(ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+        }
+    }
+}
+
+define ANTIVIBRATIONMOUNTGASKET {
+    union {
+        difference {
+            union {
+                cube {
+                    size ANTIVIBRATIONMOUNTBASEPLATEWIDTH  ANTIVIBRATIONMOUNTGASKETTHICKNESS  ANTIVIBRATIONMOUNTBASEPLATELENGTH - (ANTIVIBRATIONMOUNTBASEPLATELENGTH - 58)
+                }
+
+                cylinder {
+                    color 1  0  0
+                    orientation 0  0.5
+                    size 30  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+                    position 0  0  (ANTIVIBRATIONMOUNTBASEPLATELENGTH / 2 - 30 / 2)
+                }
+                cylinder {
+                    color 1  0  1
+                    orientation 0  0.5
+                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+                    position (ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  56/2
+                }
+                cylinder {
+                    color 1  0  1
+                    orientation 0  0.5
+                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+                    position -(ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  56/2
+                }
+                cube {
+                    color 1  2  0
+                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
+                    orientation 0  (0.73)
+                    position 11.5  0  39
+                }
+                cube {
+                    color 1  2  0
+                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
+                    orientation 0  -(0.73)
+                    position -11.5  0  39
+                }
+
+                cylinder {
+                    color 1  0  0
+                    orientation 0  0.5
+                    size 30  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+                    position 0  0  -(ANTIVIBRATIONMOUNTBASEPLATELENGTH / 2 - 30 / 2)
+                }
+                cylinder {
+                    color 1  0  1
+                    orientation 0  0.5
+                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+                    position (ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  -56/2
+                }
+                cylinder {
+                    color 1  0  1
+                    orientation 0  0.5
+                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
+                    position -(ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  -56/2
+                }
+                cube {
+                    color 1  2  0
+                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
+                    orientation 0  -(0.73)
+                    position 11.5  0  -39
+                }
+                cube {
+                    color 1  2  0
+                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
+                    orientation 0  (0.73)
+                    position -11.5  0  -39
+                }
+            }
+
+            /// Screw holes
+            SCREWHOLE {
+                position 0  0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+            }
+            SCREWHOLE {
+                position 0  0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+            }
+
+            // Square cutout in the middle
+            CUTOUT {
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+ANTIVIBRATIONMOUNTGASKET {
+}
