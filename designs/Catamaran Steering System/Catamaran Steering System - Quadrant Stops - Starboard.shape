@@ -5,22 +5,25 @@
 detail 255
 rotate 0  0  -0.5  /// CAD mode
 
-define PI                         3.14159265359
+define PI                           3.14159265359
+define INCHINMM                    25.399999619
 /// Rudder
-define RUDDERTURNANGLE           75      /// degrees
+define RUDDERTURNANGLE             75       /// degrees
+define RUDDERPOSTSHAFTSIZE         (INCHINMM * 2)  /// mm
 /// Quadrant
-define QUADRANTDIAMETER         400      /// mm
-define QUADRANTCIRCUMFERENCE    QUADRANTDIAMETER * PI  /// mm
+define QUADRANTDIAMETER           400       /// mm
+define QUADRANTCIRCUMFERENCE       (QUADRANTDIAMETER * PI)  /// mm
+define QUADRANTCENTEROFFSET         5       /// mm (towards center-midship, to create differential between rudders)
 /// Fasteners
-define SCREWDIAMETER              9.525  /// mm (3/8")
+define SCREWDIAMETER                9.525   /// mm (3/8")
 /// Stops
-define STOPHEIGHT                35      /// mm
-define STOPWIDTH                 80      /// mm
-define STOP1RADIALLENGTH        125      /// mm (radial length of first stop)
-define STOP2RADIALLENGTH        125      /// mm (radial length of first stop)
-define STOPSRADIALDISTANCE      QUADRANTCIRCUMFERENCE * (RUDDERTURNANGLE / 360)  /// mm (radial distance between two stops)
+define STOPHEIGHT                  35       /// mm
+define STOPWIDTH                   80       /// mm
+define STOP1RADIALLENGTH          125       /// mm (radial length of first stop)
+define STOP2RADIALLENGTH          125       /// mm (radial length of first stop)
+define STOPSRADIALDISTANCE         (QUADRANTCIRCUMFERENCE * (RUDDERTURNANGLE / 360))  /// mm (radial distance between two stops)
 /// Middle stopper
-define MIDDLESTOPPERTHICKNESS     8    /// mm (thickness of aluminum L-bracket attached to the hull)
+define MIDDLESTOPPERTHICKNESS       8       /// mm (thickness of aluminum L-bracket attached to the hull)
 
 define SCAN {
     import "scans/quadrant-stbd.stl"
@@ -150,14 +153,17 @@ difference {
 /// Quadrant's scan
 SCAN {
     opacity 0.5
-    size 0
     orientation 0  0  -0.5
+    position -(QUADRANTCENTEROFFSET / 2)  -13  -(QUADRANTCENTEROFFSET / 2)
+    //size 0
 }
+/// Reference for aligning the scan
 /// Reference for aligning the scan
 cube {
     color 0  1  1
     opacity 0.5
-    size 0 // 52  104
+    size RUDDERPOSTSHAFTSIZE  (RUDDERPOSTSHAFTSIZE * 2)
+    position -(QUADRANTCENTEROFFSET / 2)  0  -(QUADRANTCENTEROFFSET / 2)
 }
 
 //////////////////////////////////////////////////////////////////////////////

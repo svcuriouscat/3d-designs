@@ -6,15 +6,15 @@
 detail 1024
 rotate 0  0  -0.5  /// CAD mode
 
-/// Hull
-define HULLSOCKETDIAMETER     102.2    /// mm
-/// Rudder
-define RUDDERBEARINGDIAMETER   82.2    /// mm
+define INCHINMM                 25.399999619
 /// Bushing
-define BUSHINGLENGTH          101      /// mm
-define BUSHINGDIAMETER        (HULLSOCKETDIAMETER)  /// mm
-define BUSHINGINNERDIAMETER   (RUDDERBEARINGDIAMETER + 0.8)  /// mm
-define BUSHINGCORNERRADIUS      1      /// mm
+define BUSHINGLENGTH           (INCHINMM * 4)  /// mm
+define BUSHINGDOUTERIAMETER    (INCHINMM * 4)  /// mm
+// define BUSHINGINNERDIAMETER    ((3+5/16) * INCHINMM)  /// mm
+define BUSHINGINNERDIAMETER    ((3+1/4) * INCHINMM)  /// mm
+define BUSHINGCORNERRADIUS       1      /// mm
+/// Rudder
+define RUDDERBEARINGDIAMETER   (BUSHINGINNERDIAMETER - (INCHINMM / 100))  /// mm
 
 define BUSHING {
     color 200  200  200
@@ -22,7 +22,7 @@ define BUSHING {
     difference {
         /// Base
         cylinder {
-            size BUSHINGDIAMETER  BUSHINGLENGTH
+            size BUSHINGDOUTERIAMETER  BUSHINGLENGTH
         }
     
         /// Inner
@@ -41,7 +41,7 @@ define BUSHINGROUNDED {
             union {
                 difference {
                     cylinder {
-                        size BUSHINGDIAMETER  BUSHINGLENGTH - BUSHINGCORNERRADIUS
+                        size BUSHINGDOUTERIAMETER  BUSHINGLENGTH - BUSHINGCORNERRADIUS
                     }
 
                     cylinder {
@@ -51,7 +51,7 @@ define BUSHINGROUNDED {
 
                 difference {
                     cylinder {
-                        size BUSHINGDIAMETER - BUSHINGCORNERRADIUS  BUSHINGLENGTH
+                        size BUSHINGDOUTERIAMETER - BUSHINGCORNERRADIUS  BUSHINGLENGTH
                     }
 
                     cylinder {
@@ -70,7 +70,7 @@ define BUSHINGROUNDED {
                 along circle {
                     orientation 0  0  0.5
                     position 0  BUSHINGLENGTH / 2 - BUSHINGCORNERRADIUS / 2
-                    size BUSHINGDIAMETER - BUSHINGCORNERRADIUS
+                    size BUSHINGDOUTERIAMETER - BUSHINGCORNERRADIUS
                 }
             }
         }
@@ -96,7 +96,7 @@ define BUSHINGROUNDED {
                 along circle {
                     orientation 0  0  0.5
                     position 0  -(BUSHINGLENGTH / 2 - BUSHINGCORNERRADIUS / 2)
-                    size BUSHINGDIAMETER - BUSHINGCORNERRADIUS
+                    size BUSHINGDOUTERIAMETER - BUSHINGCORNERRADIUS
                 }
             }
         }
@@ -118,3 +118,11 @@ define BUSHINGROUNDED {
 
 BUSHING {
 }
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[BUSHING] length: " BUSHINGLENGTH "mm"
+print "[BUSHING] outer diameter: " BUSHINGDOUTERIAMETER "mm"
+print "[BUSHING] inner diameter: " BUSHINGINNERDIAMETER "mm"
+print "[RUDDER] bearing diameter: " RUDDERBEARINGDIAMETER "mm"
+print "[MISC] gap between bearing and bushing: " ((BUSHINGINNERDIAMETER - RUDDERBEARINGDIAMETER) / 2) "mm"

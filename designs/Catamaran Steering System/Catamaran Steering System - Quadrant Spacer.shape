@@ -1,29 +1,43 @@
 // ShapeScript document
 
 /// Catamaran Steering System — Quadrant Spacer
-/// This spacer isolates the quadrant from any friction against the hull or the rudder's top bushing.
+/// This spacer isolates the quadrant from any friction against the rudder's top bushing.
 /// Originally made out PTFE.  Needs to be rigid, with little surface friction.
 
 detail 2048
 rotate 0 0 -0.5  /// CAD mode
 
-define INCHINMM              25.4
+define INCHINMM                  25.399999619
+/// Bushing
+define BUSHINGDIAMETER           (INCHINMM * 4)  /// mm
 /// Rudder
-define RUDDERPOSTSHAFTSIZE   50     /// mm
+define RUDDERPOSTSHAFTSIZE       (INCHINMM * 2)  /// mm
 /// Spacer
-define SPACERDIAMETER       100     /// mm  (bushing's radius)
-define SPACERTHICKNESS      (0.25 * INCHINMM)  /// mm (1/4" thick on port, 3mm extra on starboard)
+define SPACERDIAMETER            (BUSHINGDIAMETER - 0.8)  /// mm  (slightly smaller than bushing's radius)
+define SPACERTHICKNESS           (0.25 * INCHINMM)  /// mm
+define SPACERRUDDERPOSTHOLESIZE  (RUDDERPOSTSHAFTSIZE + 0.4)
 
 define SPACER {
     difference {
         cylinder {
             size SPACERDIAMETER  SPACERTHICKNESS
         }
+
         cube {
-            size (RUDDERPOSTSHAFTSIZE + 0.4)  SPACERTHICKNESS
+            size SPACERRUDDERPOSTHOLESIZE  SPACERTHICKNESS
         }
     }
 }
 
 SPACER {
 }
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[SPACER] diameter: " SPACERDIAMETER "mm"
+print "[SPACER] square hole size: " SPACERRUDDERPOSTHOLESIZE "mm"
+print "[SPACER] thickness: " SPACERTHICKNESS "mm"
+print "[BUSHING] diameter: " BUSHINGDIAMETER "mm"
+print "[POST] size: " RUDDERPOSTSHAFTSIZE "mm"
+print "[MISC] gap between [SPACER] and [POST]: " ((SPACERRUDDERPOSTHOLESIZE - RUDDERPOSTSHAFTSIZE) / 2) "mm"
+print "[MISC] difference in size between [SPACER] and [BUSHING]: " (BUSHINGDIAMETER - SPACERDIAMETER) "mm"

@@ -6,16 +6,19 @@ detail 256
 rotate 0  0  -0.5  /// CAD
 
 define PI                           3.14159265359
+define INCHINMM                    25.399999619
 /// Rudder
-define RUDDERTURNANGLE             75      /// degrees
+define RUDDERTURNANGLE             75       /// degrees
+define RUDDERPOSTSHAFTSIZE         (INCHINMM * 2)  /// mm
 /// Quadrant
-define QUADRANTDIAMETER           400      /// mm
+define QUADRANTDIAMETER           400       /// mm
 define QUADRANTCIRCUMFERENCE       (QUADRANTDIAMETER * PI)
+define QUADRANTCENTEROFFSET         5       /// mm (towards center-midship, to create differential between rudders)
 /// Fasteners
-define SCREWDIAMETER                9.525  /// mm (3/8")
+define SCREWDIAMETER                9.525   /// mm (3/8")
 /// Stops
-define STOPHEIGHT                  30      /// mm
-define STOPWIDTH                   80      /// mm
+define STOPHEIGHT                  30       /// mm
+define STOPWIDTH                   80       /// mm
 define STOPRADIALLENGTH            (QUADRANTCIRCUMFERENCE / 2 - (QUADRANTCIRCUMFERENCE * (75 / 360)))  /// mm
 /// Cable guard
 define CABLEGUARDHEIGHTTHICKNESS    8
@@ -122,14 +125,15 @@ difference {
 SCAN {
     opacity 0.5
     orientation 0  0  -0.5
-    position 0  -10
-    size 0
+    position -(QUADRANTCENTEROFFSET / 2)  -10  -(QUADRANTCENTEROFFSET / 2)
+    //size 0
 }
 /// Reference for aligning the scan
 cube {
     color 0  1  1
     opacity 0.5
-    size 0 // 52  104
+    size RUDDERPOSTSHAFTSIZE  (RUDDERPOSTSHAFTSIZE * 2)
+    position -(QUADRANTCENTEROFFSET / 2)  0  -(QUADRANTCENTEROFFSET / 2)
 }
 
 //////////////////////////////////////////////////////////////////////////////
