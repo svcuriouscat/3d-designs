@@ -5,150 +5,172 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-detail 64
+detail 100
 rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
 
-/// Anti-vibration mount gasket
-define ANTIVIBRATIONMOUNTBASEPLATELENGTH     120.75    /// mm
-define ANTIVIBRATIONMOUNTBASEPLATEWIDTH       60.5     /// mm
-define ANTIVIBRATIONMOUNTBASEPLATETHICKNESS    3       /// mm
-define ANTIVIBRATIONMOUNTSCREWHOLEWIDTH       13.85    /// mm
-define ANTIVIBRATIONMOUNTSCREWHOLELENGTH      11       /// mm
-define ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE   100       /// mm
-define ANTIVIBRATIONMOUNTCUTOUTWIDTH          48       /// mm
-define ANTIVIBRATIONMOUNTCUTOUTLENGTH         56       /// mm
-define ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS   10       /// mm
-/// Anti-vibration mount gasket
-define ANTIVIBRATIONMOUNTGASKETTHICKNESS       0.4     /// mm
+/// Anti-vibration mount
+define MOUNTLENGTH              120.75    /// mm
+define MOUNTWIDTH                61.2     /// mm
+define MOUNTTHICKNESS             3       /// mm
+define MOUNTSCREWHOLEWIDTH       13.85    /// mm
+define MOUNTSCREWHOLELENGTH      11       /// mm
+define MOUNTSCREWHOLEDISTANCE    89.5     /// mm
+define MOUNTCUTOUTWIDTH          46       /// mm
+define MOUNTCUTOUTLENGTH         54       /// mm
+define MOUNTCUTOUTCORNERRADIUS   10       /// mm
+define MOUNTCORNERRADIUS         35       /// mm
+define MOUNTCORNERPOSITION       53       /// mm
+/// Gasket
+define GASKETTHICKNESS            0.6     /// mm
 
 //////////////////////////////////////////////////////////////////////////////
 
-define SCREWHOLE {
-    cylinder {
-        size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-        orientation 0  0.5
-        position ((ANTIVIBRATIONMOUNTSCREWHOLEWIDTH - ANTIVIBRATIONMOUNTSCREWHOLELENGTH) / 2)
+define MOUNTBASESCREWHOLE {
+    union {
+        cylinder {
+            size MOUNTSCREWHOLELENGTH  MOUNTTHICKNESS
+            orientation 0  0.5
+            position ((MOUNTSCREWHOLEWIDTH - MOUNTSCREWHOLELENGTH) / 2)
+        }
+        cube {
+            size (MOUNTSCREWHOLEWIDTH - MOUNTSCREWHOLELENGTH)  (MOUNTTHICKNESS)  (MOUNTSCREWHOLELENGTH)
+        }
+        cylinder {
+            size MOUNTSCREWHOLELENGTH  MOUNTTHICKNESS
+            orientation 0  0.5
+            position -((MOUNTSCREWHOLEWIDTH - MOUNTSCREWHOLELENGTH) / 2)
+        }
     }
-    cube {
-        size (ANTIVIBRATIONMOUNTSCREWHOLEWIDTH - ANTIVIBRATIONMOUNTSCREWHOLELENGTH)  (ANTIVIBRATIONMOUNTBASEPLATETHICKNESS)  (ANTIVIBRATIONMOUNTSCREWHOLELENGTH)
-    }
-    cylinder {
-        size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-        orientation 0  0.5
-        position -((ANTIVIBRATIONMOUNTSCREWHOLEWIDTH - ANTIVIBRATIONMOUNTSCREWHOLELENGTH) / 2)
+}
+
+define GASKETSCREWHOLE {
+    union {
+        cylinder {
+            size (MOUNTSCREWHOLELENGTH - GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+            orientation 0  0.5
+            position ((MOUNTSCREWHOLEWIDTH - MOUNTSCREWHOLELENGTH) / 2)
+        }
+        cube {
+            size (MOUNTSCREWHOLEWIDTH - MOUNTSCREWHOLELENGTH)  (MOUNTTHICKNESS + GASKETTHICKNESS)  (MOUNTSCREWHOLELENGTH - GASKETTHICKNESS * 2)
+        }
+        cylinder {
+            size (MOUNTSCREWHOLELENGTH - GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+            orientation 0  0.5
+            position -((MOUNTSCREWHOLEWIDTH - MOUNTSCREWHOLELENGTH) / 2)
+        }
     }
 }
 
 define CUTOUT {
     union {
         cube {
-            size (ANTIVIBRATIONMOUNTCUTOUTWIDTH - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (ANTIVIBRATIONMOUNTCUTOUTLENGTH)
+            size (MOUNTCUTOUTWIDTH - MOUNTCUTOUTCORNERRADIUS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS * 2)  (MOUNTCUTOUTLENGTH)
         }
         cube {
-            size (ANTIVIBRATIONMOUNTCUTOUTWIDTH)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (ANTIVIBRATIONMOUNTCUTOUTLENGTH - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)
+            size (MOUNTCUTOUTWIDTH)  (MOUNTTHICKNESS + GASKETTHICKNESS * 2)  (MOUNTCUTOUTLENGTH - MOUNTCUTOUTCORNERRADIUS * 2)
         }
         cylinder {
             orientation 0  0.5
-            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
-            position (ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  (ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+            size (MOUNTCUTOUTCORNERRADIUS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS * 2)
+            position (MOUNTCUTOUTWIDTH / 2 - MOUNTCUTOUTCORNERRADIUS)  0  (MOUNTCUTOUTLENGTH / 2 - MOUNTCUTOUTCORNERRADIUS)
         }
         cylinder {
             orientation 0  0.5
-            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
-            position -(ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  (ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+            size (MOUNTCUTOUTCORNERRADIUS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS * 2)
+            position -(MOUNTCUTOUTWIDTH / 2 - MOUNTCUTOUTCORNERRADIUS)  0  (MOUNTCUTOUTLENGTH / 2 - MOUNTCUTOUTCORNERRADIUS)
         }
         cylinder {
             orientation 0  0.5
-            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
-            position (ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  -(ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+            size (MOUNTCUTOUTCORNERRADIUS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS * 2)
+            position (MOUNTCUTOUTWIDTH / 2 - MOUNTCUTOUTCORNERRADIUS)  0  -(MOUNTCUTOUTLENGTH / 2 - MOUNTCUTOUTCORNERRADIUS)
         }
         cylinder {
             orientation 0  0.5
-            size (ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS * 2)  ANTIVIBRATIONMOUNTCUTOUTWIDTH
-            position -(ANTIVIBRATIONMOUNTCUTOUTWIDTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)  0  -(ANTIVIBRATIONMOUNTCUTOUTLENGTH / 2 - ANTIVIBRATIONMOUNTCUTOUTCORNERRADIUS)
+            size (MOUNTCUTOUTCORNERRADIUS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS * 2)
+            position -(MOUNTCUTOUTWIDTH / 2 - MOUNTCUTOUTCORNERRADIUS)  0  -(MOUNTCUTOUTLENGTH / 2 - MOUNTCUTOUTCORNERRADIUS)
         }
     }
 }
 
-define ANTIVIBRATIONMOUNTGASKET {
-    union {
-        difference {
-            union {
-                cube {
-                    size ANTIVIBRATIONMOUNTBASEPLATEWIDTH  ANTIVIBRATIONMOUNTGASKETTHICKNESS  ANTIVIBRATIONMOUNTBASEPLATELENGTH - (ANTIVIBRATIONMOUNTBASEPLATELENGTH - 58)
-                }
-
-                cylinder {
-                    color 1  0  0
-                    orientation 0  0.5
-                    size 30  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-                    position 0  0  (ANTIVIBRATIONMOUNTBASEPLATELENGTH / 2 - 30 / 2)
-                }
-                cylinder {
-                    color 1  0  1
-                    orientation 0  0.5
-                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-                    position (ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  56/2
-                }
-                cylinder {
-                    color 1  0  1
-                    orientation 0  0.5
-                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-                    position -(ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  56/2
-                }
-                cube {
-                    color 1  2  0
-                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
-                    orientation 0  (0.729)
-                    position 11.5  0  39.25
-                }
-                cube {
-                    color 1  2  0
-                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
-                    orientation 0  -(0.729)
-                    position -11.5  0  39.25
-                }
-
-                cylinder {
-                    color 1  0  0
-                    orientation 0  0.5
-                    size 30  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-                    position 0  0  -(ANTIVIBRATIONMOUNTBASEPLATELENGTH / 2 - 30 / 2)
-                }
-                cylinder {
-                    color 1  0  1
-                    orientation 0  0.5
-                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-                    position (ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  -56/2
-                }
-                cylinder {
-                    color 1  0  1
-                    orientation 0  0.5
-                    size (30)  ANTIVIBRATIONMOUNTGASKETTHICKNESS
-                    position -(ANTIVIBRATIONMOUNTBASEPLATEWIDTH / 2 - (30 / 2))  0  -56/2
-                }
-                cube {
-                    color 1  2  0
-                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
-                    orientation 0  -(0.729)
-                    position 11.5  0  -39.25
-                }
-                cube {
-                    color 1  2  0
-                    size (25)  (ANTIVIBRATIONMOUNTGASKETTHICKNESS)  (20.75)
-                    orientation 0  (0.729)
-                    position -11.5  0  -39.25
-                }
+define MOUNTBASEPLATE {
+    difference {
+        union {
+            cube {
+                size (MOUNTWIDTH)  (MOUNTTHICKNESS)  (MOUNTLENGTH - (MOUNTLENGTH - MOUNTCORNERPOSITION))
             }
 
+            cylinder {
+                color 1  0  0
+                orientation 0  0.5
+                size 30  MOUNTTHICKNESS
+                position 0  0  (MOUNTLENGTH / 2 - 30 / 2)
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS)  MOUNTTHICKNESS
+                position (MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  MOUNTCORNERPOSITION/2
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS)  MOUNTTHICKNESS
+                position -(MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  MOUNTCORNERPOSITION/2
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS)  (MOUNTCORNERRADIUS / 2)
+                orientation 0  (0.7275)
+                position 13  0  40
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS)  (MOUNTCORNERRADIUS / 2)
+                orientation 0  -(0.7275)
+                position -13  0  40
+            }
+
+            cylinder {
+                color 1  0  0
+                orientation 0  0.5
+                size 30  MOUNTTHICKNESS
+                position 0  0  -(MOUNTLENGTH / 2 - 30 / 2)
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS)  MOUNTTHICKNESS
+                position (MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  -MOUNTCORNERPOSITION/2
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS)  MOUNTTHICKNESS
+                position -(MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  -MOUNTCORNERPOSITION/2
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS)  (MOUNTCORNERRADIUS / 2)
+                orientation 0  -(0.7275)
+                position 13  0  -40
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS)  (MOUNTCORNERRADIUS / 2)
+                orientation 0  (0.7275)
+                position -13  0  -40
+            }
+        }
+
+        union {
             /// Screw holes
-            SCREWHOLE {
-                position 0  0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+            MOUNTBASESCREWHOLE {
+                position 0  0  (MOUNTSCREWHOLEDISTANCE / 2 + MOUNTSCREWHOLELENGTH / 2)
             }
-            SCREWHOLE {
-                position 0  0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+            MOUNTBASESCREWHOLE {
+                position 0  0  -(MOUNTSCREWHOLEDISTANCE / 2 + MOUNTSCREWHOLELENGTH / 2)
             }
 
             // Square cutout in the middle
@@ -158,7 +180,104 @@ define ANTIVIBRATIONMOUNTGASKET {
     }
 }
 
+define GASKETBASE {
+    difference {
+        union {
+            cube {
+                size (MOUNTWIDTH + GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)  (MOUNTLENGTH - (MOUNTLENGTH - MOUNTCORNERPOSITION))
+            }
+
+            cylinder {
+                color 1  0  0
+                orientation 0  0.5
+                size (30 + GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+                position 0  0  (MOUNTLENGTH / 2 - 30 / 2)
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS + GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+                position (MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  MOUNTCORNERPOSITION/2
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS + GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+                position -(MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  MOUNTCORNERPOSITION/2
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS + GASKETTHICKNESS)  (MOUNTCORNERRADIUS / 2 + GASKETTHICKNESS * 2)
+                orientation 0  (0.7275)
+                position 13  0  40
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS + GASKETTHICKNESS)  (MOUNTCORNERRADIUS / 2 + GASKETTHICKNESS * 2)
+                orientation 0  -(0.7275)
+                position -13  0  40
+            }
+
+            cylinder {
+                color 1  0  0
+                orientation 0  0.5
+                size (30 + GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+                position 0  0  -(MOUNTLENGTH / 2 - 30 / 2)
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS + GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+                position (MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  -MOUNTCORNERPOSITION/2
+            }
+            cylinder {
+                color 1  0  1
+                orientation 0  0.5
+                size (MOUNTCORNERRADIUS + GASKETTHICKNESS * 2)  (MOUNTTHICKNESS + GASKETTHICKNESS)
+                position -(MOUNTWIDTH / 2 - (MOUNTCORNERRADIUS / 2))  0  -MOUNTCORNERPOSITION/2
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS + GASKETTHICKNESS)  (MOUNTCORNERRADIUS / 2 + GASKETTHICKNESS * 2)
+                orientation 0  -(0.7275)
+                position 13  0  -40
+            }
+            cube {
+                color 1  2  0
+                size (24)  (MOUNTTHICKNESS + GASKETTHICKNESS)  (MOUNTCORNERRADIUS / 2 + GASKETTHICKNESS * 2)
+                orientation 0  (0.7275)
+                position -13  0  -40
+            }
+        }
+
+        union {
+            /// Screw holes
+            GASKETSCREWHOLE {
+                position 0  0  (MOUNTSCREWHOLEDISTANCE / 2 + MOUNTSCREWHOLELENGTH / 2)
+            }
+            GASKETSCREWHOLE {
+                position 0  0  -(MOUNTSCREWHOLEDISTANCE / 2 + MOUNTSCREWHOLELENGTH / 2)
+            }
+
+            // Square cutout in the middle
+            CUTOUT {
+            }
+        }
+    }
+}
+
+define GASKET {
+    difference {
+        GASKETBASE {
+        }
+
+        MOUNTBASEPLATE {
+            position 0  (GASKETTHICKNESS / 2)
+        }
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////
 
-ANTIVIBRATIONMOUNTGASKET {
+GASKET {
 }
