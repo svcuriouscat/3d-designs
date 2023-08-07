@@ -1,11 +1,11 @@
 // ShapeScript document
 
-/// Vibration Isolator Gasket
-/// Protects surfaces and minimizes galvanic corrossion
+/// Engine Mount Gasket
+/// Protects surfaces and minimizes (galvanic) corrossion
 
 //////////////////////////////////////////////////////////////////////////////
 
-detail 100
+detail 98
 rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
@@ -18,10 +18,10 @@ define MOUNTSCREWHOLEWIDTH       13.85    /// mm
 define MOUNTSCREWHOLELENGTH      11       /// mm
 define MOUNTSCREWHOLEDISTANCE    89.5     /// mm
 define MOUNTCUTOUTWIDTH          46       /// mm
-define MOUNTCUTOUTLENGTH         54       /// mm
-define MOUNTCUTOUTCORNERRADIUS   10       /// mm
+define MOUNTCUTOUTLENGTH         53       /// mm
+define MOUNTCUTOUTCORNERRADIUS    7.5     /// mm
 define MOUNTCORNERRADIUS         35       /// mm
-define MOUNTCORNERPOSITION       53       /// mm
+define MOUNTCORNERPOSITION       MOUNTCUTOUTLENGTH       /// mm
 /// Gasket
 define GASKETTHICKNESS            0.6     /// mm
 
