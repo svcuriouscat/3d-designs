@@ -17,41 +17,48 @@ define MOTORSHAFTLENGTH                       60       /// mm
 define MOTORSHAFTDIAMETER                     35       /// mm
 /// Gasket
 define GASKETTHICKNESS                         0.4     /// mm (my own addition to protect the blue paint on the aluminum chassis of the motor)
-/// Brackets
-define BRACKETLEGSIZE                         40       /// mm
-define BRACKETTHICKNESS                        4       /// mm
-define BRACKETWIDTH                          340       /// mm (cut from E-Tech's 50cm)
-define BRACKETLEGLENGTH                      271       /// mm (length of the legs, from horizontal rail all the way to the tips)
-define BRACKETHOLESDISTANCE                  300       /// mm (varies slightly per bracket, 299–304)
-define BRACKETHOLESOFFSET                     (15.05 - 13.05)  /// mm (offset of screw holes)
-define BRACKETDISTANCEFROMSHAFT              165.5     /// mm
-/// Anti-vibration mount
-define ANTIVIBRATIONMOUNTHEIGHT               40       /// mm
-define ANTIVIBRATIONMOUNTBASEPLATELENGTH     120.75    /// mm
-define ANTIVIBRATIONMOUNTBASEPLATEWIDTH       60.5     /// mm
-define ANTIVIBRATIONMOUNTBASEPLATETHICKNESS    3       /// mm
-define ANTIVIBRATIONMOUNTSCREWHOLEWIDTH       13.85    /// mm
-define ANTIVIBRATIONMOUNTSCREWHOLELENGTH      11       /// mm
-define ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE   100       /// mm
+/// Motor brackets
+define MOTORBRACKETLEGSIZE                    40       /// mm
+define MOTORBRACKETTHICKNESS                   4       /// mm
+define MOTORBRACKETWIDTH                     340       /// mm (cut from E-Tech's 50cm)
+define MOTORBRACKETLEGLENGTH                 271       /// mm (length of the legs, from horizontal rail all the way to the tips)
+define MOTORBRACKETHOLESDISTANCE             300       /// mm (varies slightly per bracket, 299–304)
+define MOTORBRACKETHOLESOFFSET                (15.05 - 13.05)  /// mm (offset of screw holes)
+define MOTORBRACKETDISTANCEFROMSHAFT         165.5     /// mm
+/// Engine mount
+define ENGINEMOUNT                            40       /// mm
+define ENGINEMOUNTBASEPLATELENGTH            120.75    /// mm
+define ENGINEMOUNTBASEPLATEWIDTH              60.5     /// mm
+define ENGINEMOUNTBASEPLATETHICKNESS           3       /// mm
+define ENGINEMOUNTSCREWHOLEWIDTH              13.85    /// mm
+define ENGINEMOUNTSCREWHOLELENGTH             11       /// mm
+define ENGINEMOUNTSCREWHOLEDISTANCE           89.5       /// mm
 /// Coupling
 define COUPLINGDIAMETER                      101.6     /// mm
 /// Floor hatch
 define FLOORHATCHWIDTH                       350       /// mm
 define FLOORHATCHLENGTH                      760       /// mm
 /// Rails
-define RAILLENGTH                            614       /// mm (24" + bonus extra length)
-define RAILLEGSIZE                            63.5     /// mm (2-1/2", 2.5")
-define RAILTHICKNESS                           6.35    /// mm (1/4", 0.25")
-define RAILANTIVIBRATIONMOUNTSCREWHOLESIZE     9.525   /// mm (3/8")
+define RAILLENGTH                            610       /// mm (24")
+define RAILLEGSIZE                            63.5     /// mm (2-1/2" AKA 2.5")
+define RAILTHICKNESS                           6.35    /// mm (1/4" AKA 0.25")
+define RAILMOUNTSCREWHOLESIZE                  9.525   /// mm (3/8")
 define RAILVERTICALPOSITIONOFFSET             85       /// mm (distance between motor's horizontal brackets and rails)
-/// Supports
+/// Supports for rails
 define SUPPORTTHICKNESS                       50       /// mm
 define SUPPORTWIDTH                          100       /// mm
 define SUPPORTHEIGHT                         150       /// mm
 define SUPPORTANGLERADIUS                     20       /// mm
 define SUPPORTFIBERGLASSTHICKNESS              2       /// mm
 define SUPPORTHOLEDIAMETER                    10       /// mm
-/// 
+/// Holders
+define HOLDERLONGTITUDALHOLEOFFSET            20       /// mm (distance from the center of the hole to the support)
+define HOLDERTHICKNESS                         7       /// mm
+define HOLDERLENGTH                           40       /// mm
+define HOLDERWIDTH                            50       /// mm
+define HOLDERHEIGHT                           55
+/// Pre-calculated values
+define RAILLOADMIDDLE                         ((RAILLEGSIZE - RAILTHICKNESS) / 2)  // (middle of the rail sans the leg)
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -95,34 +102,63 @@ define RAIL {
             position (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)  0  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
         }
 
-        /// Screw holes
+        /// Top screw holes (for engine mounts)
         group {
             cylinder {
-                size RAILANTIVIBRATIONMOUNTSCREWHOLESIZE  RAILTHICKNESS
+                size RAILMOUNTSCREWHOLESIZE  RAILTHICKNESS
                 orientation 0  0  0.5
-                position 0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+                position 0  (ENGINEMOUNTSCREWHOLEDISTANCE / 2 + ENGINEMOUNTSCREWHOLELENGTH / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
             }
             cylinder {
-                size RAILANTIVIBRATIONMOUNTSCREWHOLESIZE  RAILTHICKNESS
+                size RAILMOUNTSCREWHOLESIZE  RAILTHICKNESS
                 orientation 0  0  0.5
-                position 0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+                position 0  -(ENGINEMOUNTSCREWHOLEDISTANCE / 2 + ENGINEMOUNTSCREWHOLELENGTH / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
             }
 
-            position 0  (MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+            position 0  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
         }
         group {
             cylinder {
-                size RAILANTIVIBRATIONMOUNTSCREWHOLESIZE  RAILTHICKNESS
+                size RAILMOUNTSCREWHOLESIZE  RAILTHICKNESS
                 orientation 0  0  0.5
-                position 0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+                position 0  (ENGINEMOUNTSCREWHOLEDISTANCE / 2 + ENGINEMOUNTSCREWHOLELENGTH / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
             }
             cylinder {
-                size RAILANTIVIBRATIONMOUNTSCREWHOLESIZE  RAILTHICKNESS
+                size RAILMOUNTSCREWHOLESIZE  RAILTHICKNESS
                 orientation 0  0  0.5
-                position 0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
+                position 0  -(ENGINEMOUNTSCREWHOLEDISTANCE / 2 + ENGINEMOUNTSCREWHOLELENGTH / 2)  (RAILLEGSIZE / 2 - RAILTHICKNESS / 2)
             }
 
-            position 0  -(MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+            position 0  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
+        }
+
+        /// Side screw holes (for supports)
+        group {
+            union {
+                cylinder {
+                    orientation 0.5
+                    size 10  1000
+                    position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS - SUPPORTTHICKNESS / 2 - SUPPORTFIBERGLASSTHICKNESS - HOLDERLONGTITUDALHOLEOFFSET)
+                }
+                cylinder {
+                    orientation 0.5
+                    size 10  1000
+                    position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS - SUPPORTTHICKNESS / 2 - SUPPORTFIBERGLASSTHICKNESS - HOLDERLONGTITUDALHOLEOFFSET)
+                }
+                cylinder {
+                    orientation 0.5
+                    size 10  1000
+                    position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS + SUPPORTTHICKNESS / 2 + SUPPORTFIBERGLASSTHICKNESS + HOLDERLONGTITUDALHOLEOFFSET)
+                }
+                cylinder {
+                    orientation 0.5
+                    size 10  1000
+                    position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS + SUPPORTTHICKNESS / 2 + SUPPORTFIBERGLASSTHICKNESS + HOLDERLONGTITUDALHOLEOFFSET)
+                }
+
+                /// Move farther away from the wall
+                position 0  0  -(RAILTHICKNESS / 2)
+            }
         }
 
         /// Align top surface of the rail with the motor's center
@@ -159,136 +195,137 @@ define MOTOR {
     }
 }
 
-define BRACKETRAIL {
+define MOTORBRACKETRAIL {
     color 100  100  100
 
     difference {
         /// Shape
         cube {
-            size BRACKETLEGSIZE  1
+            size MOTORBRACKETLEGSIZE  1
         }
         cube {
-            size (BRACKETLEGSIZE - BRACKETTHICKNESS)  1
-            position (BRACKETTHICKNESS / 2)  0  -(BRACKETTHICKNESS / 2)
+            size (MOTORBRACKETLEGSIZE - MOTORBRACKETTHICKNESS)  1
+            position (MOTORBRACKETTHICKNESS / 2)  0  -(MOTORBRACKETTHICKNESS / 2)
         }
 
         /// Round top edge
         difference {
             cube {
-                size BRACKETTHICKNESS  1  BRACKETTHICKNESS / 2
-                position 0  0  -(BRACKETTHICKNESS / 4)
+                size MOTORBRACKETTHICKNESS  1  MOTORBRACKETTHICKNESS / 2
+                position 0  0  -(MOTORBRACKETTHICKNESS / 4)
             }
             cylinder {
-                size BRACKETTHICKNESS
+                size MOTORBRACKETTHICKNESS
             }
 
-            position -(BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)  0  -(BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+            position -(MOTORBRACKETLEGSIZE / 2 - MOTORBRACKETTHICKNESS / 2)  0  -(MOTORBRACKETLEGSIZE / 2 - MOTORBRACKETTHICKNESS / 2)
         }
 
         /// Round bottom edge
         difference {
             cube {
-                size (BRACKETTHICKNESS / 2)  1  BRACKETTHICKNESS
-                position (BRACKETTHICKNESS / 4)
+                size (MOTORBRACKETTHICKNESS / 2)  1  MOTORBRACKETTHICKNESS
+                position (MOTORBRACKETTHICKNESS / 4)
             }
             cylinder {
-                size BRACKETTHICKNESS
+                size MOTORBRACKETTHICKNESS
             }
 
-            position (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)  0  (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+            position (MOTORBRACKETLEGSIZE / 2 - MOTORBRACKETTHICKNESS / 2)  0  (MOTORBRACKETLEGSIZE / 2 - MOTORBRACKETTHICKNESS / 2)
         }
     }
 }
 
 /// Stainless steel brackets bolted to both ends of the motor
-define BRACKET {
+define MOTORBRACKET {
     rotate 0.5
 
     union {
         /// Horizontal
         difference {
-            BRACKETRAIL {
-                size 1  BRACKETWIDTH
+            MOTORBRACKETRAIL {
+                size 1  MOTORBRACKETWIDTH
                 orientation 1
             }
 
             /// Holes
             cylinder {
                 orientation 0  0  0.5
-                size 12  BRACKETTHICKNESS
-                position -(BRACKETHOLESOFFSET)  (BRACKETHOLESDISTANCE / 2)  (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+                size 12  MOTORBRACKETTHICKNESS
+                position -(MOTORBRACKETHOLESOFFSET)  (MOTORBRACKETHOLESDISTANCE / 2)  (MOTORBRACKETLEGSIZE / 2 - MOTORBRACKETTHICKNESS / 2)
             }
             cylinder {
                 orientation 0  0  0.5
-                size 12  BRACKETTHICKNESS
-                position -(BRACKETHOLESOFFSET)  -(BRACKETHOLESDISTANCE / 2)  (BRACKETLEGSIZE / 2 - BRACKETTHICKNESS / 2)
+                size 12  MOTORBRACKETTHICKNESS
+                position -(MOTORBRACKETHOLESOFFSET)  -(MOTORBRACKETHOLESDISTANCE / 2)  (MOTORBRACKETLEGSIZE / 2 - MOTORBRACKETTHICKNESS / 2)
             }
         }
 
         difference {
             union {
                 /// Vertical (right)
-                BRACKETRAIL {
-                    size 1  BRACKETLEGLENGTH
+                MOTORBRACKETRAIL {
+                    size 1  MOTORBRACKETLEGLENGTH
                     orientation 0.5  0  0.5
-                    position 0  (115 / 2 + BRACKETLEGSIZE / 2)  (BRACKETLEGLENGTH / 2 + BRACKETLEGSIZE / 2)
+                    position 0  (115 / 2 + MOTORBRACKETLEGSIZE / 2)  (MOTORBRACKETLEGLENGTH / 2 + MOTORBRACKETLEGSIZE / 2)
                 }
 
                 /// Vertical (left)
-                BRACKETRAIL {
-                    size 1  BRACKETLEGLENGTH
+                MOTORBRACKETRAIL {
+                    size 1  MOTORBRACKETLEGLENGTH
                     orientation 1  0  0.5
-                    position 0  -(115 / 2 + BRACKETLEGSIZE / 2)  (BRACKETLEGLENGTH / 2 + BRACKETLEGSIZE / 2)
+                    position 0  -(115 / 2 + MOTORBRACKETLEGSIZE / 2)  (MOTORBRACKETLEGLENGTH / 2 + MOTORBRACKETLEGSIZE / 2)
                 }
             }
 
             /// Round cut-offs to fit into narrow bilge
             difference {
                 cube {
-                    size BRACKETLEGSIZE  MOTORBODYDIAMETER  MOTORBODYDIAMETER / 2
-                    position 0  0  (BRACKETLEGLENGTH / 2 + BRACKETLEGSIZE / 2 + (BRACKETLEGLENGTH - MOTORBODYDIAMETER) / 2 + 14) + MOTORBODYDIAMETER / 4
+                    size MOTORBRACKETLEGSIZE  MOTORBODYDIAMETER  MOTORBODYDIAMETER / 2
+                    position 0  0  (MOTORBRACKETLEGLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + (MOTORBRACKETLEGLENGTH - MOTORBODYDIAMETER) / 2 + 14) + MOTORBODYDIAMETER / 4
                 }
                 cylinder {
-                    size MOTORBODYDIAMETER  BRACKETLEGSIZE
+                    size MOTORBODYDIAMETER  MOTORBRACKETLEGSIZE
                     orientation 0.5
-                    position 0  0  (BRACKETLEGLENGTH / 2 + BRACKETLEGSIZE / 2 + (BRACKETLEGLENGTH - MOTORBODYDIAMETER) / 2 + 14)
+                    position 0  0  (MOTORBRACKETLEGLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + (MOTORBRACKETLEGLENGTH - MOTORBODYDIAMETER) / 2 + 14)
                 }
             }
         }
 
         /// Align bottom surface of the bracket with the motor's center
-        position 0  0  -(BRACKETLEGSIZE / 2)
+        position 0  0  -(MOTORBRACKETLEGSIZE / 2)
     }
 }
 
-define ANTIVIBRATIONMOUNT {
+define MOUNT {
     color 200  200  200
+    opacity 0.9
 
     union {
         /// Core
         cube {
-            size ANTIVIBRATIONMOUNTBASEPLATEWIDTH  80  ANTIVIBRATIONMOUNTHEIGHT
+            size ENGINEMOUNTBASEPLATEWIDTH  80  ENGINEMOUNT
         }
 
         /// Base plate
         difference {
             cube {
-                size ANTIVIBRATIONMOUNTBASEPLATEWIDTH  ANTIVIBRATIONMOUNTBASEPLATELENGTH  3
+                size ENGINEMOUNTBASEPLATEWIDTH  ENGINEMOUNTBASEPLATELENGTH  3
             }
 
             /// Screw holes
             cylinder {
-                size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTBASEPLATETHICKNESS
+                size ENGINEMOUNTSCREWHOLELENGTH  ENGINEMOUNTBASEPLATETHICKNESS
                 orientation 0  0  0.5
-                position 0  (ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+                position 0  (ENGINEMOUNTSCREWHOLEDISTANCE / 2 + ENGINEMOUNTSCREWHOLELENGTH / 2)
             }
             cylinder {
-                size ANTIVIBRATIONMOUNTSCREWHOLELENGTH  ANTIVIBRATIONMOUNTBASEPLATETHICKNESS
+                size ENGINEMOUNTSCREWHOLELENGTH  ENGINEMOUNTBASEPLATETHICKNESS
                 orientation 0  0  0.5
-                position 0  -(ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE / 2)
+                position 0  -(ENGINEMOUNTSCREWHOLEDISTANCE / 2 + ENGINEMOUNTSCREWHOLELENGTH / 2)
             }
 
-            position 0  0  (ANTIVIBRATIONMOUNTHEIGHT / 2 - ANTIVIBRATIONMOUNTBASEPLATETHICKNESS / 2)
+            position 0  0  (ENGINEMOUNT / 2 - ENGINEMOUNTBASEPLATETHICKNESS / 2)
         }
 
         /// Central screw
@@ -297,7 +334,7 @@ define ANTIVIBRATIONMOUNT {
             color 125  125  125
             orientation 0  0  0.5
             size 12  70
-            position 0  0  -(ANTIVIBRATIONMOUNTHEIGHT / 2 + 70 / 2)
+            position 0  0  -(ENGINEMOUNT / 2 + 70 / 2)
         }
 
         /// Nut
@@ -306,11 +343,11 @@ define ANTIVIBRATIONMOUNT {
             size 31.35  10
             detail 6
             orientation 0  0  0.5
-            position 0  0  -(ANTIVIBRATIONMOUNTHEIGHT / 2 + 10 / 2)
+            position 0  0  -(ENGINEMOUNT / 2 + 10 / 2)
         }
 
-        /// Align bottom surface of anti-vibration mounts with the motor's center
-        position 0  0  -(ANTIVIBRATIONMOUNTHEIGHT / 2)
+        /// Align bottom surface of engine mounts with the motor's center
+        position 0  0  -(ENGINEMOUNT / 2)
     }
 }
 
@@ -437,96 +474,200 @@ define SUPPORT {
     }
 }
 
-define MOTORWITHBRACKETS {
+define HOLDER {
+    color 0.75  0.75  0.5
+    opacity 0.5
+
+    difference {
+        cube {
+            size HOLDERWIDTH  HOLDERLENGTH  HOLDERHEIGHT
+        }
+
+        cube {
+            size HOLDERWIDTH - HOLDERTHICKNESS  HOLDERLENGTH - HOLDERTHICKNESS  HOLDERHEIGHT
+            position HOLDERTHICKNESS / 2  HOLDERTHICKNESS / 2
+        }
+    }
+}
+
+define MOTORWITHMOTORBRACKETS {
     MOTOR
 
     /// Brackets
     group {
         /// Front bracket
-        BRACKET {
-            position 0  (MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + GASKETTHICKNESS)
+        MOTORBRACKET {
+            position 0  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + GASKETTHICKNESS)
         }
 
         /// Back bracket
-        BRACKET {
+        MOTORBRACKET {
             orientation 1
-            position 0  -(MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + GASKETTHICKNESS)
+            position 0  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + GASKETTHICKNESS)
         }
 
         /// Move up where it's supposed to be
-        position 0  0  -(BRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2)
+        position 0  0  -(MOTORBRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2)
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
-MOTORWITHBRACKETS {
+MOTORWITHMOTORBRACKETS {
 }
 
 /// Rails
 group {
     RAIL {
         orientation 1  1
-        position (BRACKETHOLESDISTANCE / 2)
+        position (MOTORBRACKETHOLESDISTANCE / 2)
     }
     RAIL {
         orientation 0  1
-        position -(BRACKETHOLESDISTANCE / 2)
+        position -(MOTORBRACKETHOLESDISTANCE / 2)
     }
 
-    position 0  0  -(BRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILVERTICALPOSITIONOFFSET)
+    position 0  0  -(MOTORBRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILVERTICALPOSITIONOFFSET)
 }
 
-/// Anti-vibration mounts
+/// Engine mounts
 group {
-    ANTIVIBRATIONMOUNT {
-        position 150  (MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+    MOUNT {
+        position 150  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
     }
-    ANTIVIBRATIONMOUNT {
-        position -150  (MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+    MOUNT {
+        position -150  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
     }
-    ANTIVIBRATIONMOUNT {
-        position 150  -(MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+    MOUNT {
+        position 150  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
     }
-    ANTIVIBRATIONMOUNT {
-        position -150  -(MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+    MOUNT {
+        position -150  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
     }
 
-    position 0  0  -(BRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILVERTICALPOSITIONOFFSET)
+    position 0  0  -(MOTORBRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILVERTICALPOSITIONOFFSET)
 }
 
 /// Supports
 difference {
-    group {
+    union {
         SUPPORT {
-            position -(BRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+            position -(MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
         }
         SUPPORT {
-            position (BRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+            position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
         }
         SUPPORT {
-            position -(BRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+            position -(MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
         }
         SUPPORT {
-            position (BRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + BRACKETLEGSIZE / 2 + BRACKETHOLESOFFSET + GASKETTHICKNESS)
+            position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
         }
 
-        position 0  0  -(BRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILTHICKNESS - RAILVERTICALPOSITIONOFFSET - SUPPORTFIBERGLASSTHICKNESS)
+        position 0  0  -(MOTORBRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILTHICKNESS - RAILVERTICALPOSITIONOFFSET - SUPPORTFIBERGLASSTHICKNESS)
     }
 
-    /// Holes for securing rails
-    group {
+    /// Holes for securing rails using holders
+    union {
         cylinder {
             size (SUPPORTHOLEDIAMETER)  (MOTORBODYLENGTH * 2)
-            position (BRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS - 20)
+            position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + RAILLOADMIDDLE)
         }
         cylinder {
             size (SUPPORTHOLEDIAMETER)  (MOTORBODYLENGTH * 2)
-            position -(BRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS - 20)
+            position -(MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + RAILLOADMIDDLE)
         }
 
-        position 0  0  -(BRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILLEGSIZE / 2 - RAILVERTICALPOSITIONOFFSET - RAILTHICKNESS)
+        position 0  0  -(MOTORBRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILVERTICALPOSITIONOFFSET - RAILTHICKNESS - RAILLOADMIDDLE)
     }
+}
+
+/// Holders
+group {
+    group {
+        group {
+            HOLDER {
+                position 0 (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS + SUPPORTTHICKNESS / 2 + SUPPORTFIBERGLASSTHICKNESS + HOLDERLENGTH / 2)
+            }
+            HOLDER {
+                orientation 1  1
+                position 0 (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS - SUPPORTTHICKNESS / 2 - SUPPORTFIBERGLASSTHICKNESS - HOLDERLENGTH / 2)
+            }
+
+            position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + HOLDERWIDTH / 2)
+        }
+
+        group {
+            HOLDER {
+                orientation 0  1
+                position 0 (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS + SUPPORTTHICKNESS / 2 + SUPPORTFIBERGLASSTHICKNESS + HOLDERLENGTH / 2)
+            }
+            HOLDER {
+                orientation 1
+                position 0 (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS - SUPPORTTHICKNESS / 2 - SUPPORTFIBERGLASSTHICKNESS - HOLDERLENGTH / 2)
+            }
+
+            position -(MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + HOLDERWIDTH / 2)
+        }
+    }
+
+    group {
+        group {
+            HOLDER {
+                orientation 1  1
+                position 0 -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS + SUPPORTTHICKNESS / 2 + SUPPORTFIBERGLASSTHICKNESS + HOLDERLENGTH / 2)
+            }
+            HOLDER {
+                position 0 -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS - SUPPORTTHICKNESS / 2 - SUPPORTFIBERGLASSTHICKNESS - HOLDERLENGTH / 2)
+            }
+
+            position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + HOLDERWIDTH / 2)
+        }
+
+        group {
+            HOLDER {
+                orientation 1
+                position 0 -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS + SUPPORTTHICKNESS / 2 + SUPPORTFIBERGLASSTHICKNESS + HOLDERLENGTH / 2)
+            }
+            HOLDER {
+                orientation 0  1
+                position 0 -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS - SUPPORTTHICKNESS / 2 - SUPPORTFIBERGLASSTHICKNESS - HOLDERLENGTH / 2)
+            }
+
+            position -(MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + HOLDERWIDTH / 2)
+        }
+    }
+
+    position 0  0  -(MOTORBRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILVERTICALPOSITIONOFFSET - RAILTHICKNESS - RAILLOADMIDDLE)
+}
+
+/// Supports fiberglass
+group {
+    color 0.25  0.25  0.5
+    opacity 0.75
+
+    union {
+        cube {
+            size (SUPPORTWIDTH + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTTHICKNESS + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTHEIGHT + SUPPORTFIBERGLASSTHICKNESS * 2)
+            position -(MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
+        }
+        cube {
+            size (SUPPORTWIDTH + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTTHICKNESS + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTHEIGHT + SUPPORTFIBERGLASSTHICKNESS * 2)
+            position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  (MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
+        }
+        cube {
+            size (SUPPORTWIDTH + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTTHICKNESS + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTHEIGHT + SUPPORTFIBERGLASSTHICKNESS * 2)
+            position -(MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
+        }
+        cube {
+            size (SUPPORTWIDTH + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTTHICKNESS + SUPPORTFIBERGLASSTHICKNESS * 2)  (SUPPORTHEIGHT + SUPPORTFIBERGLASSTHICKNESS * 2)
+            position (MOTORBRACKETHOLESDISTANCE / 2 - RAILLEGSIZE / 2 + RAILTHICKNESS + SUPPORTWIDTH / 2 + SUPPORTFIBERGLASSTHICKNESS)  -(MOTORBODYLENGTH / 2 + MOTORBRACKETLEGSIZE / 2 + MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)
+        }
+
+        position 0  0  -(MOTORBRACKETDISTANCEFROMSHAFT + MOTORSHAFTDIAMETER / 2 - RAILTHICKNESS - RAILVERTICALPOSITIONOFFSET - (SUPPORTHEIGHT + SUPPORTFIBERGLASSTHICKNESS * 2) / 2)
+    }
+
+    size 0
 }
 
 /// Floor hatch
@@ -540,8 +681,10 @@ cube {
 
 //////////////////////////////////////////////////////////////////////////////
 
-print "[RAIL] distance from end to nearest anti-vibration mount screw hole's center: " ((RAILLENGTH - MOTORBODYLENGTH - BRACKETLEGSIZE - ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE) / 2 - (BRACKETHOLESOFFSET + GASKETTHICKNESS)) "mm"
-print "[RAIL] distance from end to farthest anti-vibration mount screw hole's center: " ((RAILLENGTH - MOTORBODYLENGTH - BRACKETLEGSIZE + ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE) / 2 - (BRACKETHOLESOFFSET + GASKETTHICKNESS)) "mm"
-print "[RAIL] distance between innermost anti-vibration mount screw holes' centers: " (MOTORBODYLENGTH + BRACKETLEGSIZE - ANTIVIBRATIONMOUNTSCREWHOLEDISTANCE + ((BRACKETHOLESOFFSET + GASKETTHICKNESS) * 2)) "mm"
-print "[RAIL] central anti-vibration mount screw holes' line: " (RAILLEGSIZE / 2) "mm"
-print "[SUPPORTS] distance between supports: " (165 * 2 - SUPPORTTHICKNESS) "mm"
+print "[RAIL] length: " (RAILLENGTH) "mm"
+print "[RAIL] center of width: " (RAILLEGSIZE / 2) "mm"
+print "[RAIL] distance from end to nearest engine mount screw hole's center: " ((RAILLENGTH - MOTORBODYLENGTH - MOTORBRACKETLEGSIZE - ENGINEMOUNTSCREWHOLEDISTANCE - ENGINEMOUNTSCREWHOLELENGTH) / 2 - (MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)) "mm"
+print "[RAIL] distance from end to farthest engine mount screw hole's center: " ((RAILLENGTH - MOTORBODYLENGTH - MOTORBRACKETLEGSIZE + ENGINEMOUNTSCREWHOLEDISTANCE + ENGINEMOUNTSCREWHOLELENGTH) / 2 - (MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS)) "mm"
+print "[RAIL] distance between innermost engine mount screw holes' centers: " (MOTORBODYLENGTH + MOTORBRACKETLEGSIZE - ENGINEMOUNTSCREWHOLEDISTANCE - ENGINEMOUNTSCREWHOLELENGTH + ((MOTORBRACKETHOLESOFFSET + GASKETTHICKNESS) * 2)) "mm"
+print "[SUPPORTS] fiberglass layer thickness: " (SUPPORTFIBERGLASSTHICKNESS) "mm"
+//print "[SUPPORTS] lateral distance between supports (without fiberglass): " (165 * 2 - SUPPORTTHICKNESS) "mm"
