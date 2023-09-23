@@ -1,0 +1,55 @@
+// ShapeScript document
+
+/// Catamaran Propulsion System — Shaft Aligner
+/// Motor model: E-Tech 10WG
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90 * 3
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM                           25.399999619
+define GAP                                   0.4   /// mm
+/// Prop shaft
+define PROP_SHAFT_DIAMETER                  ((1+1/8) * INCH_IN_MM)
+define PROP_SHAFT_LENGTH                    55
+/// Motor
+define MOTOR_SHAFT_DIAMETER                 35
+define MOTOR_SHAFT_LENGTH                   57
+/// Shaft aligner
+define SHAFT_ALIGNER_WALL_THICKNESS          5
+define SHAFT_ALIGNER_SPACE_BETWEEN_SHAFTS   10
+
+//////////////////////////////////////////////////////////////////////////////
+
+define SHAFT_ALIGNER {
+    difference {
+        cylinder {
+            size (MOTOR_SHAFT_DIAMETER + GAP * 2 + SHAFT_ALIGNER_WALL_THICKNESS * 2)  (MOTOR_SHAFT_LENGTH + SHAFT_ALIGNER_SPACE_BETWEEN_SHAFTS + PROP_SHAFT_LENGTH)
+        }
+
+        cylinder {
+            size (MOTOR_SHAFT_DIAMETER + GAP * 2)  MOTOR_SHAFT_LENGTH
+            position 0  ((MOTOR_SHAFT_LENGTH + SHAFT_ALIGNER_SPACE_BETWEEN_SHAFTS + PROP_SHAFT_LENGTH) / 2 - (MOTOR_SHAFT_LENGTH / 2))
+        }
+
+        cylinder {
+            size (PROP_SHAFT_DIAMETER + GAP * 2)  PROP_SHAFT_LENGTH
+            position 0  -((MOTOR_SHAFT_LENGTH + SHAFT_ALIGNER_SPACE_BETWEEN_SHAFTS + PROP_SHAFT_LENGTH) / 2 - (PROP_SHAFT_LENGTH / 2))
+        }
+
+        /// Cut half off
+        cube {
+            size (MOTOR_SHAFT_DIAMETER + GAP * 2 + SHAFT_ALIGNER_WALL_THICKNESS * 2)  (MOTOR_SHAFT_LENGTH + SHAFT_ALIGNER_SPACE_BETWEEN_SHAFTS + PROP_SHAFT_LENGTH) (MOTOR_SHAFT_DIAMETER + GAP * 2 + SHAFT_ALIGNER_WALL_THICKNESS * 2) / 2
+            position 0  0  (MOTOR_SHAFT_DIAMETER + GAP * 2 + SHAFT_ALIGNER_WALL_THICKNESS * 2) / 4
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+SHAFT_ALIGNER
+
+//////////////////////////////////////////////////////////////////////////////

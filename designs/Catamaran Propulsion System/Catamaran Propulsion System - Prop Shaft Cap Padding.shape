@@ -1,0 +1,11 @@
+// ShapeScript document
+
+/// Catamaran Propulsion System — Prop Shaft Cap Padding
+/// Shaft on port side is shorter than on starboard
+
+detail 180
+rotate 0  0  -0.5  /// CAD mode
+
+cylinder {
+    size 27  (68 - 56)
+}

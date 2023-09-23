@@ -1,7 +1,7 @@
 // ShapeScript document
 
-/// Catamaran Propulsion System — Starboard Motor
-/// Motor: E-Tech 10WG
+/// Catamaran Propulsion System — Motor
+/// Motor model: E-Tech 10WG
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ define HOLDER_HEIGHT                          40       /// mm
 define HOLDER_SCREW_HOLE_DIAMETER              8.3     /// mm (5/16")
 /// Supports for rails
 define SUPPORT_THICKNESS                      40       /// mm
-define SUPPORT_WIDTH                          93.5       /// mm
+define SUPPORT_WIDTH                         150       /// mm
 define SUPPORT_HEIGHT                        210       /// mm
 define SUPPORT_ANGLE_RADIUS                   14       /// mm
 define SUPPORT_FIBERGLASS_THICKNESS            2       /// mm
@@ -63,7 +63,7 @@ define RAIL_LOAD_MIDDLE                       ((RAIL_LEG_SIZE - RAIL_THICKNESS) 
 //////////////////////////////////////////////////////////////////////////////
 
 /// L-Shaped aluminum (6061) angle (2.5" x 2.5" x 24", 0.25" thick)
-define RAIL_ {
+define RAIL {
     color 145  145  145
 
     difference {
@@ -164,7 +164,7 @@ define RAIL_ {
     }
 }
 
-/// The electric motor
+/// Electric motor
 /// https://starboats.eu/electric-drives/e-tech-wg-inboard-engines/
 define MOTOR {
     color 0  0  1
@@ -192,7 +192,7 @@ define MOTOR {
     }
 }
 
-define MOTOR_BRACKET_RAIL_ {
+define MOTOR_BRACKET_RAIL {
     color 100  100  100
 
     difference {
@@ -234,13 +234,13 @@ define MOTOR_BRACKET_RAIL_ {
 }
 
 /// Stainless steel brackets bolted to both ends of the motor
-define MOTOR_BRACKET_ {
+define MOTOR_BRACKET {
     rotate 0.5
 
     union {
         /// Horizontal
         difference {
-            MOTOR_BRACKET_RAIL_ {
+            MOTOR_BRACKET_RAIL {
                 size 1  MOTOR_BRACKET_WIDTH
                 orientation 1
             }
@@ -261,14 +261,14 @@ define MOTOR_BRACKET_ {
         difference {
             union {
                 /// Vertical (right)
-                MOTOR_BRACKET_RAIL_ {
+                MOTOR_BRACKET_RAIL {
                     size 1  MOTOR_BRACKET_LEG_LENGTH
                     orientation 0.5  0  0.5
                     position 0  (115 / 2 + MOTOR_BRACKET_LEG_SIZE / 2)  (MOTOR_BRACKET_LEG_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2)
                 }
 
                 /// Vertical (left)
-                MOTOR_BRACKET_RAIL_ {
+                MOTOR_BRACKET_RAIL {
                     size 1  MOTOR_BRACKET_LEG_LENGTH
                     orientation 1  0  0.5
                     position 0  -(115 / 2 + MOTOR_BRACKET_LEG_SIZE / 2)  (MOTOR_BRACKET_LEG_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2)
@@ -348,7 +348,7 @@ define MOUNT {
     }
 }
 
-define SUPPORT_ {
+define SUPPORT {
     color 230  230  230
 
     difference {
@@ -431,7 +431,7 @@ define SUPPORT_ {
     }
 }
 
-define HOLDER_ {
+define HOLDER {
     color 0.75  0.75  0.5
 
     difference {
@@ -461,18 +461,18 @@ define HOLDER_ {
     }
 }
 
-define MOTORWITHMOTOR_BRACKET_S {
+define MOTOR_WITH_BRACKETS {
     MOTOR
 
     /// Brackets
     group {
         /// Front bracket
-        MOTOR_BRACKET_ {
+        MOTOR_BRACKET {
             position 0  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_GASKET_THICKNESS)
         }
 
         /// Back bracket
-        MOTOR_BRACKET_ {
+        MOTOR_BRACKET {
             orientation 1
             position 0  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_GASKET_THICKNESS)
         }
@@ -483,194 +483,272 @@ define MOTORWITHMOTOR_BRACKET_S {
 }
 
 define SCAN {
-    import "scans/bilge-stbd.stl"
+    import "scans/bilge-port.stl"
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
-MOTORWITHMOTOR_BRACKET_S {
+if true {
+    MOTOR_WITH_BRACKETS {
+    }
 }
 
 /// Rails
-group {
-    RAIL_ {
-        orientation 1  1
-        position (MOTOR_BRACKET_HOLES_DISTANCE / 2)
-    }
-    RAIL_ {
-        orientation 0  1
-        position -(MOTOR_BRACKET_HOLES_DISTANCE / 2)
-    }
+if true {
+    group {
+        RAIL {
+            orientation 1  1
+            position (MOTOR_BRACKET_HOLES_DISTANCE / 2)
+        }
+        RAIL {
+            orientation 0  1
+            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2)
+        }
 
-    position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_VERTICAL_POSITION_OFFSET)
+        position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_VERTICAL_POSITION_OFFSET)
+    }
 }
 
 /// Engine mounts
-group {
-    MOUNT {
-        position (MOTOR_BRACKET_HOLES_DISTANCE / 2)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-    }
-    MOUNT {
-        position -(MOTOR_BRACKET_HOLES_DISTANCE / 2)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-    }
-    MOUNT {
-        position (MOTOR_BRACKET_HOLES_DISTANCE / 2)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-    }
-    MOUNT {
-        position -(MOTOR_BRACKET_HOLES_DISTANCE / 2)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-    }
+if true {
+    group {
+        MOUNT {
+            position (MOTOR_BRACKET_HOLES_DISTANCE / 2)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+        }
+        MOUNT {
+            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+        }
+        MOUNT {
+            position (MOTOR_BRACKET_HOLES_DISTANCE / 2)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+        }
+        MOUNT {
+            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+        }
 
-    position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_VERTICAL_POSITION_OFFSET)
+        position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_VERTICAL_POSITION_OFFSET)
+    }
 }
 
 /// Supports
-difference {
-    union {
-        /// Front Left
-        SUPPORT_ {
-            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-        }
-        /// Front Right
-        SUPPORT_ {
-            position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-            orientation 1
-        }
-        /// Back Left
-        SUPPORT_ {
-            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-        }
-        /// Back Right
-        SUPPORT_ {
-            position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-            orientation 1
+if true {
+    difference {
+        union {
+            /// Front Left
+            SUPPORT {
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
+            /// Front Right
+            SUPPORT {
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+                orientation 1
+            }
+            /// Back Left
+            SUPPORT {
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
+            /// Back Right
+            SUPPORT {
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+                orientation 1
+            }
+
+            position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_THICKNESS - RAIL_VERTICAL_POSITION_OFFSET - SUPPORT_FIBERGLASS_THICKNESS)
         }
 
-        position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_THICKNESS - RAIL_VERTICAL_POSITION_OFFSET - SUPPORT_FIBERGLASS_THICKNESS)
+        // SCAN {}
     }
-
-    // SCAN
 }
 
 /// Holder brackets
-group {
+if true {
     group {
         group {
-            HOLDER_ {
-                position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
-            }
-            HOLDER_ {
-                orientation 1  1
-                position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
+            group {
+                HOLDER {
+                    position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
+                }
+                HOLDER {
+                    orientation 1  1
+                    position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
+                }
+
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
             }
 
-            position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
+            group {
+                HOLDER {
+                    orientation 0  1
+                    position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
+                }
+                HOLDER {
+                    orientation 1
+                    position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
+                }
+
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
+            }
         }
 
         group {
-            HOLDER_ {
-                orientation 0  1
-                position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
-            }
-            HOLDER_ {
-                orientation 1
-                position 0 (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
+            group {
+                HOLDER {
+                    orientation 1  1
+                    position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
+                }
+                HOLDER {
+                    position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
+                }
+
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
             }
 
-            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
+            group {
+                HOLDER {
+                    orientation 1
+                    position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
+                }
+                HOLDER {
+                    orientation 0  1
+                    position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
+                }
+
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
+            }
         }
+
+        position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_VERTICAL_POSITION_OFFSET - RAIL_THICKNESS - RAIL_LOAD_MIDDLE)
     }
-
-    group {
-        group {
-            HOLDER_ {
-                orientation 1  1
-                position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
-            }
-            HOLDER_ {
-                position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
-            }
-
-            position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
-        }
-
-        group {
-            HOLDER_ {
-                orientation 1
-                position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS + SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_LENGTH / 2)
-            }
-            HOLDER_ {
-                orientation 0  1
-                position 0 -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS - SUPPORT_THICKNESS / 2 - SUPPORT_FIBERGLASS_THICKNESS - HOLDER_LENGTH / 2)
-            }
-
-            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + HOLDER_WIDTH / 2)
-        }
-    }
-
-    position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_VERTICAL_POSITION_OFFSET - RAIL_THICKNESS - RAIL_LOAD_MIDDLE)
 }
 
 /// Supports' fiberglass
-group {
-    color 0.25  0.25  0.5
-    opacity 0.75
+if not true {
+    group {
+        color 0.25  0.25  0.5
+        opacity 0.75
 
-    union {
-        cube {
-            size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
-            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-        }
-        cube {
-            size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
-            position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-        }
-        cube {
-            size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
-            position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-        }
-        cube {
-            size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
-            position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
-        }
+        union {
+            cube {
+                size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
+            cube {
+                size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
+            cube {
+                size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
+            cube {
+                size (SUPPORT_WIDTH + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_THICKNESS + SUPPORT_FIBERGLASS_THICKNESS * 2)  (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2)
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
 
-        position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_THICKNESS - RAIL_VERTICAL_POSITION_OFFSET - (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2) / 2)
+            position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_THICKNESS - RAIL_VERTICAL_POSITION_OFFSET - (SUPPORT_HEIGHT + SUPPORT_FIBERGLASS_THICKNESS * 2) / 2)
+        }
     }
-
-    size 0
 }
 
-SCAN {
-    opacity 0.7
-    size 0
+if not true {
+    SCAN {
+        opacity 0.7
+    }
 }
 
 /// Prop shaft cap
-cylinder {
-    color 1  0  0
-    opacity 0.5
-    size PROP_SHAFT_CAP_OUTER_DIAMETER  PROP_SHAFT_CAP_LENGTH
-    position 0  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2)
-    size 0
+if not true {
+    cylinder {
+        color 1  0  0
+        opacity 0.5
+        size PROP_SHAFT_CAP_OUTER_DIAMETER  PROP_SHAFT_CAP_LENGTH
+        position 0  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2)
+    }
+}
+
+/// Alignment helper
+if not true {  
+    difference {
+        union {
+            cube {
+                size 180  30  40
+                position -70  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2 - 50)  -44
+                orientation -0.08  0.18
+            }
+            cube {
+                size 180  30  40
+                position 70  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2 - 50)  -44
+                orientation 0.08  -0.18
+            }
+
+            cube {
+                size 260  30  15
+                position 0  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2 - 70)  -40
+            }
+
+            cube {
+                size 40  40  40
+                position 0  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2 - 40)  0
+            }
+
+            cube {
+                size 260  30  20
+                position 0  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2 - 70)  -100
+            }
+        }
+
+        cylinder {
+            color 1  0  0
+            opacity 0.5
+            size PROP_SHAFT_CAP_OUTER_DIAMETER+0.6  PROP_SHAFT_CAP_LENGTH+0.4
+            position 0  (MOTOR_BODY_LENGTH / 2 + MOTOR_SHAFT_LENGTH + PROP_SHAFT_CAP_LENGTH / 2)
+        }
+
+        union {
+            /// Front Left
+            SUPPORT {
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
+            /// Front Right
+            SUPPORT {
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  (MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+                orientation 1
+            }
+            /// Back Left
+            SUPPORT {
+                position -(MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+            }
+            /// Back Right
+            SUPPORT {
+                position (MOTOR_BRACKET_HOLES_DISTANCE / 2 - RAIL_LEG_SIZE / 2 + RAIL_THICKNESS + SUPPORT_WIDTH / 2 + SUPPORT_FIBERGLASS_THICKNESS)  -(MOTOR_BODY_LENGTH / 2 + MOTOR_BRACKET_LEG_SIZE / 2 + MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)
+                orientation 1
+            }
+
+            position 0  0  -(MOTOR_BRACKET_DISTANCE_FROM_SHAFT + MOTOR_SHAFT_DIAMETER / 2 - RAIL_THICKNESS - RAIL_VERTICAL_POSITION_OFFSET - SUPPORT_FIBERGLASS_THICKNESS)
+        }
+    }
 }
 
 /// Floor hatch
-cube {
-    opacity 0.25
-    color 1  0  0
-    size FLOOR_HATCH_WIDTH  FLOOR_HATCH_LENGTH  30
-    position 0  0  -200
-    size 0
+if false {
+    cube {
+        opacity 0.25
+        color 1  0  0
+        size FLOOR_HATCH_WIDTH  FLOOR_HATCH_LENGTH  30
+        position 0  0  -200
+        size 0
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
-print "[RAIL_] length: " (RAIL_LENGTH) "mm"
-print "[RAIL_] width center: " (RAIL_LEG_SIZE / 2) "mm"
-print "[RAIL_] distance from end to nearest engine mount screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE - ENGINE_MOUNT_SCREW_HOLE_DISTANCE - ENGINE_MOUNT_SCREW_HOLE_LENGTH) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)) "mm"
-print "[RAIL_] distance from end to farthest engine mount screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE + ENGINE_MOUNT_SCREW_HOLE_DISTANCE + ENGINE_MOUNT_SCREW_HOLE_LENGTH) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)) "mm"
-print "[RAIL_] distance between innermost engine mount screw holes' centers: " (MOTOR_BODY_LENGTH + MOTOR_BRACKET_LEG_SIZE - ENGINE_MOUNT_SCREW_HOLE_DISTANCE - ENGINE_MOUNT_SCREW_HOLE_LENGTH + ((MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS) * 2)) "mm"
-print "[RAIL_] distance from corner to holder screw hole's center: " (RAIL_LEG_SIZE / 2 + RAIL_THICKNESS / 2) "mm"
-print "[RAIL_] distance from end to nearest holder screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS) - (SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_THICKNESS / 2 + HOLDER_LENGTH / 2)) "mm"
-print "[RAIL_] distance from end to farthest holder screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS) + (SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_THICKNESS / 2 + HOLDER_LENGTH / 2)) "mm"
-print "[SUPPORT_] fiberglass layer thickness: " (SUPPORT_FIBERGLASS_THICKNESS) "mm"
-print "[HOLDER_] distance from corner to screw hole's center: " (HOLDER_WIDTH / 2 + HOLDER_THICKNESS / 2) "mm"
+print "[RAIL] length: " (RAIL_LENGTH) "mm"
+print "[RAIL] width center: " (RAIL_LEG_SIZE / 2) "mm"
+print "[RAIL] distance from end to nearest engine mount screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE - ENGINE_MOUNT_SCREW_HOLE_DISTANCE - ENGINE_MOUNT_SCREW_HOLE_LENGTH) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)) "mm"
+print "[RAIL] distance from end to farthest engine mount screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE + ENGINE_MOUNT_SCREW_HOLE_DISTANCE + ENGINE_MOUNT_SCREW_HOLE_LENGTH) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS)) "mm"
+print "[RAIL] distance between innermost engine mount screw holes' centers: " (MOTOR_BODY_LENGTH + MOTOR_BRACKET_LEG_SIZE - ENGINE_MOUNT_SCREW_HOLE_DISTANCE - ENGINE_MOUNT_SCREW_HOLE_LENGTH + ((MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS) * 2)) "mm"
+print "[RAIL] distance from corner to [HOLDER] screw hole's center: " (RAIL_LEG_SIZE / 2 + RAIL_THICKNESS / 2) "mm"
+print "[RAIL] distance from end to nearest [HOLDER] screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS) - (SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_THICKNESS / 2 + HOLDER_LENGTH / 2)) "mm"
+print "[RAIL] distance from end to farthest [HOLDER] screw hole's center: " ((RAIL_LENGTH - MOTOR_BODY_LENGTH - MOTOR_BRACKET_LEG_SIZE) / 2 - (MOTOR_BRACKET_HOLES_OFFSET + MOTOR_GASKET_THICKNESS) + (SUPPORT_THICKNESS / 2 + SUPPORT_FIBERGLASS_THICKNESS + HOLDER_THICKNESS / 2 + HOLDER_LENGTH / 2)) "mm"
+print "[RAIL] distance between rails: " (MOTOR_BRACKET_HOLES_DISTANCE - RAIL_LEG_SIZE) "mm"
+print "[SUPPORT] fiberglass layer thickness: " (SUPPORT_FIBERGLASS_THICKNESS) "mm"
+// print "[HOLDER] distance from corner to screw hole's center: " (HOLDER_WIDTH / 2 + HOLDER_THICKNESS / 2) "mm"

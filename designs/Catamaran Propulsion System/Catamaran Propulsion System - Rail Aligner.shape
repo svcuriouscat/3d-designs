@@ -1,0 +1,49 @@
+// ShapeScript document
+
+/// Catamaran Propulsion System — Rail Aligner
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM                     25.399999619
+/// Motor brackets
+define MOTOR_BRACKET_HOLES_DISTANCE  300       /// mm (varies per every bracket, 299–304)
+/// Rails
+define RAIL_LEG_SIZE                  63.5     /// mm (2-1/2" AKA 2.5")
+
+//////////////////////////////////////////////////////////////////////////////
+
+define RAIL_ALIGNER {
+    union {
+        difference {
+            cube {
+                size (MOTOR_BRACKET_HOLES_DISTANCE - RAIL_LEG_SIZE)  (RAIL_LEG_SIZE)  (RAIL_LEG_SIZE / 5)
+            }
+
+            cube {
+                size (MOTOR_BRACKET_HOLES_DISTANCE - RAIL_LEG_SIZE - INCH_IN_MM)  (RAIL_LEG_SIZE - INCH_IN_MM)  (RAIL_LEG_SIZE / 5)
+            }
+        }
+
+        cube {
+            size (MOTOR_BRACKET_HOLES_DISTANCE - RAIL_LEG_SIZE + INCH_IN_MM / 2)  2  (RAIL_LEG_SIZE / 5)
+            position 0  ((RAIL_LEG_SIZE + 2) / 2)
+        }
+
+        cube {
+            size (MOTOR_BRACKET_HOLES_DISTANCE - RAIL_LEG_SIZE + INCH_IN_MM / 2)  2  (RAIL_LEG_SIZE / 5)
+            position 0  -((RAIL_LEG_SIZE + 2) / 2)
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+RAIL_ALIGNER {
+}
+
+print "[RAIL] distance between rails: " (MOTOR_BRACKET_HOLES_DISTANCE - RAIL_LEG_SIZE) "mm"

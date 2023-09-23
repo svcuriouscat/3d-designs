@@ -1,0 +1,84 @@
+// ShapeScript document
+
+/// Catamaran Propulsion System – Jointed Coupling
+/// Motor model: E-Tech 10WG
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM                           25.399999619
+define GAP                                   0.2   /// mm
+/// Coupling
+define COUPLING_DIAMETER                    (4.5 * INCH_IN_MM)
+define COUPLING_THICKNEESS                  (1 * INCH_IN_MM)
+define COUPLING_BUSHING_INNER_DIAMETER      17.4     /// mm
+//define COUPLING_BUSHING_OUTER_DIAMETER      ???     /// mm
+define COUPLING_PLATE_THICKNESS             (1/8 * INCH_IN_MM)
+define COUPLING_BUSHING_POSITION            40
+/// Motor
+define MOTOR_SHAFT_DIAMETER                 35
+define MOTOR_SHAFT_KEY_WIDTH                 8
+define MOTOR_SHAFT_KEY_HEIGHT                3
+define MOTOR_SHAFT_KEY_OFFSET                5
+define MOTOR_SHAFT_FASTENER_DIAMETER         7.6
+
+//////////////////////////////////////////////////////////////////////////////
+
+define BUSHING {
+    cylinder {
+        size (COUPLING_BUSHING_INNER_DIAMETER + GAP * 2)  (COUPLING_THICKNEESS * 4)
+        position COUPLING_BUSHING_POSITION
+    }
+}
+
+define COUPLING {
+    difference {
+        /// Base
+        union {
+            cylinder {
+                size COUPLING_DIAMETER  COUPLING_THICKNEESS
+            }
+
+            cylinder {
+                size (COUPLING_BUSHING_POSITION * 2 - COUPLING_BUSHING_INNER_DIAMETER - GAP * 2)  COUPLING_THICKNEESS
+                position 0 COUPLING_THICKNEESS
+            }
+        }
+
+        /// Shaft
+        union {
+            cylinder {
+                size (MOTOR_SHAFT_DIAMETER + GAP * 2)  (COUPLING_THICKNEESS - COUPLING_PLATE_THICKNESS + COUPLING_THICKNEESS)
+            }
+
+            /// Keyway
+            cube {
+                size ((MOTOR_SHAFT_DIAMETER + MOTOR_SHAFT_KEY_HEIGHT * 2) / 2 + GAP * 2)  (COUPLING_THICKNEESS - COUPLING_PLATE_THICKNESS + COUPLING_THICKNEESS)  (MOTOR_SHAFT_KEY_WIDTH + GAP * 2)
+                position  ((MOTOR_SHAFT_DIAMETER + MOTOR_SHAFT_KEY_HEIGHT * 2) / 4)  (COUPLING_PLATE_THICKNESS / 2 + MOTOR_SHAFT_KEY_OFFSET)
+            }
+
+            position 0  (COUPLING_PLATE_THICKNESS / 2 + COUPLING_THICKNEESS / 2)
+        }
+
+        /// Fastener hole
+        cylinder {
+            size (MOTOR_SHAFT_FASTENER_DIAMETER + GAP * 2)  (COUPLING_THICKNEESS)
+        }
+
+        /// Bushings
+        for i in 1 to 3 {
+            BUSHING {
+                orientation 0  (i / (3 / 2) + 1/3)
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+COUPLING {
+}

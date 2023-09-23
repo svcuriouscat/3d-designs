@@ -1,0 +1,41 @@
+// ShapeScript document
+
+/// Catamaran Propulsion System — Spacer
+/// Meant to be used for alignment of supports, before they're reinforced
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM                  25.399999619  /// mm
+define GAP                          0.2  /// mm
+/// Holders
+define HOLDER_SCREW_HOLE_DIAMETER  (5/16 * INCH_IN_MM)  /// (5/16")
+/// Supports for rails
+define SUPPORT_THICKNESS                      40       /// mm
+define SUPPORT_WIDTH                          93.5     /// mm
+define SUPPORT_HEIGHT                        210       /// mm
+define SUPPORT_ANGLE_RADIUS                   14       /// mm
+define SUPPORT_FIBERGLASS_THICKNESS            2       /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define SPACER {
+    difference {
+        cube {
+            size  (SUPPORT_THICKNESS - SUPPORT_ANGLE_RADIUS)  (SUPPORT_FIBERGLASS_THICKNESS)  (SUPPORT_THICKNESS - SUPPORT_ANGLE_RADIUS * 2)
+        }
+
+        cylinder {
+            size (HOLDER_SCREW_HOLE_DIAMETER + GAP * 2)   (SUPPORT_FIBERGLASS_THICKNESS)
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+SPACER {
+}
