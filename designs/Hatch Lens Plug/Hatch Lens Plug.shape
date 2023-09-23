@@ -1,22 +1,24 @@
 // ShapeScript document
 
 /// Hatch Lens Plug
+/// For Jim Black 592-20RND-05-02-05 20"
 
 //////////////////////////////////////////////////////////////////////////////
 
-detail 90
+detail 90 * 2
 rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
 
+define INCH_IN_MM                 25.399999619
 /// Hatch
-define HATCH_LENS_THICKNESS        6.2   /// mm
-define HATCH_LENS_HOLE_DIAMETER   15.6   /// mm
+define HATCH_LENS_THICKNESS       (1/4 * INCH_IN_MM) - 0.2  /// mm
+define HATCH_LENS_HOLE_DIAMETER   15.8   /// mm
 /// PLUG
 define PLUG_WALL_THICKNESS         2     /// mm
 define PLUG_CAP_HEIGHT             1     /// mm
 define PLUG_LOCK_SEGMENTS          5     /// count
-define PLUG_LOCK_THICKNESS         1     /// mm
+define PLUG_LOCK_THICKNESS         0.6   /// mm
 define PLUG_LOCK_SEGMENT_LENGTH   ((HATCH_LENS_THICKNESS) / 2 + PLUG_WALL_THICKNESS)  /// mm
 
 //////////////////////////////////////////////////////////////////////////////
@@ -81,7 +83,7 @@ define HATCH_LENS_PLUG {
 
                 position 0  -((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2)
             }
-            /// Material for making locks transition smooth
+            /// Material for making locks' transition smooth
             cylinder {
                 size (HATCH_LENS_HOLE_DIAMETER + PLUG_LOCK_THICKNESS)  (PLUG_WALL_THICKNESS / 2)
                 position 0  -((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 - PLUG_WALL_THICKNESS * 1.25)
@@ -130,22 +132,22 @@ define HATCH_LENS_PLUG {
 //////////////////////////////////////////////////////////////////////////////
 
 HATCH_LENS_PLUG {
-    position 0  PLUG_WALL_THICKNESS / 2
+    position 0  (PLUG_WALL_THICKNESS / 2)
     orientation 1
 }
 
 /// Lens
-difference {
-    color 1  0  0
-    opacity 0.1
+if not true {
+    difference {
+        color 1  0  0
+        opacity 0.1
 
-    cube {
-        size (HATCH_LENS_HOLE_DIAMETER * 3)  (HATCH_LENS_THICKNESS)  (HATCH_LENS_HOLE_DIAMETER * 3)
+        cube {
+            size (HATCH_LENS_HOLE_DIAMETER * 3)  (HATCH_LENS_THICKNESS)  (HATCH_LENS_HOLE_DIAMETER * 3)
+        }
+
+        cylinder {
+            size (HATCH_LENS_HOLE_DIAMETER)  (HATCH_LENS_THICKNESS)
+        }
     }
-
-    cylinder {
-        size (HATCH_LENS_HOLE_DIAMETER)  (HATCH_LENS_THICKNESS)
-    }
-
-    size 0
 }
