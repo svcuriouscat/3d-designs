@@ -1,0 +1,99 @@
+// ShapeScript document
+
+/// Line Floater
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90 * 2
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM               25.399999619
+/// Line
+define LINE_DIAMETER           (1/2 * INCH_IN_MM)
+/// Floater
+define FLOATER_THICKNESS_MAX   (LINE_DIAMETER * 3.5)
+define FLOATER_THICKNESS_MIN   (LINE_DIAMETER * 3)
+define FLOATER_LENGTH          (FLOATER_THICKNESS_MAX * 2.5)
+//////////////////////////////////////////////////////////////////////////////
+
+define FLOATER {
+    difference {
+        /// Base
+        sphere {
+            size (FLOATER_LENGTH * 1.1)  FLOATER_THICKNESS_MAX  FLOATER_THICKNESS_MAX
+        }
+
+        /// Hole for the line
+        union {
+            cylinder {
+                size LINE_DIAMETER  FLOATER_LENGTH
+                orientation 0.5
+            }
+
+            difference {
+                cylinder {
+                    size (LINE_DIAMETER * 1.25)  (LINE_DIAMETER / 8)
+                    orientation 0.5
+                    position (FLOATER_LENGTH / 2 - (LINE_DIAMETER / 16))
+                }
+
+                extrude {
+                    circle {
+                        size (LINE_DIAMETER / 4)
+                    }
+                    along circle {
+                        orientation 0  0.5
+                        size (LINE_DIAMETER + (LINE_DIAMETER / 4))
+                        position (FLOATER_LENGTH / 2 - (LINE_DIAMETER / 8))
+                    }
+                }
+            }
+
+            difference {
+                cylinder {
+                    size (LINE_DIAMETER * 1.25)  (LINE_DIAMETER / 8)
+                    orientation 0.5
+                    position -(FLOATER_LENGTH / 2 - (LINE_DIAMETER / 16))
+                }
+
+                extrude {
+                    circle {
+                        size (LINE_DIAMETER / 4)
+                    }
+                    along circle {
+                        orientation 0  0.5
+                        size (LINE_DIAMETER + (LINE_DIAMETER / 4))
+                        position -(FLOATER_LENGTH / 2 - (LINE_DIAMETER / 8))
+                    }
+                }
+            }
+        }
+
+        /// Cut off any ends that may be sticking out
+        cylinder {
+            size FLOATER_THICKNESS_MAX  FLOATER_LENGTH
+            orientation 0.5
+            position FLOATER_LENGTH
+        }
+        cylinder {
+            size FLOATER_THICKNESS_MAX  FLOATER_LENGTH
+            orientation 0.5
+            position -FLOATER_LENGTH
+        }
+    }
+}
+
+if not true {
+    cylinder {
+        opacity 0.2
+        color 1  0  0
+        size FLOATER_THICKNESS_MAX  FLOATER_LENGTH
+        orientation 0.5
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+FLOATER {}
