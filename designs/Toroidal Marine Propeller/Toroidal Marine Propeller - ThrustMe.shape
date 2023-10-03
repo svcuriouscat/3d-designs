@@ -1,0 +1,238 @@
+// ShapeScript document
+
+/// Toroidal Marine Propeller — ThrustMe
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 80
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define GAP                                0.2    /// mm
+/// Motor
+define MOTOR_SPEED                     3000      /// RPM (what speed the prop's targeted at, https://www.thrustme.no/eu/thruster-more-eu claims 200–4200 RPM)
+define MOTOR_SPIN_DIRECTION               1      /// direction, (1 for CW, -1 for CCW)
+/// Propeller
+define PROP_DIAMETER_WITH_BLADES         98      /// mm
+/// Propeller base
+define PROP_BASE_LENGTH                  43.8    /// mm
+define PROP_BASE_DIAMETER                46      /// mm
+define PROP_BASE_WALL_THICKNESS           1.5    /// mm
+define PROP_BASE_TOP_THICKNESS            2.5    /// mm
+define PROP_BASE_TOP_EDGE_RADIUS          1      /// mm
+define PROP_BASE_CENTRAL_HOLE_DIAMETER    7.2    /// mm
+define PROP_BASE_SMALL_HOLE_DIAMETER      4      /// mm
+define PROP_BASE_SCREW_HOLE_DIAMETER      3.5    /// mm
+/// Propeller blades
+define PROP_BLADE_COUNT                   3      /// count (total amount of toroidal blades)
+define PROP_BLADE_THICKNESS               3
+define PROP_BLADE_WIDTH                  25
+define PROP_BLADES_OFFSET                10      /// mm (offset from bottom)
+define PROP_BLADES_HEIGHT                27      /// mm (how much of the prop's length the blades take up)
+/// Auto-calculated
+define PROP_BLADE_PITCH                  18      /// degrees (inital [base] angle of the blade) TODO: likely needs to include MOTOR_SPEED into this calculation
+define PROP_BLADE_LENGTH                 ((PROP_DIAMETER_WITH_BLADES - PROP_BASE_DIAMETER) / 2)  /// mm
+define PROP_BLADE_MATERIAL_LENGTH        ((PROP_DIAMETER_WITH_BLADES - PROP_BLADE_THICKNESS * 1.5) * (1 / (PROP_BLADE_PITCH / 360) / 5))
+
+//////////////////////////////////////////////////////////////////////////////
+
+define PROP_BASE_SCREWHOLE {
+    union {
+        cylinder {
+            size PROP_BASE_SCREW_HOLE_DIAMETER  PROP_BASE_TOP_THICKNESS
+        }
+        cone {
+            size (PROP_BASE_SCREW_HOLE_DIAMETER * 1.714)  (PROP_BASE_TOP_THICKNESS * 2)
+            position 0  (PROP_BASE_TOP_THICKNESS / 2)
+        }
+    }
+}
+
+define PROP_BASE {
+    difference {
+        cylinder {
+            size PROP_BASE_DIAMETER  PROP_BASE_LENGTH
+        }
+
+        /// Main cutout
+        cylinder {
+            size (PROP_BASE_DIAMETER - PROP_BASE_WALL_THICKNESS * 2)  (PROP_BASE_LENGTH - PROP_BASE_TOP_THICKNESS)
+            position 0 (PROP_BASE_TOP_THICKNESS / 2)
+        }
+
+        /// Hole in the middle
+        cylinder {
+            size PROP_BASE_CENTRAL_HOLE_DIAMETER  PROP_BASE_TOP_THICKNESS
+            position 0  -(PROP_BASE_LENGTH / 2 - PROP_BASE_TOP_THICKNESS / 2)
+        }
+
+        /// Screw holes
+        group {
+            PROP_BASE_SCREWHOLE {
+                position (23.5/2)  -(PROP_BASE_LENGTH / 2 - PROP_BASE_TOP_THICKNESS / 2)  5
+            }
+            PROP_BASE_SCREWHOLE {
+                position -(23.5/2)  -(PROP_BASE_LENGTH / 2 - PROP_BASE_TOP_THICKNESS / 2)  -5
+            }
+        }
+
+        /// Small holes
+        group {
+            cylinder {
+                size PROP_BASE_SMALL_HOLE_DIAMETER  PROP_BASE_TOP_THICKNESS
+                position (23.5/2)  -(PROP_BASE_LENGTH / 2 - PROP_BASE_TOP_THICKNESS / 2)  -5
+            }
+            cylinder {
+                size PROP_BASE_SMALL_HOLE_DIAMETER  PROP_BASE_TOP_THICKNESS
+                position -(23.5/2)  -(PROP_BASE_LENGTH / 2 - PROP_BASE_TOP_THICKNESS / 2)  5
+            }
+        }
+
+        /// Smooth edge
+        difference {
+            difference {
+                cylinder {
+                    size PROP_BASE_DIAMETER  PROP_BASE_TOP_EDGE_RADIUS
+                }
+
+                cylinder {
+                    size (PROP_BASE_DIAMETER - PROP_BASE_TOP_EDGE_RADIUS * 2)  PROP_BASE_TOP_EDGE_RADIUS
+                }
+
+                position 0  -(PROP_BASE_TOP_EDGE_RADIUS / 2)
+            }
+
+            extrude {
+                circle {
+                    size (PROP_BASE_TOP_EDGE_RADIUS * 2)
+                }
+                along circle {
+                    orientation 0  0  0.5
+                    size (PROP_BASE_DIAMETER - PROP_BASE_TOP_EDGE_RADIUS * 2)
+                }
+            }
+
+            position 0  -(PROP_BASE_LENGTH / 2 - PROP_BASE_TOP_EDGE_RADIUS)
+        }
+    }
+}
+
+define PROP_BLADE_SHAPE {
+    circle {
+        size (PROP_BLADE_THICKNESS)  (PROP_BLADE_WIDTH)  (0)
+
+        // orientation  (PROP_BLADE_PITCH / 360)
+    }
+}
+
+define PROP_BLADE_CURVE {
+    define steps 16
+
+    path {
+        for i in -(steps / 2) to (steps / 2) {
+            define I  (i / (steps / 2))
+            define IABS  abs(I)
+
+            curve 0  0.5  //-(I * 0.1)
+            rotate -(2 / (steps * 2))  (0.001 * IABS)   (0.001 * IABS)    // -(IABS * 0.15)
+        }
+    }
+}
+
+/// Prop blade sample
+if not true {
+    extrude {
+        color 1  0  0
+
+        square {
+            size 1 10 0
+        }
+
+        along PROP_BLADE_CURVE {
+            position -10  50  12
+            size 55  PROP_BLADES_HEIGHT  55
+        }
+    }
+}
+
+define PROP_BLADE {
+    // rotate 0.05  0  0.1
+
+    extrude {
+        color 0.5  0.75  2
+
+        PROP_BLADE_SHAPE {
+        }
+        along PROP_BLADE_CURVE {
+            size 70  (PROP_BLADES_HEIGHT - PROP_BLADE_THICKNESS)  70
+            position -12
+        }
+    }
+}
+
+define PROP {
+    // union {
+        PROP_BASE {
+        }
+
+        difference {
+            union {
+                for i in 1 to PROP_BLADE_COUNT {
+                    PROP_BLADE {
+                        orientation 0  (2 / PROP_BLADE_COUNT * i)  (-PROP_BLADE_PITCH / 180 * MOTOR_SPIN_DIRECTION)
+                    }
+                }
+            }
+
+            cylinder {
+                size (PROP_BASE_DIAMETER - PROP_BASE_WALL_THICKNESS)  (PROP_BASE_LENGTH - PROP_BASE_TOP_THICKNESS)
+                position 0  -(PROP_BASE_TOP_THICKNESS / 2)
+            }
+
+            position 0  -(PROP_BASE_LENGTH / 2 - PROP_BLADES_HEIGHT / 2 - PROP_BLADES_OFFSET)
+        }
+    // }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// The propeller model
+PROP {
+}
+
+/// Visual aid
+if not true {
+    union {
+        opacity 0.1
+
+        /// Overall dimensins
+        if not true {
+            cylinder {
+                detail 64
+                color 1  0  0
+                size PROP_DIAMETER_WITH_BLADES  PROP_BASE_LENGTH
+            }
+        }
+
+        /// Dimensions of prop blades
+        if true {
+            cylinder {
+                detail 64
+                color 0  1  0
+                size PROP_DIAMETER_WITH_BLADES  PROP_BLADES_HEIGHT
+                position 0  -(PROP_BASE_LENGTH / 2 - PROP_BLADES_HEIGHT / 2 - PROP_BLADES_OFFSET)
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[MOTOR] target speed: " MOTOR_SPEED " RPM"
+if MOTOR_SPIN_DIRECTION > 0 {
+    print "[MOTOR] spin direction: " " clockwise"
+} else {
+    print "[MOTOR] spin direction: " " counter clockwise"
+}
+print "[PROP] blade pitch: " PROP_BLADE_PITCH " degrees"
