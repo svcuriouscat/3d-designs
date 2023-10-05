@@ -1,46 +1,47 @@
 // ShapeScript document
 
-/// MC4 Protective Cover - For Female
+/// Protective Covers for MC4 Solar Panel Connectors - For Female
 
-detail 320
+detail 180
 rotate 0  0  -0.5  /// CAD mode
 
+define GAP                    0.2   /// mm
 /// Base
-define BASELENGTH           5     /// mm
-define BASEHEIGHT          11     /// mm
-define BASEDIAMETER        19     /// mm
-define BASEHOLEDIAMETER     3     /// mm
-/// Cylinder
-define CYLINDERLENGTH       4     /// mm
-define CYLINDERDIAMETER     9.2   /// mm
-define CYLINDERGROVESIZE    1.5   /// mm
-define CYLINDERGROVEDEPTH   1     /// mm
-/// Locks
-define LOCKSTHICKNESS       1.5   /// mm
-define LOCKSWIDTH           6.65  /// mm
-define LOCKSLENGTH         11     /// mm
-define LOCKSOUTERDISTANCE  15.9   /// mm
-define LOCKSTABLENGTH       3.84  /// mm
-define LOCKTABTHICKNESS     2     /// mm
+define BASE_LENGTH            7     /// mm
+define BASE_HEIGHT           11     /// mm
+define BASE_DIAMETER         19     /// mm
+define BASE_HOLEDIAMETER      3     /// mm
 /// Shaft
-define SHAFTLENGTH         (LOCKSLENGTH - CYLINDERLENGTH)     /// mm
-define SHAFTDIAMETER        8     /// mm
-define SHAFTWIDTH           7     /// mm
-define SHAFTHOLEDIAMETER    5     /// mm
+define SHAFT_LENGTH          18   /// mm
+define SHAFT_DIAMETER         8.1   /// mm
+define SHAFT_WIDTH            7     /// mm
+define SHAFT_HOLE_DIAMETER    5.6   /// mm
+define SHAFT_HOLE_DEPTH      20     /// mm
+/// Cylinder
+define CYLINDER_LENGTH        4.75  /// mm
+define CYLINDER_DIAMETER      9.2   /// mm
+define CYLINDER_GROVE_SIZE    2     /// mm
+/// Locks
+define LOCKS_THICKNESS        1.5   /// mm
+define LOCKS_WIDTH            6.65  /// mm
+define LOCKS_LENGTH          11     /// mm
+define LOCKS_OUTER_DISTANCE  15.9   /// mm
+define LOCKS_TAB_LENGTH       3.84  /// mm
+define LOCK_TAB_THICKNESS     2     /// mm
 
 define BASE {
     difference {
         intersection {
             cylinder {
-                size BASEDIAMETER  BASELENGTH
+                size BASE_DIAMETER  BASE_LENGTH
             }
             cube {
-                size BASEDIAMETER  BASELENGTH  BASEHEIGHT
+                size BASE_DIAMETER  BASE_LENGTH  BASE_HEIGHT
             }
         }
 
         cylinder {
-            size BASEHOLEDIAMETER  BASEHEIGHT
+            size BASE_HOLEDIAMETER  BASE_HEIGHT
             orientation 0  0  0.5
         }
     }
@@ -48,16 +49,46 @@ define BASE {
 
 define CYLINDER {
     difference {
-        cylinder {
-            size CYLINDERDIAMETER  CYLINDERLENGTH 
+        lathe path {
+            point 0  CYLINDER_LENGTH
+            point CYLINDER_DIAMETER / 2 - ((CYLINDER_DIAMETER - SHAFT_DIAMETER) / 2)  CYLINDER_LENGTH
+            point CYLINDER_DIAMETER / 2  CYLINDER_LENGTH - ((CYLINDER_DIAMETER - SHAFT_DIAMETER) / 2)
+            point CYLINDER_DIAMETER / 2  CYLINDER_LENGTH
+            point CYLINDER_DIAMETER / 2  0
+            point 0  0
+
+            position 0  -(CYLINDER_LENGTH / 2)
         }
-        difference {
-            cylinder {
-                size CYLINDERDIAMETER  CYLINDERGROVESIZE 
+
+        extrude {
+            circle {
+                size (CYLINDER_GROVE_SIZE)
             }
-            cylinder {
-                size (CYLINDERDIAMETER - CYLINDERGROVEDEPTH - CYLINDERGROVEDEPTH)  CYLINDERGROVESIZE 
+            along circle {
+                orientation 0  0  0.5
+                size (CYLINDER_DIAMETER)
             }
+
+            position 0  -((CYLINDER_DIAMETER - SHAFT_DIAMETER) / 4)
+        }
+    }
+}
+
+define SHAFT {
+    difference {
+        intersection {
+            cylinder {
+                size SHAFT_DIAMETER  SHAFT_LENGTH
+            }
+
+            cube {
+                size SHAFT_WIDTH  SHAFT_LENGTH  SHAFT_DIAMETER
+            }
+        }
+
+        cylinder {
+            size SHAFT_HOLE_DIAMETER  SHAFT_HOLE_DEPTH
+            position 0  (SHAFT_LENGTH / 2 - SHAFT_HOLE_DEPTH / 2)
         }
     }
 }
@@ -66,66 +97,48 @@ define LOCK {
     difference {
         group {
             cube {
-                size LOCKSTHICKNESS  LOCKSLENGTH  LOCKSWIDTH
+                size LOCKS_THICKNESS  LOCKS_LENGTH  LOCKS_WIDTH
             }
             cube {
-                size LOCKTABTHICKNESS  LOCKSTABLENGTH  LOCKSWIDTH
-                position ((LOCKTABTHICKNESS - LOCKSTHICKNESS) / 2)  (LOCKSLENGTH / 2 - LOCKSTABLENGTH / 2)
+                size LOCK_TAB_THICKNESS  LOCKS_TAB_LENGTH  LOCKS_WIDTH
+                position ((LOCK_TAB_THICKNESS - LOCKS_THICKNESS) / 2)  (LOCKS_LENGTH / 2 - LOCKS_TAB_LENGTH / 2)
             }
         }
 
         cube {
-            size 2.5  8  LOCKSWIDTH
+            size 2.5  8  LOCKS_WIDTH
             orientation -0.175
-            position (1.9)  (LOCKSLENGTH / 2 - 4 / 2)
+            position (1.9)  (LOCKS_LENGTH / 2 - 4 / 2)
         }
     }
 }
 
 define LOCKS {
     LOCK {
-        position ((LOCKSOUTERDISTANCE - 1.6) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2) - 0.025
+        position ((LOCKS_OUTER_DISTANCE - 1.6) / 2)  (LOCKS_LENGTH / 2 + BASE_LENGTH / 2) - 0.025
         orientation 0.01
     }
 
     LOCK {
-        position -((LOCKSOUTERDISTANCE - 1.6) / 2)  (LOCKSLENGTH / 2 + BASELENGTH / 2) - 0.025
+        position -((LOCKS_OUTER_DISTANCE - 1.6) / 2)  (LOCKS_LENGTH / 2 + BASE_LENGTH / 2) - 0.025
         orientation -0.01  1
     }
 
     /// Visual aid
-    cube {
-        opacity 0.3
-        color 1  0  0
-        size 15.5  LOCKSTHICKNESS  LOCKSWIDTH
-        size 0
-        position 0  (BASELENGTH / 2 + LOCKSTHICKNESS / 2)
-    }
-    cube {
-        opacity 0.3
-        color 1  0  0
-        size 17  LOCKSTHICKNESS  LOCKSWIDTH
-        size 0
-        position 0  (BASELENGTH / 2 + LOCKSTHICKNESS / 2 + LOCKSLENGTH / 1.5)
-    }
-}
-
-define SHAFT {
-    //difference {
-        intersection {
-            cylinder {
-                size SHAFTDIAMETER  SHAFTLENGTH
-            }
-
-            cube {
-                size SHAFTWIDTH  SHAFTLENGTH  SHAFTDIAMETER
-            }
+    if not true {
+        cube {
+            opacity 0.3
+            color 1  0  0
+            size 15.5  LOCKS_THICKNESS  LOCKS_WIDTH
+            position 0  (BASE_LENGTH / 2 + LOCKS_THICKNESS / 2)
         }
-
-        //cylinder {
-        //    size SHAFTHOLEDIAMETER  SHAFTLENGTH
-        //}
-    //}
+        cube {
+            opacity 0.3
+            color 1  0  0
+            size 17  LOCKS_THICKNESS  LOCKS_WIDTH
+            position 0  (BASE_LENGTH / 2 + LOCKS_THICKNESS / 2 + LOCKS_LENGTH / 1.5)
+        }
+    }
 }
 
 define MC4PROTECTIVECAPFEMALE {
@@ -134,11 +147,11 @@ define MC4PROTECTIVECAPFEMALE {
         }
 
         CYLINDER {
-            position 0  (BASELENGTH / 2 + CYLINDERLENGTH / 2)
+            position 0  (BASE_LENGTH / 2 + CYLINDER_LENGTH / 2)
         }
 
         SHAFT {
-            position 0  (BASELENGTH / 2 + CYLINDERLENGTH + SHAFTLENGTH / 2)
+            position 0  (BASE_LENGTH / 2 + CYLINDER_LENGTH + SHAFT_LENGTH / 2)
         }
 
         LOCKS {
@@ -147,8 +160,8 @@ define MC4PROTECTIVECAPFEMALE {
 }
 
 MC4PROTECTIVECAPFEMALE {
-    opacity 0.5
+    opacity 0.75
 
-    /// Lay on a side
+    /// Lay on a side for better printing orientation
     // orientation 0.5  0.5
 }

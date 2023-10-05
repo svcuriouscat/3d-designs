@@ -1,39 +1,39 @@
 // ShapeScript document
 
-/// MC4 Protective Cover - For Male
+/// Protective Covers for MC4 Solar Panel Connectors - For Male
 
-detail 320
+detail 160
 rotate 0  0  -0.5  /// CAD mode
 
 /// Base
-define BASELENGTH           5     /// mm
-define BASEHEIGHT          11     /// mm
-define BASEDIAMETER        19     /// mm
-define BASEHOLEDIAMETER     3     /// mm
+define BASE_LENGTH           7     /// mm
+define BASE_HEIGHT          11     /// mm
+define BASE_DIAMETER        19     /// mm
+define BASE_HOLE_DIAMETER    3     /// mm
 /// Chamber
-define CHAMBERDIAMETER     BASEDIAMETER
-define HOLEDIAMETER        10     /// mm
-define CHAMBERLENGTH       24     /// mm
+define CHAMBER_DIAMETER     BASE_DIAMETER
+define HOLE_DIAMETER        10     /// mm
+define CHAMBER_LENGTH       24     /// mm
 /// Slots for locking tabs
-define SLOTLENGTH           7     /// mm
-define SLOTTHICKNESS        2.2   /// mm
-define SLOTWIDTH            7     /// mm
-define SLOTSINNERDISTANCE  11.5   /// mm
-define SLOTSCUTOUTSLENGTH   4     /// mm
+define SLOT_LENGTH           7     /// mm
+define SLOT_THICKNESS        2.2   /// mm
+define SLOT_WIDTH            7     /// mm
+define SLOT_SINNERDISTANCE  11.5   /// mm
+define SLOT_SCUTOUTSLENGTH   4     /// mm
 
 define BASE {
     difference {
         intersection {
             cylinder {
-                size BASEDIAMETER  BASELENGTH
+                size BASE_DIAMETER  BASE_LENGTH
             }
             cube {
-                size BASEDIAMETER  BASELENGTH  BASEHEIGHT
+                size BASE_DIAMETER  BASE_LENGTH  BASE_HEIGHT
             }
         }
 
         cylinder {
-            size BASEHOLEDIAMETER  BASEDIAMETER
+            size BASE_HOLE_DIAMETER  BASE_DIAMETER
             orientation 0  0  0.5
         }
     }
@@ -43,65 +43,68 @@ define CHAMBER {
     difference {
         intersection {
             cylinder {
-                size CHAMBERDIAMETER  CHAMBERLENGTH
+                size CHAMBER_DIAMETER  CHAMBER_LENGTH
             }
             cube {
-                size CHAMBERDIAMETER  CHAMBERLENGTH  BASEHEIGHT
+                size CHAMBER_DIAMETER  CHAMBER_LENGTH  BASE_HEIGHT
             }
         }
 
-        /// Middle hole
-        cylinder {
-            size HOLEDIAMETER  CHAMBERLENGTH
-        }
+        union {
+            /// Middle hole
+            cylinder {
+                size HOLE_DIAMETER  CHAMBER_LENGTH
+            }
 
-        /// Slots
-        cube {
-            size SLOTTHICKNESS  SLOTLENGTH  SLOTWIDTH
-            position (SLOTSINNERDISTANCE / 2 + SLOTTHICKNESS / 2)  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2)
-        }
-        cube {
-            size SLOTTHICKNESS  SLOTLENGTH  SLOTWIDTH
-            position -(SLOTSINNERDISTANCE / 2 + SLOTTHICKNESS / 2)  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2)
-        }
+            /// Slots
+            cube {
+                size SLOT_THICKNESS  SLOT_LENGTH  SLOT_WIDTH
+                position (SLOT_SINNERDISTANCE / 2 + SLOT_THICKNESS / 2)  (CHAMBER_LENGTH / 2 - SLOT_LENGTH / 2)
+            }
+            cube {
+                size SLOT_THICKNESS  SLOT_LENGTH  SLOT_WIDTH
+                position -(SLOT_SINNERDISTANCE / 2 + SLOT_THICKNESS / 2)  (CHAMBER_LENGTH / 2 - SLOT_LENGTH / 2)
+            }
 
-        /// Side cutouts
-        cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEDIAMETER
-            position (SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
-        }
-        cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 2)  SLOTSCUTOUTSLENGTH  BASEDIAMETER
-            position -(SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 4))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2)
-        }
+            /// Side cutouts
+            cube {
+                size ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE) / 2)  SLOT_SCUTOUTSLENGTH  BASE_DIAMETER
+                position (SLOT_SINNERDISTANCE / 2 + ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE) / 4))  (CHAMBER_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_SCUTOUTSLENGTH / 2)
+            }
+            cube {
+                size ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE) / 2)  SLOT_SCUTOUTSLENGTH  BASE_DIAMETER
+                position -(SLOT_SINNERDISTANCE / 2 + ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE) / 4))  (CHAMBER_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_SCUTOUTSLENGTH / 2)
+            }
 
-        /// Side cutouts
-        cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEDIAMETER
-            orientation 0.25
-            position (SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
-        }
-        cube {
-            size ((CHAMBERDIAMETER - SLOTSINNERDISTANCE))  SLOTSCUTOUTSLENGTH  BASEDIAMETER
-            orientation -0.25
-            position -(SLOTSINNERDISTANCE / 2 + ((CHAMBERDIAMETER - SLOTSINNERDISTANCE) / 1.8446))  (CHAMBERLENGTH / 2 - SLOTLENGTH / 2 - SLOTLENGTH / 2 - SLOTSCUTOUTSLENGTH / 2 - SLOTSCUTOUTSLENGTH) + 0.765
+            /// Side cutouts
+            cube {
+                size ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE))  SLOT_SCUTOUTSLENGTH  BASE_DIAMETER
+                orientation 0.25
+                position (SLOT_SINNERDISTANCE / 2 + ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE) / 1.8446))  (CHAMBER_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_SCUTOUTSLENGTH / 2 - SLOT_SCUTOUTSLENGTH) + 0.765
+            }
+            cube {
+                size ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE))  SLOT_SCUTOUTSLENGTH  BASE_DIAMETER
+                orientation -0.25
+                position -(SLOT_SINNERDISTANCE / 2 + ((CHAMBER_DIAMETER - SLOT_SINNERDISTANCE) / 1.8446))  (CHAMBER_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_LENGTH / 2 - SLOT_SCUTOUTSLENGTH / 2 - SLOT_SCUTOUTSLENGTH) + 0.765
+            }
         }
     }
 }
 
-define MC4PROTECTIONFORMALE {
+define MC4_PROTECTIVE_COVER_FOR_MALE {
     union {
         CHAMBER {
         }
+
         BASE {
-            position 0  -(CHAMBERLENGTH / 2 + BASELENGTH / 2)
+            position 0  -(CHAMBER_LENGTH / 2 + BASE_LENGTH / 2)
         }
     }
 }
 
-MC4PROTECTIONFORMALE {
-    opacity 0.5
+MC4_PROTECTIVE_COVER_FOR_MALE {
+    opacity 0.75
 
-    /// Flip vertically
+    /// Flip for better printing orientation
     orientation  1
 }
