@@ -1,0 +1,66 @@
+// ShapeScript document
+
+/// Solar Cooker Level — Mounting Bracket
+/// For GoSun Sport
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90 * 2
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM                      25.399999619
+define GAP                              0.2   /// mm
+/// Solar cooker
+define SOLAR_COOKER_CHAMBER_DIAMETER   70.30  /// mm
+/// Level
+define LEVEL_DIAMETER                  12.44  /// mm
+define LEVEL_LENGTH                    76.12  /// mm
+/// Mounting bracket
+define MOUNTING_BRACKET_THICKNESS       2     /// mm
+define MOUNTING_BRACKET_WIDTH           6     /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define SOLAR_GRILL_LEVEL_MOUNTING_BRACKET {
+    difference {
+        union {
+            cylinder {
+                size (SOLAR_COOKER_CHAMBER_DIAMETER + MOUNTING_BRACKET_THICKNESS * 2)  MOUNTING_BRACKET_WIDTH
+                orientation 0.5  1/8
+            }
+            cylinder {
+                size (LEVEL_DIAMETER + MOUNTING_BRACKET_THICKNESS * 2)  MOUNTING_BRACKET_WIDTH
+                orientation 0.5  1/8
+                position 0  (SOLAR_COOKER_CHAMBER_DIAMETER / 2 + LEVEL_DIAMETER / 2 + MOUNTING_BRACKET_THICKNESS)
+            }
+        }
+
+        /// Solar cooker's chamber
+        cylinder {
+            size (SOLAR_COOKER_CHAMBER_DIAMETER + GAP * 2)  LEVEL_LENGTH
+            orientation 0.5
+        }
+
+        /// Level
+        cylinder {
+            detail 8
+            size (LEVEL_DIAMETER + GAP * 2)  LEVEL_LENGTH
+            orientation 0.5  1/8
+            position 0  (SOLAR_COOKER_CHAMBER_DIAMETER / 2 + LEVEL_DIAMETER / 2 + MOUNTING_BRACKET_THICKNESS)
+        }
+
+        /// Cut off parts for mounting
+        cube {
+            size (LEVEL_DIAMETER + MOUNTING_BRACKET_THICKNESS * 2)  ((LEVEL_DIAMETER + MOUNTING_BRACKET_THICKNESS * 2) / 2)
+            position 0  (SOLAR_COOKER_CHAMBER_DIAMETER / 2 + LEVEL_DIAMETER / 2 + MOUNTING_BRACKET_THICKNESS) + ((LEVEL_DIAMETER + MOUNTING_BRACKET_THICKNESS * 2) / 2)
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+SOLAR_GRILL_LEVEL_MOUNTING_BRACKET {
+    orientation 0.5
+}
