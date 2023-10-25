@@ -1,0 +1,52 @@
+// ShapeScript document
+
+/// Rope End Cap — 3/8"
+
+detail 190
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM               25.399999619
+/// Rope
+define ROPE_THICKNESS          (3/8 * INCH_IN_MM)  /// mm
+/// Cap
+define CAP_WALL_THICKNESS      0.5   /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define ROPE_CAP {
+    difference {
+        union {
+            cylinder {
+                size (ROPE_THICKNESS + CAP_WALL_THICKNESS * 2)  (ROPE_THICKNESS * 1.5)
+            }
+            sphere {
+                size (ROPE_THICKNESS + CAP_WALL_THICKNESS * 2)
+                position 0  ((ROPE_THICKNESS * 1.5) / 2)
+            }
+        }
+
+        union {
+            cylinder {
+                size (ROPE_THICKNESS)  (ROPE_THICKNESS * 1.5)
+            }
+            sphere {
+                size (ROPE_THICKNESS)
+                position 0  ((ROPE_THICKNESS * 1.5) / 2)
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+ROPE_CAP {
+    opacity 0.5
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[ROPE] thickness: " ROPE_THICKNESS "mm"
+print "[CAP] wall thickness: " CAP_WALL_THICKNESS "mm"
+print "[CAP] length: " ((ROPE_THICKNESS * 1.5) + (ROPE_THICKNESS - CAP_WALL_THICKNESS * 2) / 2) "mm"
