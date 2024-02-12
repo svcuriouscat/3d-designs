@@ -1,6 +1,6 @@
 // ShapeScript document
 
-/// Hole Plug — 10mm x 6mm
+/// Hole Plug
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -9,14 +9,26 @@ rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
 
+define INCH_IN_MM                 25.399999619  /// mm
+define GAP                         0.2  /// mm
 /// Hatch
-define HATCH_LENS_HOLE_DIAMETER   10     /// mm
-define HATCH_LENS_THICKNESS        6     /// mm
+define HATCH_LENS_HOLE_DIAMETER   {  /// mm
+//    10
+//    15.8
+//    23
+    50
+}
+define HATCH_LENS_THICKNESS       {  /// mm
+//    6
+//    6.15
+//    9
+    36
+}
 /// PLUG
-define PLUG_WALL_THICKNESS         2     /// mm
-define PLUG_CAP_HEIGHT             1     /// mm
-define PLUG_LOCK_SEGMENTS          5     /// count
-define PLUG_LOCK_THICKNESS         0.6   /// mm
+define PLUG_WALL_THICKNESS         2    /// mm
+define PLUG_CAP_HEIGHT             1    /// mm
+define PLUG_LOCK_SEGMENTS          5    /// count
+define PLUG_LOCK_THICKNESS         0.6  /// mm
 define PLUG_LOCK_SEGMENT_LENGTH   ((HATCH_LENS_THICKNESS) / 2 + PLUG_WALL_THICKNESS)  /// mm
 
 //////////////////////////////////////////////////////////////////////////////
@@ -152,5 +164,7 @@ if not true {
 
 //////////////////////////////////////////////////////////////////////////////
 
+print "[MODEL] detail: " (detail)
+print ""
 print "[HOLE] thickness: " HATCH_LENS_THICKNESS "mm"
 print "[HOLE] diameter: " HATCH_LENS_HOLE_DIAMETER "mm"
