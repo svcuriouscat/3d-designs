@@ -1,0 +1,48 @@
+// ShapeScript document
+
+/// Water Filter Cartridge Bracket
+
+detail 190
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define GAP                  0.2   /// mm
+/// Membrane
+define MEMBRANE_DIAMETER   62.32  /// mm
+/// Filter
+define FILTER_DIAMETER     80     /// mm
+/// Holder
+define BRACKET_THICKNESS    3     /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define FILTER_HOLDER {
+    difference {
+        union {
+            cylinder {
+                size (MEMBRANE_DIAMETER + GAP * 2 + 2)  (BRACKET_THICKNESS)
+            }
+
+            cube {
+                size (FILTER_DIAMETER - GAP * 2)  (BRACKET_THICKNESS)  (BRACKET_THICKNESS)
+            }
+
+            cube {
+                size (BRACKET_THICKNESS)  (BRACKET_THICKNESS) (FILTER_DIAMETER - GAP * 2)
+            }
+        }
+
+        union {
+            cylinder {
+                size (MEMBRANE_DIAMETER + GAP * 2)  (BRACKET_THICKNESS)
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+FILTER_HOLDER {
+    opacity 0.5
+}
