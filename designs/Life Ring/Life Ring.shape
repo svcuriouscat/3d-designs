@@ -1,0 +1,84 @@
+// ShapeScript document
+
+/// Life Ring
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 200
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define INCH_IN_MM                 25.399999619  /// mm
+/// Life Ring
+define LIFE_RING_OUTER_DIAMETER   (24 * INCH_IN_MM)  /// mm
+define LIFE_RING_INNER_DIAMETER   (14 * INCH_IN_MM)  /// mm
+define LIFE_RING_THICKNESS        (4 * INCH_IN_MM)  /// mm
+define LIFE_RING_SEGMENT_COUNT     7  /// count
+/// Laminate
+define LAMINATE_THICKNESS          0.5  /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define LIFE_RING_CORE {
+    extrude {
+        circle {
+            size ((LIFE_RING_OUTER_DIAMETER - LIFE_RING_INNER_DIAMETER) / 2 - LAMINATE_THICKNESS * 2)  (LIFE_RING_THICKNESS)
+        }
+        along circle {
+            orientation 0  0  0.5
+            size ((LIFE_RING_OUTER_DIAMETER + LIFE_RING_INNER_DIAMETER) / 2)
+        }
+    }
+}
+
+define SLICER {
+    cube {
+        size ((LIFE_RING_OUTER_DIAMETER - LIFE_RING_INNER_DIAMETER) / 2)  (LIFE_RING_THICKNESS)  (LAMINATE_THICKNESS)
+        position ((LIFE_RING_OUTER_DIAMETER + LIFE_RING_INNER_DIAMETER) / 4)
+    }
+}
+
+define REMOVER {
+    cube {
+        size (LIFE_RING_OUTER_DIAMETER)  (LIFE_RING_THICKNESS)  (LIFE_RING_OUTER_DIAMETER)
+        position 0  0  (LIFE_RING_OUTER_DIAMETER / 2)
+    }
+}
+
+define LIFE_RING_CORE_SEGMENT {
+    difference {
+        LIFE_RING_CORE {}
+
+        for i in 1 to LIFE_RING_SEGMENT_COUNT {
+            SLICER {
+                orientation 0  (i * (2 / LIFE_RING_SEGMENT_COUNT))
+            }
+        }
+
+        if LIFE_RING_SEGMENT_COUNT > 1 {
+            REMOVER {
+            }
+            if LIFE_RING_SEGMENT_COUNT > 2 {
+                REMOVER {
+                    orientation 0  ((2 / LIFE_RING_SEGMENT_COUNT) * (LIFE_RING_SEGMENT_COUNT / 2 - 1))
+                }
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+//LIFE_RING_CORE {}
+LIFE_RING_CORE_SEGMENT {}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[MODEL] detail: " (detail)
+print ""
+print "[LIFE RING] outer diameter: " (LIFE_RING_OUTER_DIAMETER) "mm"
+print "[LIFE RING] inner diameter: " (LIFE_RING_INNER_DIAMETER) "mm"
+print "[LIFE RING] thickness: " (LIFE_RING_THICKNESS) "mm"
+print "[LIFE RING] segment count: " (LIFE_RING_SEGMENT_COUNT)
+print "[LAMINATE] thickness: " (LAMINATE_THICKNESS) "mm"
