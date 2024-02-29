@@ -1,15 +1,21 @@
 // ShapeScript document
 
-/// Rope End Cap — 3/8"
+/// Rope End Cap / Aglet
 
-detail 190
+detail 90
 rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
 
-define INCH_IN_MM               25.399999619
+define INCH_IN_MM             25.399999619
 /// Rope
-define ROPE_THICKNESS          (3/8 * INCH_IN_MM)  /// mm
+define ROPE_THICKNESS          {  /// mm
+     14  /// mm (14mm rope)
+    // (1/2 * INCH_IN_MM)  /// mm (1/2" rope)
+    // 12  /// mm (12mm rope)
+    // 10  /// mm (10mm rope)
+    // (3/8 * INCH_IN_MM)  /// mm (3/8" rope)
+}
 /// Cap
 define CAP_WALL_THICKNESS      0.5   /// mm
 
@@ -49,4 +55,6 @@ ROPE_CAP {
 
 print "[ROPE] thickness: " ROPE_THICKNESS "mm"
 print "[CAP] wall thickness: " CAP_WALL_THICKNESS "mm"
-print "[CAP] length: " ((ROPE_THICKNESS * 1.5) + (ROPE_THICKNESS - CAP_WALL_THICKNESS * 2) / 2) "mm"
+print "[CAP] inner diameter: " (ROPE_THICKNESS) "mm"
+print "[CAP] outer diameter: " (ROPE_THICKNESS + CAP_WALL_THICKNESS * 2) "mm"
+print "[CAP] total length: " ((ROPE_THICKNESS * 1.5) + (ROPE_THICKNESS - CAP_WALL_THICKNESS * 2) / 2) "mm"
