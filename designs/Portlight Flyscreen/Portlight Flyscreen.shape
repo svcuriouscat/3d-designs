@@ -1,0 +1,345 @@
+// ShapeScript document
+
+/// Portlight Flyscreen
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 128
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define GAP                       0.2   /// mm
+/// Portlight Variant
+define PORTLIGHT {  /// width (mm), height (mm), corner radius (mm), name (string)
+    320  117  (117 / 2)  "Lewmar Atlantic Size 32"
+}
+/// Screen
+define SCREEN_THICKNESS          2     /// mm
+define SCREEN_BORDER_WIDTH       3     /// mm
+/// Tabs
+define TABS_HEIGHT             124     /// mm
+define TABS_WIDTH              327     /// mm
+define TABS_SIZE_HORIZ          18     /// mm
+define TABS_SIZE_VERT           16     /// mm
+define TAB_WIDTH                16     /// mm
+define TAB_LENGTH                3.5   /// mm
+define TAB_THICKNESS             1     /// mm
+/// Mesh
+define GRILL_HOLE_SIZE           2     /// mm
+define GRILL_LINE_THICKNESS      0.5   /// mm
+define MESH_ANGLE               69     /// degrees
+define GRILL_LINE_COUNT_HORIZ   (PORTLIGHT[1] - SCREEN_THICKNESS * 2) / (GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE) / (MESH_ANGLE / 360)  /// count
+define GRILL_LINE_COUNT_VERT    (PORTLIGHT[0] - SCREEN_THICKNESS * 2) / (GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE)  /// count
+
+//////////////////////////////////////////////////////////////////////////////
+
+define BORDER_SHAPE {
+    union {
+        cylinder {
+            size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
+            position ((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+        }
+
+        cube {
+            size (PORTLIGHT[0] - PORTLIGHT[2] * 2)  SCREEN_THICKNESS  PORTLIGHT[1]
+        }
+
+        cylinder {
+            size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
+            position -((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+        }
+
+        if (PORTLIGHT[2] * 2) < PORTLIGHT[1] {
+            cylinder {
+                size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
+                position ((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  -((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+            }
+
+            cube {
+                size PORTLIGHT[0]  SCREEN_THICKNESS  (PORTLIGHT[1] - PORTLIGHT[2] * 2)
+            }
+
+            cylinder {
+                size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
+                position -((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  -((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+            }
+        }
+    }
+}
+
+define CUTOUT {
+    union {
+        cylinder {
+            size (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)
+            position ((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+        }
+
+        cube {
+            size (PORTLIGHT[0] - PORTLIGHT[2] * 2)  (SCREEN_THICKNESS)  (PORTLIGHT[1] - SCREEN_BORDER_WIDTH * 2)
+        }
+
+        cylinder {
+            size (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)  (SCREEN_THICKNESS)  (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)
+            position -((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+        }
+
+        if (PORTLIGHT[2] * 2) < PORTLIGHT[1] {
+            cylinder {
+                size (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)
+                position ((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  -((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+            }
+
+            cube {
+                size (PORTLIGHT[0] - SCREEN_BORDER_WIDTH * 2)  (SCREEN_THICKNESS)  (PORTLIGHT[1] - PORTLIGHT[2] * 2)
+            }
+
+            cylinder {
+                size (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)  (SCREEN_THICKNESS)  (PORTLIGHT[2] * 2 - SCREEN_BORDER_WIDTH * 2)
+                position -((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  -((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+            }
+        }
+    }
+}
+
+define BORDER {
+    difference {
+        union {
+            BORDER_SHAPE {
+            }
+
+            /// Tabs
+            group {
+                TAB {
+                    position (PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  -(PORTLIGHT[1] / 2)
+                }
+                TAB {
+                    position -(PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  -(PORTLIGHT[1] / 2)
+                }
+                TAB {
+                    orientation 0  -1
+                    position (PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  (PORTLIGHT[1] / 2)
+                }
+                TAB {
+                    orientation 0  -1
+                    position -(PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  (PORTLIGHT[1] / 2)
+                }
+
+
+                TAB {
+                    orientation 0  0.5
+                    position (PORTLIGHT[0] / 2)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)
+                }
+                TAB {
+                    orientation 0  -0.5
+                    position -(PORTLIGHT[0] / 2)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)
+                }
+            }
+        }
+
+        CUTOUT {
+        }
+    }
+}
+
+define TAB_OLD {
+    union {
+        sphere {
+            size TABS_HEIGHT  SCREEN_THICKNESS  TABS_HEIGHT
+            position (TABS_WIDTH / 2 - TABS_HEIGHT / 2)
+        }
+
+        cylinder {
+            orientation  0.5
+            size (SCREEN_THICKNESS)  (TABS_WIDTH - TABS_HEIGHT)  TABS_HEIGHT
+        }
+
+        sphere {
+            size TABS_HEIGHT  SCREEN_THICKNESS  TABS_HEIGHT
+            position -(TABS_WIDTH / 2 - TABS_HEIGHT / 2)
+        }
+    }
+}
+
+define TAB {
+    intersection {
+        union {
+            cylinder {
+                size TAB_THICKNESS  TAB_WIDTH  (TAB_LENGTH * 2)
+                orientation 0.5
+            }
+
+            cube {
+                size TAB_THICKNESS  TAB_WIDTH  (TAB_LENGTH)
+                orientation 0.5
+                position 0  0  (TAB_LENGTH / 2)
+            }
+        }
+
+        cylinder {
+            size TAB_WIDTH  TAB_THICKNESS  (TAB_WIDTH * 1.5)
+            position 0  0  (TAB_LENGTH)
+        }
+    }
+}
+
+define TABS {
+    intersection {
+        /// Base
+        difference {
+            TAB_OLD {
+                position 0  -(SCREEN_THICKNESS / 2 - 0.5)
+            }
+
+            /// Cut out hole in the middle (for the border)
+            BORDER_SHAPE {
+                size 1  10  1
+            }
+        }
+
+        /// Levers
+        union {
+            /// Horizontal
+            cylinder {
+                size TABS_SIZE_HORIZ  SCREEN_THICKNESS
+                position (PORTLIGHT[0] / 2 - TABS_SIZE_HORIZ / 10)
+            }
+            cylinder {
+                size TABS_SIZE_HORIZ  SCREEN_THICKNESS
+                position -(PORTLIGHT[0] / 2 - TABS_SIZE_HORIZ / 10)
+            }
+
+            /// Vertical
+            group {
+                cylinder {
+                    size TABS_SIZE_VERT  SCREEN_THICKNESS
+                    position (PORTLIGHT[0] / 4)  0  -(PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
+                }
+                cylinder {
+                    size TABS_SIZE_VERT  SCREEN_THICKNESS
+                    position -(PORTLIGHT[0] / 4)  0  -(PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
+                }
+                cylinder {
+                    size TABS_SIZE_VERT  SCREEN_THICKNESS
+                    position (PORTLIGHT[0] / 4)  0  (PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
+                }
+                cylinder {
+                    size TABS_SIZE_VERT  SCREEN_THICKNESS
+                    position -(PORTLIGHT[0] / 4)  0  (PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
+                }
+            }
+        }
+    }
+}
+
+define MESH {
+    intersection {
+        CUTOUT {
+        }
+
+        union {
+            group {
+                /// Horizontal lines (angled)
+                for i in -(GRILL_LINE_COUNT_HORIZ / 2) to (GRILL_LINE_COUNT_HORIZ / 2) {
+                    cube {
+                        size (PORTLIGHT[0])  (PORTLIGHT[1])  (GRILL_LINE_THICKNESS)
+                        position 0  0  (i * (GRILL_LINE_COUNT_HORIZ / PORTLIGHT[1]))
+                    }
+                }
+
+                orientation 0  0  -(MESH_ANGLE / 180)
+                /// Move down a little to have as many holes as possible
+                position 0  -(GRILL_HOLE_SIZE / 2 + GRILL_LINE_THICKNESS / 2)
+            }
+
+            group {
+                /// Vertical lines
+                for i in -(GRILL_LINE_COUNT_VERT / 2) to (GRILL_LINE_COUNT_VERT / 2) {
+                    cube {
+                        size (GRILL_LINE_THICKNESS)  (SCREEN_THICKNESS)  (PORTLIGHT[1] - SCREEN_THICKNESS * 2)
+                        position (i * (GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE) - ((GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE) / 4))
+                    }
+                }
+
+                /// Move them a little to make the grill symmetrical
+                position (GRILL_HOLE_SIZE / 2 + GRILL_LINE_THICKNESS / 2)-(GRILL_HOLE_SIZE / 2 + GRILL_LINE_THICKNESS / 2)
+            }
+        }
+    }
+}
+
+define PORTLIGHT_FLYSCREEN {
+    union {
+        BORDER {
+        }
+
+        ///TABS {
+        ///}
+
+        MESH {
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+if not true {
+    PORTLIGHT_FLYSCREEN {
+    }
+} else {
+    difference {
+        name "Left Half"
+        color 100  100  100
+
+        union {
+            PORTLIGHT_FLYSCREEN {
+            }
+
+            /// Reinforcement in the middle (where the two halves will be glued together)
+            cube {
+                size (SCREEN_BORDER_WIDTH)  SCREEN_THICKNESS  PORTLIGHT[1]
+            }
+        }
+
+        cube {
+            size (TABS_WIDTH / 2)  (SCREEN_THICKNESS)  (TABS_HEIGHT)
+            position (TABS_WIDTH / 4)
+        }
+    }
+
+    difference {
+        name "Right Half"
+        color 50  50  50
+
+        union {
+            PORTLIGHT_FLYSCREEN {
+            }
+
+            /// Reinforcement in the middle (where the two halves will be glued together)
+            cube {
+                size (SCREEN_BORDER_WIDTH)  SCREEN_THICKNESS  PORTLIGHT[1]
+            }
+        }
+
+        cube {
+            size (TABS_WIDTH / 2)  (SCREEN_THICKNESS)  (TABS_HEIGHT)
+            position -(TABS_WIDTH / 4)
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[MODEL] detail: " (detail)
+print "[MODEL] variant: " PORTLIGHT[3]
+print ""
+print "[PORTLIGHT] opening width: " PORTLIGHT[0] "mm"
+print "[PORTLIGHT] opening height: " PORTLIGHT[1] "mm"
+print "[PORTLIGHT] opening corner radius: " PORTLIGHT[2] "mm"
+print ""
+print "[SCREEN] thickness: " SCREEN_THICKNESS "mm"
+print ""
+print "[TAB] width: " TAB_WIDTH "mm"
+print "[TAB] length: " TAB_LENGTH "mm"
+print "[TAB] thickness: " TAB_THICKNESS "mm"
+print ""
