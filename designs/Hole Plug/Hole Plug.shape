@@ -10,60 +10,69 @@ rotate 0  0  -0.5  /// CAD mode
 //////////////////////////////////////////////////////////////////////////////
 
 define INCH_IN_MM                 25.399999619  /// mm
-define GAP                         0.2  /// mm
-/// Hatch
-define HATCH_LENS_HOLE_DIAMETER   {  /// mm
+// define GAP                         0.2  /// mm
+
+/// Hole
+define HOLE_DIAMETER              {  /// mm
 //    10
 //    15.8
 //    23
-    50
+    // 50  /// Some small old marine instrument display
+    90  /// Some medium-sized old marine instrument display
 }
-define HATCH_LENS_THICKNESS       {  /// mm
+define HOLE_DEPTH                 {  /// mm
 //    6
 //    6.15
 //    9
-    36
+    34.5  /// 1-1/4" + laminate; fiberglass-foam sandwich
 }
-/// PLUG
+
+/// Plug
 define PLUG_WALL_THICKNESS         2    /// mm
 define PLUG_CAP_HEIGHT             1    /// mm
 define PLUG_LOCK_SEGMENTS          5    /// count
 define PLUG_LOCK_THICKNESS         0.6  /// mm
-define PLUG_LOCK_SEGMENT_LENGTH   ((HATCH_LENS_THICKNESS) / 2 + PLUG_WALL_THICKNESS)  /// mm
+define PLUG_LOCK_SEGMENT_LENGTH   ((HOLE_DEPTH) / 2 + PLUG_WALL_THICKNESS)  /// mm
+
+/// Opening
+define OPENING_DIAMETER           {  /// mm (a hole within a hole)
+    0  /// mm (default, no opening)
+    // 18.84  /// mm (stianless steel horn push button by Sheridan Marine)
+}
 
 //////////////////////////////////////////////////////////////////////////////
 
-define HATCH_LENS_PLUG_LOCK_SPACE {
+define HOLE_PLUG_LOCK_SPACE {
     cube {
-        size ((HATCH_LENS_HOLE_DIAMETER + PLUG_LOCK_THICKNESS) / 2)  (PLUG_LOCK_SEGMENT_LENGTH)  (PLUG_WALL_THICKNESS)
-        position ((HATCH_LENS_HOLE_DIAMETER + PLUG_LOCK_THICKNESS) / 4)  -((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 - PLUG_LOCK_SEGMENT_LENGTH / 2)
+        size ((HOLE_DIAMETER + PLUG_LOCK_THICKNESS) / 2)  (PLUG_LOCK_SEGMENT_LENGTH)  (PLUG_WALL_THICKNESS)
+        position ((HOLE_DIAMETER + PLUG_LOCK_THICKNESS) / 4)  -((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2 - PLUG_LOCK_SEGMENT_LENGTH / 2)
     }
 }
 
-define HATCH_LENS_PLUG {
+define HOLE_PLUG {
     difference {
         union {
             /// Base
             cylinder {
-                size (HATCH_LENS_HOLE_DIAMETER)  (HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS)
+                size (HOLE_DIAMETER)  (HOLE_DEPTH + PLUG_WALL_THICKNESS)
             }
 
             /// Cap
             difference {
                 cylinder {
-                    size (HATCH_LENS_HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2)  (PLUG_CAP_HEIGHT)
-                    position 0  ((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 + PLUG_CAP_HEIGHT / 2)
+                    size (HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2)  (PLUG_CAP_HEIGHT)
+                    position 0  ((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2 + PLUG_CAP_HEIGHT / 2)
                 }
 
                 difference {
                     difference {
                         cylinder {
-                            size (HATCH_LENS_HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2)  (PLUG_CAP_HEIGHT)
-                            position 0  ((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 + PLUG_CAP_HEIGHT / 2)
+                            size (HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2)  (PLUG_CAP_HEIGHT)
+                            position 0  ((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2 + PLUG_CAP_HEIGHT / 2)
                         }
                         cylinder {
-                            size (HATCH_LENS_HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2 - PLUG_CAP_HEIGHT * 2)  (PLUG_CAP_HEIGHT)
-                            position 0  ((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 + PLUG_CAP_HEIGHT / 2)
+                            size (HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2 - PLUG_CAP_HEIGHT * 2)  (PLUG_CAP_HEIGHT)
+                            position 0  ((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2 + PLUG_CAP_HEIGHT / 2)
                         }
                     }
                     extrude {
@@ -72,44 +81,51 @@ define HATCH_LENS_PLUG {
                         }
                         along circle {
                             orientation 0  0  0.5
-                            size (HATCH_LENS_HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2 - PLUG_CAP_HEIGHT * 2)
-                            position 0  ((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2)
+                            size (HOLE_DIAMETER + PLUG_WALL_THICKNESS * 2 - PLUG_CAP_HEIGHT * 2)
+                            position 0  ((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2)
                         }
                     }
                 }
-            }
-            /// Material for making cap transition smooth
-            cylinder {
-                size (HATCH_LENS_HOLE_DIAMETER + PLUG_WALL_THICKNESS)  (PLUG_WALL_THICKNESS / 2)
-                position 0  ((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 - PLUG_WALL_THICKNESS / 4)
             }
 
             /// Locks
             lathe path {
                 point 0  PLUG_WALL_THICKNESS
-                point ((HATCH_LENS_HOLE_DIAMETER + PLUG_LOCK_THICKNESS) / 2)  PLUG_WALL_THICKNESS
-                point (HATCH_LENS_HOLE_DIAMETER / 2)  0
+                point ((HOLE_DIAMETER + PLUG_LOCK_THICKNESS) / 2)  PLUG_WALL_THICKNESS
+                point (HOLE_DIAMETER / 2)  0
                 point 0  0
 
-                position 0  -((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2)
+                position 0  -((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2)
             }
             /// Material for making locks' transition smooth
             cylinder {
-                size (HATCH_LENS_HOLE_DIAMETER + PLUG_LOCK_THICKNESS)  (PLUG_WALL_THICKNESS / 2)
-                position 0  -((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 - PLUG_WALL_THICKNESS * 1.25)
+                size (HOLE_DIAMETER + PLUG_LOCK_THICKNESS)  (PLUG_WALL_THICKNESS / 2)
+                position 0  -((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2 - PLUG_WALL_THICKNESS * 1.25)
             }
         }
 
         /// Center
         cylinder {
-            size (HATCH_LENS_HOLE_DIAMETER - PLUG_WALL_THICKNESS * 2)  (HATCH_LENS_THICKNESS)
+            size (HOLE_DIAMETER - PLUG_WALL_THICKNESS * 2)  (HOLE_DEPTH)
             position 0  -(PLUG_WALL_THICKNESS / 2)
         }
 
         /// Lock segments
         for i in 1 to PLUG_LOCK_SEGMENTS {
-            HATCH_LENS_PLUG_LOCK_SPACE {
+            HOLE_PLUG_LOCK_SPACE {
                 orientation 0  i * (2 / PLUG_LOCK_SEGMENTS)
+            }
+        }
+
+        /// Opening
+        if OPENING_DIAMETER > 0 {
+            cylinder {
+                if OPENING_DIAMETER > (HOLE_DIAMETER - PLUG_WALL_THICKNESS * 2) {
+                    size (HOLE_DIAMETER - PLUG_WALL_THICKNESS * 2)  (PLUG_WALL_THICKNESS * 1.5)
+                } else {
+                    size OPENING_DIAMETER  (PLUG_WALL_THICKNESS * 1.5)
+                }
+                position 0  (HOLE_DEPTH / 2 + PLUG_WALL_THICKNESS / 4)
             }
         }
 
@@ -120,20 +136,8 @@ define HATCH_LENS_PLUG {
             }
             along circle {
                 orientation 0  0  0.5
-                size (HATCH_LENS_HOLE_DIAMETER + PLUG_LOCK_THICKNESS)
-                position 0  -((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 - PLUG_WALL_THICKNESS * 1.5)
-            }
-        }
-
-        /// Make cap transition smooth
-        extrude {
-            circle {
-                size (PLUG_WALL_THICKNESS)
-            }
-            along circle {
-                orientation 0  0  0.5
-                size (HATCH_LENS_HOLE_DIAMETER + PLUG_WALL_THICKNESS)
-                position 0  ((HATCH_LENS_THICKNESS + PLUG_WALL_THICKNESS) / 2 - PLUG_WALL_THICKNESS / 2)
+                size (HOLE_DIAMETER + PLUG_LOCK_THICKNESS)
+                position 0  -((HOLE_DEPTH + PLUG_WALL_THICKNESS) / 2 - PLUG_WALL_THICKNESS * 1.5)
             }
         }
     }
@@ -141,23 +145,23 @@ define HATCH_LENS_PLUG {
 
 //////////////////////////////////////////////////////////////////////////////
 
-HATCH_LENS_PLUG {
+HOLE_PLUG {
     position 0  (PLUG_WALL_THICKNESS / 2)
     orientation 1
 }
 
-/// Lens
+/// Ghost
 if not true {
     difference {
         color 1  0  0
         opacity 0.1
 
         cube {
-            size (HATCH_LENS_HOLE_DIAMETER * 3)  (HATCH_LENS_THICKNESS)  (HATCH_LENS_HOLE_DIAMETER * 3)
+            size (HOLE_DIAMETER * 3)  (HOLE_DEPTH)  (HOLE_DIAMETER * 3)
         }
 
         cylinder {
-            size (HATCH_LENS_HOLE_DIAMETER)  (HATCH_LENS_THICKNESS)
+            size (HOLE_DIAMETER)  (HOLE_DEPTH)
         }
     }
 }
@@ -165,6 +169,12 @@ if not true {
 //////////////////////////////////////////////////////////////////////////////
 
 print "[MODEL] detail: " (detail)
+
 print ""
-print "[HOLE] thickness: " HATCH_LENS_THICKNESS "mm"
-print "[HOLE] diameter: " HATCH_LENS_HOLE_DIAMETER "mm"
+print "[HOLE] depth: " HOLE_DEPTH "mm"
+print "[HOLE] diameter: " HOLE_DIAMETER "mm"
+
+if OPENING_DIAMETER > 0 {
+    print ""
+    print "[OPENING] diameter: " OPENING_DIAMETER "mm"
+}
