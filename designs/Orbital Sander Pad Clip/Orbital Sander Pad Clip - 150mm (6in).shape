@@ -2,32 +2,47 @@
 
 /// Orbital Sander Pad Clip — 150mm (6")
 
-define BASEDIAMETER           150     /// mm (125 for 5" discs, 150 for 6" discs)
-define BASEHEIGHT               3     /// mm
-define BASEHOLEDIAMETER       BASEDIAMETER / 4.5  /// mm
-define DISCHOLEDIAMETER         8     /// mm
-define DISCOUTERHOLEDIAMETER   10     /// mm (N/A for 5" discs,  10 for 6" discs)
-define DISCHOLEDISTANCE        57     /// mm (55 for 5" discs,   57 for 6" discs)
-define DISCOUTERHOLEDISTANCE  110     /// mm (N/A for 5" discs, 110 for 6" discs)
-define RODLENGTH               22     /// mm
-define RODDIAMETER            DISCHOLEDIAMETER - 0.4  /// mm
-define OUTERRODDIAMETER       DISCOUTERHOLEDIAMETER - 0.4  /// mm
+//////////////////////////////////////////////////////////////////////////////
 
-detail 80
-rotate 0 0 -0.5  /// CAD mode
+detail 90
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define GAP                          0.2   /// mm
+
+/// Base
+define BASE_DIAMETER              150     /// mm (125 for 5" discs, 150 for 6" discs)
+define BASE_HEIGHT                  3     /// mm
+define BASE_HOLE_DIAMETER          (BASE_DIAMETER / 4.5)  /// mm
+
+/// Disc
+define DISC_HOLE_DIAMETER           8     /// mm
+define DISC_HOLE_DISTANCE          57     /// mm (55 for 5" discs,   57 for 6" discs)
+define DISC_OUTER_HOLES_DIAMETER   10     /// mm (N/A for 5" discs,  10 for 6" discs)
+define DISC_OUTER_HOLES_DISTANCE  110     /// mm (N/A for 5" discs, 110 for 6" discs)
+
+/// Rods
+define ROD_LENGTH                  22     /// mm
+define ROD_DIAMETER               (DISC_HOLE_DIAMETER - GAP * 2)  /// mm
+
+/// Outer rods
+define OUTER_ROD_DIAMETER         (DISC_OUTER_HOLES_DIAMETER - GAP * 2)  /// mm
+
+//////////////////////////////////////////////////////////////////////////////
 
 define HOLE {
     difference {
         cylinder {
-            size (BASEHOLEDIAMETER + BASEHEIGHT)  BASEHEIGHT
+            size (BASE_HOLE_DIAMETER + BASE_HEIGHT)  BASE_HEIGHT
         }
         extrude {
             circle {
-                size BASEHEIGHT
+                size BASE_HEIGHT
             }
             along circle {
                 orientation 0  0  0.5
-                size (BASEHOLEDIAMETER + BASEHEIGHT)
+                size (BASE_HOLE_DIAMETER + BASE_HEIGHT)
             }
         }
     }
@@ -36,16 +51,16 @@ define HOLE {
 define ROD {
     difference {
         cylinder {
-            size RODDIAMETER  RODLENGTH
+            size ROD_DIAMETER  ROD_LENGTH
         }
         difference {
             cylinder {
-                size RODDIAMETER  (RODDIAMETER / 2)
-                position 0  (RODLENGTH / 2 - RODDIAMETER / 4)
+                size ROD_DIAMETER  (ROD_DIAMETER / 2)
+                position 0  (ROD_LENGTH / 2 - ROD_DIAMETER / 4)
             }
             sphere {
-                size RODDIAMETER
-                position 0  (RODLENGTH / 2 - RODDIAMETER / 2)
+                size ROD_DIAMETER
+                position 0  (ROD_LENGTH / 2 - ROD_DIAMETER / 2)
             }
         }
     }
@@ -54,23 +69,22 @@ define ROD {
 define OUTERROD {
     difference {
         cylinder {
-            size OUTERRODDIAMETER  RODLENGTH
+            size OUTER_ROD_DIAMETER  ROD_LENGTH
         }
         difference {
             cylinder {
-                size OUTERRODDIAMETER  (OUTERRODDIAMETER / 2)
-                position 0  (RODLENGTH / 2 - OUTERRODDIAMETER / 4)
+                size OUTER_ROD_DIAMETER  (OUTER_ROD_DIAMETER / 2)
+                position 0  (ROD_LENGTH / 2 - OUTER_ROD_DIAMETER / 4)
             }
             sphere {
-                size OUTERRODDIAMETER
-                position 0  (RODLENGTH / 2 - OUTERRODDIAMETER / 2)
+                size OUTER_ROD_DIAMETER
+                position 0  (ROD_LENGTH / 2 - OUTER_ROD_DIAMETER / 2)
             }
         }
     }
 }
 
 define PADCLIP {
-
     difference {
         /// Base with rods
         union {
@@ -78,16 +92,16 @@ define PADCLIP {
             difference {
                 union {
                     cylinder {
-                        size (BASEDIAMETER - BASEHEIGHT)  BASEHEIGHT
+                        size (BASE_DIAMETER - BASE_HEIGHT)  BASE_HEIGHT
                     }
                     /// Round outer edge
                     extrude {
                         circle {
-                            size BASEHEIGHT
+                            size BASE_HEIGHT
                         }
                         along circle {
                             orientation 0  0  0.5
-                            size (BASEDIAMETER - BASEHEIGHT)
+                            size (BASE_DIAMETER - BASE_HEIGHT)
                         }
                     }
                 }
@@ -101,7 +115,7 @@ define PADCLIP {
 
                     for i in 1 to 8 {
                         HOLE {
-                            position (BASEDIAMETER / 2)
+                            position (BASE_DIAMETER / 2)
                         }
 
                         rotate 0  ((0.25 * i))
@@ -112,26 +126,32 @@ define PADCLIP {
             /// Rods
             union {
                 /// Inner rods
-                for i in 1 to 8 {
+                for i in 1 to 4 {
                     ROD {
-                        position (DISCHOLEDISTANCE / 2 + DISCHOLEDIAMETER / 2)  (BASEHEIGHT / 2 + RODLENGTH / 2)
+                        position (DISC_HOLE_DISTANCE / 2 + DISC_HOLE_DIAMETER / 2)  (BASE_HEIGHT / 2 + ROD_LENGTH / 2)
                     }
 
-                    rotate 0  (0.25 * i)
+                    rotate 0  (i / 2)
                 }
 
                 /// Outer rods
-                for i in 1 to 8 {
+                for i in 1 to 4 {
                     OUTERROD {
-                        position (DISCOUTERHOLEDISTANCE / 2 + DISCOUTERHOLEDIAMETER / 2)  (BASEHEIGHT / 2 + RODLENGTH / 2)
+                        position (DISC_OUTER_HOLES_DISTANCE / 2 + DISC_OUTER_HOLES_DIAMETER / 2)  (BASE_HEIGHT / 2 + ROD_LENGTH / 2)
                     }
 
-                    rotate 0  (0.25 * i)
+                    rotate 0  (i / 2)
                 }
             }
         }
     }
-    
 }
 
-PADCLIP
+//////////////////////////////////////////////////////////////////////////////
+
+PADCLIP {
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[MODEL] detail: " (detail)
