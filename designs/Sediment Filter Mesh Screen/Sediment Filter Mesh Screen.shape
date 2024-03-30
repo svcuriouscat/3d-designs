@@ -1,0 +1,113 @@
+// ShapeScript document
+
+/// Sediment Filter Mesh Screen
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 90
+
+camera {
+    position -9.0469 -42.8308 14.762
+    orientation -0.0039 0.1636 -0.3574
+    width 677
+    height 609
+}
+
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define PI                          3.141592653589793238462643383279502884197
+define GAP                         0.1
+
+/// Screen
+define SCREEN {
+  90/9  40  0.2
+}
+define SCREEN_HEIGHT                 SCREEN[0]  /// mm
+define SCREEN_INNER_DIAMETER        (SCREEN[1] + GAP * 2)  /// mm
+define SCREEN_WALL_THICKNESS         SCREEN[2]  /// mm
+define SCREEN_INNER_CIRCUMFERENCE   (2 * PI * SCREEN_INNER_DIAMETER)  /// mm
+
+/// Mesh
+define MESH {  /// opening size (mm), distance between openings (mm), name (string)
+  0.5    (0.5 / 2)  "US Mesh 35"
+//  0.4    (1 / 2)  "US Mesh 40"
+//  0.35   (1 / 2)  "US Mesh 45"
+//  0.297  (0.297 / 2)  "US Mesh 50"
+//  0.25   (1 / 2)  "US Mesh 60"
+//  0.21   (1 / 2)  "US Mesh 70"
+//  0.177  (1 / 2)  "US Mesh 80"
+//  0.149  (1 / 2)  "US Mesh 100"
+//  0.125  (1 / 2)  "US Mesh 120"
+//  0.105  (1 / 2)  "US Mesh 140"
+//  0.088  (1 / 2)  "US Mesh 170"
+}
+define MESH_OPENING_SIZE         MESH[0]
+define MESH_OPENING_SPACING      MESH[1]
+define MESH_NAME                 MESH[2]
+define MESH_OPENINGS_PER_ROW    floor(SCREEN_INNER_CIRCUMFERENCE / (MESH_OPENING_SIZE + MESH_OPENING_SPACING))  /// count
+define MESH_OPENINGS_ROWS       floor(SCREEN_HEIGHT / (MESH_OPENING_SIZE + MESH_OPENING_SPACING))  /// count
+// TODO increase amount of rows by calculating distance between oddly-stacked rows
+
+//////////////////////////////////////////////////////////////////////////////
+
+define MESH_OPENINGS_ROW {
+    union {
+        for j in 0 to (MESH_OPENINGS_PER_ROW / 4 - 1) {
+            cylinder {
+                detail (detail / 4)
+                size MESH_OPENING_SIZE  (SCREEN_INNER_DIAMETER + SCREEN_WALL_THICKNESS * 2)
+                orientation 0.5  0  (j / MESH_OPENINGS_PER_ROW * 4)
+            }
+        }
+    }
+}
+
+define MESH_SCREEN {
+    difference {
+        cylinder {
+            size (SCREEN_INNER_DIAMETER + SCREEN_WALL_THICKNESS * 2)  SCREEN_HEIGHT
+        }
+
+        cylinder {
+            size (SCREEN_INNER_DIAMETER)  SCREEN_HEIGHT
+        }
+
+        /// Mesh holes
+        union {
+            for i in -(MESH_OPENINGS_ROWS / 2 - 1) to (MESH_OPENINGS_ROWS / 2 - 1) {
+                MESH_OPENINGS_ROW {
+                    position 0  (i * (MESH_OPENING_SIZE + MESH_OPENING_SPACING))  0
+
+                    /// Turn even rows a little
+                    if floor(i) % 2 = 0 {
+                        orientation 0  (0.5 / MESH_OPENINGS_PER_ROW * 4)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+MESH_SCREEN {
+    name "Sediment Filter Mesh Screen - " MESH_NAME
+    opacity 0.25
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[MODEL] detail: " (detail)
+
+print ""
+print "[SCREEN] height: " SCREEN_HEIGHT "mm"
+print "[SCREEN] inner diameter: " SCREEN_INNER_DIAMETER "mm"
+print "[SCREEN] wall thickness: " SCREEN_WALL_THICKNESS "mm"
+print ""
+print "[MESH] name: " MESH_NAME
+print "[MESH] opening size: " MESH_OPENING_SIZE "mm (" (MESH_OPENING_SIZE * 1000) "µm)"
+print "[MESH] spacing between openings: " MESH_OPENING_SPACING "mm (" (MESH_OPENING_SPACING * 1000) "µm)"
+print "[MESH] total number of openings: " (MESH_OPENINGS_PER_ROW * MESH_OPENINGS_ROWS)
+// TODO: calculate and output flow rate
