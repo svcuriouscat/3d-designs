@@ -1,0 +1,255 @@
+// ShapeScript document
+
+/// USCG vessel placard
+
+//////////////////////////////////////////////////////////////////////////////
+
+detail 40
+
+camera {
+    position 356.2864 -187.9616 607.7221
+    orientation 0.0018 -0.1062 -0.0923
+    width 767
+    height 485
+}
+
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// Placard
+define PLACARD_NUMBER              "1234567"  /// VIN (string)
+define PLACARD_WIDTH                1000
+define PLACARD_HEIGHT               250
+define PLACARD_THICKNESS            4
+define PLACARD_SHAPE_TYPE           2  /// number (1–4)
+define PLACARD_FONT_WIDTH           0
+define PLACARD_FONT_DEPTH           -1  /// mm (can be negative for indented text)
+define PLACARD_FONT_RENDER          true  /// boolean
+define PLACARD_FASTENERS_DIAMETER {  /// mm
+//    0
+  8  /// (M8)
+}
+define PLACARD_FASTENERS_CENTER      true  /// boolean (two more fasteners, if true)
+
+//////////////////////////////////////////////////////////////////////////////
+
+define NUMBER {
+    extrude {
+        size (PLACARD_HEIGHT / 2)  (PLACARD_FONT_DEPTH)  (PLACARD_HEIGHT / 2)
+
+        text {
+            color black
+            "NO. " PLACARD_NUMBER
+            orientation 0  0  0.5
+        }
+    }
+}
+
+define PLACARD_BODY {
+    difference {
+        /// Body & text
+        union {
+            if PLACARD_SHAPE_TYPE = 1 {
+                /// Plain rectangle with sharp corners
+                cube {
+                    size PLACARD_WIDTH  PLACARD_THICKNESS  PLACARD_HEIGHT
+                }
+            } else if PLACARD_SHAPE_TYPE = 2 {
+                /// Rounded on all edges
+                intersection {
+                    cube {
+                        size PLACARD_WIDTH  PLACARD_THICKNESS  PLACARD_HEIGHT
+                    }
+
+                    union {
+                        cube {
+                            size (PLACARD_WIDTH - PLACARD_THICKNESS)  PLACARD_THICKNESS  (PLACARD_HEIGHT - PLACARD_THICKNESS * 2)
+                        }
+
+                        cube {
+                            size (PLACARD_WIDTH - PLACARD_THICKNESS * 2)  PLACARD_THICKNESS  (PLACARD_HEIGHT - PLACARD_THICKNESS)
+                        }
+
+                        /// Left edge
+                        cylinder {
+                            size PLACARD_THICKNESS  (PLACARD_HEIGHT - PLACARD_THICKNESS * 2)
+                            orientation 0  0  0.5
+                            position -(PLACARD_WIDTH / 2 - PLACARD_THICKNESS / 2)
+                        }
+
+                        /// Right edge
+                        cylinder {
+                            size PLACARD_THICKNESS  (PLACARD_HEIGHT - PLACARD_THICKNESS * 2)
+                            orientation 0  0  0.5
+                            position (PLACARD_WIDTH / 2 - PLACARD_THICKNESS / 2)
+                        }
+
+                        /// Top edge
+                        cylinder {
+                            size PLACARD_THICKNESS  (PLACARD_WIDTH - PLACARD_THICKNESS * 2)
+                            orientation 0.5
+                            position 0  0  -(PLACARD_HEIGHT / 2 - PLACARD_THICKNESS / 2)
+                        }
+
+                        /// Bottom edge
+                        cylinder {
+                            size PLACARD_THICKNESS  (PLACARD_WIDTH - PLACARD_THICKNESS * 2)
+                            orientation 0.5
+                            position 0  0  (PLACARD_HEIGHT / 2 - PLACARD_THICKNESS / 2)
+                        }
+
+                        define CORNER {
+                            union {
+                                cylinder {
+                                    size PLACARD_THICKNESS  PLACARD_THICKNESS
+                                }
+
+                                extrude {
+                                    circle {
+                                        size PLACARD_THICKNESS
+                                    }
+                                    along circle {
+                                        size PLACARD_THICKNESS
+                                        orientation 0  0  0.5
+                                    }
+                                }
+                            }
+                        }
+
+                        /// Bottom-right corner
+                        CORNER {
+                            position (PLACARD_WIDTH / 2 - PLACARD_THICKNESS)  0  (PLACARD_HEIGHT / 2 - PLACARD_THICKNESS)
+                        }
+
+                        /// Bottom-left corner
+                        CORNER {
+                            position -(PLACARD_WIDTH / 2 - PLACARD_THICKNESS)  0  (PLACARD_HEIGHT / 2 - PLACARD_THICKNESS)
+                        }
+
+                        /// Top-right corner
+                        CORNER {
+                            position (PLACARD_WIDTH / 2 - PLACARD_THICKNESS)  0  -(PLACARD_HEIGHT / 2 - PLACARD_THICKNESS)
+                        }
+
+                        /// Top-left corner
+                        CORNER {
+                            position -(PLACARD_WIDTH / 2 - PLACARD_THICKNESS)  0  -(PLACARD_HEIGHT / 2 - PLACARD_THICKNESS)
+                        }
+                    }
+                }
+            } else if PLACARD_SHAPE_TYPE = 3 {
+                intersection {
+                    cube {
+                        size PLACARD_WIDTH  PLACARD_THICKNESS  PLACARD_HEIGHT
+                    }
+
+                    union {
+                        cube {
+                            size PLACARD_WIDTH  PLACARD_THICKNESS  (PLACARD_HEIGHT - PLACARD_THICKNESS * 2)
+                        }
+
+                        cube {
+                            size (PLACARD_WIDTH - PLACARD_THICKNESS * 2)  PLACARD_THICKNESS  PLACARD_HEIGHT
+                        }
+                    }
+                }
+            } else if PLACARD_SHAPE_TYPE = 4 {
+                intersection {
+                    cube {
+                        size PLACARD_WIDTH  PLACARD_THICKNESS  PLACARD_HEIGHT
+                    }
+
+                    union {
+                        cube {
+                            size PLACARD_WIDTH  PLACARD_THICKNESS  (PLACARD_HEIGHT - PLACARD_THICKNESS * 2)
+                        }
+
+                        cube {
+                            size (PLACARD_WIDTH - PLACARD_THICKNESS * 2)  PLACARD_THICKNESS  PLACARD_HEIGHT
+                        }
+                    }
+                }
+            }
+        }
+
+        if PLACARD_FONT_DEPTH < 0 {
+            NUMBER {
+                position -(NUMBER.bounds.width / 2)  (PLACARD_THICKNESS / 2 + PLACARD_FONT_DEPTH / 2)  (NUMBER.bounds.depth / 2)
+            }
+        }
+
+        /// Screw holes
+        if PLACARD_FASTENERS_DIAMETER > 0 {
+            union {
+                detail (detail / 2)
+                cylinder {
+                    size PLACARD_FASTENERS_DIAMETER  PLACARD_THICKNESS
+                    position (PLACARD_WIDTH / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)  0  (PLACARD_HEIGHT / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)
+                }
+
+                cylinder {
+                    size PLACARD_FASTENERS_DIAMETER  PLACARD_THICKNESS
+                    position (PLACARD_WIDTH / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)  0  -(PLACARD_HEIGHT / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)
+                }
+
+                cylinder {
+                    size PLACARD_FASTENERS_DIAMETER  PLACARD_THICKNESS
+                    position -(PLACARD_WIDTH / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)  0  (PLACARD_HEIGHT / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)
+                }
+
+                cylinder {
+                    size PLACARD_FASTENERS_DIAMETER  PLACARD_THICKNESS
+                    position -(PLACARD_WIDTH / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)  0  -(PLACARD_HEIGHT / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)
+                }
+
+                if PLACARD_FASTENERS_CENTER {
+                    cylinder {
+                        size PLACARD_FASTENERS_DIAMETER  PLACARD_THICKNESS
+                        position 0  0  (PLACARD_HEIGHT / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)
+                    }
+
+                    cylinder {
+                        size PLACARD_FASTENERS_DIAMETER  PLACARD_THICKNESS
+                        position 0  0  -(PLACARD_HEIGHT / 2 - PLACARD_FASTENERS_DIAMETER * 2 - PLACARD_THICKNESS / 2)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+PLACARD_BODY {
+    name "Body"
+}
+
+if PLACARD_FONT_RENDER {
+    NUMBER {
+        name "Text"
+        position -(NUMBER.bounds.width / 2)  (PLACARD_THICKNESS / 2 + PLACARD_FONT_DEPTH / 2)  (NUMBER.bounds.depth / 2)
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[MODEL] detail: " (detail)
+
+print ""
+print "[PLACARD] width: " PLACARD_WIDTH "mm"
+print "[PLACARD] height: " PLACARD_HEIGHT "mm"
+print "[PLACARD] thickness: " PLACARD_THICKNESS "mm"
+print "[PLACARD] number: " PLACARD_NUMBER
+print "[PLACARD] text is indentend: " PLACARD_FONT_DEPTH < 0
+
+if PLACARD_FASTENERS_DIAMETER > 0 {
+    print ""
+    print "[FASTENERS] diameter: " PLACARD_FASTENERS_DIAMETER "mm"
+    if PLACARD_FASTENERS_CENTER {
+        print "[FASTENERS] count: " 6
+    } else {
+        print "[FASTENERS] count: " 4
+    }
+}
+
