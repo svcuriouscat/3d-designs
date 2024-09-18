@@ -1,71 +1,87 @@
 // ShapeScript document
 
-/// Line Floater
+/// Rope Float
 
 //////////////////////////////////////////////////////////////////////////////
 
-detail 90 * 2
+camera {
+    position -133.2176 32.8251 60.7548
+    orientation 0.0123 0.3379 0.0872
+    width 784
+    height 546
+}
+
+detail 176
 rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
 
-define INCH_IN_MM               25.399999619
-/// Line
-define LINE_DIAMETER           (1/2 * INCH_IN_MM)
-/// Floater
-define FLOATER_THICKNESS_MAX   (LINE_DIAMETER * 3.5)
-define FLOATER_THICKNESS_MIN   (LINE_DIAMETER * 3)
-define FLOATER_LENGTH          (FLOATER_THICKNESS_MAX * 2.5)
+define GAP                    0.2  /// mm
+define INCH_IN_MM            25.399999619  /// mm
+define SHOW_GHOSTS            false  /// boolean
+
+/// Rope
+define ROPE {  /// diameter (mm), name (text)
+    (1/2 * INCH_IN_MM)  "1/2\""
+//    (3/4 * INCH_IN_MM)  "3/4\""
+}
+define ROPE_DIAMETER         ROPE[0]  /// mm
+
+/// Float
+define FLOAT_INNER_DIAMETER  (ROPE_DIAMETER)  /// mm
+define FLOAT_OUTER_DIAMETER  (ROPE_DIAMETER * 3.5)  /// mm
+define FLOAT_LENGTH          (FLOAT_OUTER_DIAMETER * 2.5)  /// mm
+
 //////////////////////////////////////////////////////////////////////////////
 
-define FLOATER {
+define ROPE_FLOAT {
     difference {
         /// Base
         sphere {
-            size (FLOATER_LENGTH * 1.1)  FLOATER_THICKNESS_MAX  FLOATER_THICKNESS_MAX
+            size (FLOAT_LENGTH * 1.1)  FLOAT_OUTER_DIAMETER  FLOAT_OUTER_DIAMETER
         }
 
-        /// Hole for the line
+        /// Hole
         union {
             cylinder {
-                size LINE_DIAMETER  FLOATER_LENGTH
+                size ROPE_DIAMETER  FLOAT_LENGTH
                 orientation 0.5
             }
 
             difference {
                 cylinder {
-                    size (LINE_DIAMETER * 1.25)  (LINE_DIAMETER / 8)
+                    size (ROPE_DIAMETER * 1.25)  (ROPE_DIAMETER / 8)
                     orientation 0.5
-                    position (FLOATER_LENGTH / 2 - (LINE_DIAMETER / 16))
+                    position (FLOAT_LENGTH / 2 - (ROPE_DIAMETER / 16))
                 }
 
                 extrude {
                     circle {
-                        size (LINE_DIAMETER / 4)
+                        size (ROPE_DIAMETER / 4)
                     }
                     along circle {
                         orientation 0  0.5
-                        size (LINE_DIAMETER + (LINE_DIAMETER / 4))
-                        position (FLOATER_LENGTH / 2 - (LINE_DIAMETER / 8))
+                        size (ROPE_DIAMETER + (ROPE_DIAMETER / 4))
+                        position (FLOAT_LENGTH / 2 - (ROPE_DIAMETER / 8))
                     }
                 }
             }
 
             difference {
                 cylinder {
-                    size (LINE_DIAMETER * 1.25)  (LINE_DIAMETER / 8)
+                    size (ROPE_DIAMETER * 1.25)  (ROPE_DIAMETER / 8)
                     orientation 0.5
-                    position -(FLOATER_LENGTH / 2 - (LINE_DIAMETER / 16))
+                    position -(FLOAT_LENGTH / 2 - (ROPE_DIAMETER / 16))
                 }
 
                 extrude {
                     circle {
-                        size (LINE_DIAMETER / 4)
+                        size (ROPE_DIAMETER / 4)
                     }
                     along circle {
                         orientation 0  0.5
-                        size (LINE_DIAMETER + (LINE_DIAMETER / 4))
-                        position -(FLOATER_LENGTH / 2 - (LINE_DIAMETER / 8))
+                        size (ROPE_DIAMETER + (ROPE_DIAMETER / 4))
+                        position -(FLOAT_LENGTH / 2 - (ROPE_DIAMETER / 8))
                     }
                 }
             }
@@ -73,27 +89,53 @@ define FLOATER {
 
         /// Cut off any ends that may be sticking out
         cylinder {
-            size FLOATER_THICKNESS_MAX  FLOATER_LENGTH
+            size FLOAT_OUTER_DIAMETER  FLOAT_LENGTH
             orientation 0.5
-            position FLOATER_LENGTH
+            position FLOAT_LENGTH
         }
         cylinder {
-            size FLOATER_THICKNESS_MAX  FLOATER_LENGTH
+            size FLOAT_OUTER_DIAMETER  FLOAT_LENGTH
             orientation 0.5
-            position -FLOATER_LENGTH
+            position -FLOAT_LENGTH
         }
     }
 }
 
-if not true {
+//////////////////////////////////////////////////////////////////////////////
+
+/// Rope float
+ROPE_FLOAT {
+    name "Rope Float — " ROPE[1]
+    color 0.6  0.6  0.6
+    opacity 0.85
+}
+
+/// Ghosts
+if SHOW_GHOSTS {
+    /// Outer dimensions
     cylinder {
         opacity 0.2
         color 1  0  0
-        size FLOATER_THICKNESS_MAX  FLOATER_LENGTH
+        size FLOAT_OUTER_DIAMETER  FLOAT_LENGTH
+        orientation 0.5
+    }
+
+    /// Rope
+    cylinder {
+        opacity 0.2
+        color 0  1  0
+        size ROPE_DIAMETER  (FLOAT_LENGTH * 2)
         orientation 0.5
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
-FLOATER {}
+print "[MODEL] detail: " (detail)
+print ""
+print "[ROPE]: " ROPE[1]
+print "[ROPE] diameter: " ROPE[0] "mm"
+print ""
+print "[FLOAT] length: " FLOAT_LENGTH "mm"
+print "[FLOAT] outer diameter: " FLOAT_OUTER_DIAMETER "mm"
+print "[FLOAT] inner diameter: " FLOAT_INNER_DIAMETER "mm"
