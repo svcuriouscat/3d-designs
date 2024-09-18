@@ -4,13 +4,13 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-detail 89
+detail 99
 
 camera {
-    position -17.1347 -27.7823 33.8549
-    orientation 0.0097 0.1197 -0.1794
-    width 700
-    height 575
+    position 14.4711 -13.3956 20.9272
+    orientation 0.0103 -0.1609 -0.121
+    width 540
+    height 533
 }
 
 rotate 0  0  -0.5  /// CAD mode
@@ -19,9 +19,10 @@ rotate 0  0  -0.5  /// CAD mode
 
 define INCH_IN_MM                        25.399999619  /// mm
 define GAP                                0.1  /// mm
+define SHOW_GHOSTS                       false  /// boolean
 
 /// Fastener
-define FASTENER {  /// diameter (mm), identificator (str)
+define FASTENER {  /// diameter (mm), name (str)
 //    3     "M3"
     5.92  "M6"
 //    7.88  "M8"
@@ -32,7 +33,8 @@ define FASTENER_DIAMETER                 FASTENER[0]  /// mm
 /// Nut
 define NUT {  /// width (mm), thickness (mm)
 //    0  0
-    9.96  5  // M6
+//    9.96  5  /// M6
+    9.99  3.89  /// "M6 — 1/2 Height" — https://www.ti64.com/product-p/5124.htm
 }
 define NUT_WIDTH                         NUT[0]  /// mm
 define NUT_THICKNESS                     NUT[1]  /// mm
@@ -158,11 +160,15 @@ define NUT_SURFACE_MOUNT {
 //////////////////////////////////////////////////////////////////////////////
 
 NUT_SURFACE_MOUNT {
-    opacity 0.5
+    if SHOW_GHOSTS {
+        opacity 0.20
+    } else {
+        opacity 0.5
+    }
 }
 
 /// Ghosts
-if not true {
+if SHOW_GHOSTS {
     group {
         opacity 0.5
 
@@ -209,8 +215,8 @@ if not true {
 print "[MODEL] detail: " (detail)
 
 print ""
-print "[FASTENER] fastener: " FASTENER[1]
-print "[FASTENER] fastener diameter: " FASTENER_DIAMETER "mm"
+print "[FASTENER] name: " FASTENER[1]
+print "[FASTENER] diameter: " FASTENER_DIAMETER "mm"
 
 if NUT_THICKNESS > 0 {
     print ""
