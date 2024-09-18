@@ -8,6 +8,7 @@ rotate 0  0  -0.5  /// CAD mode
 //////////////////////////////////////////////////////////////////////////////
 
 define INCH_IN_MM             25.399999619
+
 /// Rope
 define ROPE_THICKNESS          {  /// mm
      14  /// mm (14mm rope)
@@ -16,24 +17,13 @@ define ROPE_THICKNESS          {  /// mm
     // (3/8 * INCH_IN_MM)  /// mm (3/8" [0.375"] rope)
     // (1/2 * INCH_IN_MM)  /// mm (1/2" [0.5"] rope)
 }
+
 /// Cap
 define CAP_WALL_THICKNESS      0.5 /// mm
 define CAP_WIDTH              (ROPE_THICKNESS + CAP_WALL_THICKNESS * 2)  /// mm
 define CAP_LENGTH             (ROPE_THICKNESS + CAP_WALL_THICKNESS * 2)  /// mm
 
 //////////////////////////////////////////////////////////////////////////////
-
-define TUNNEL {
-    extrude {
-        circle {
-            size (ROPE_THICKNESS / 4)
-        }
-        along circle {
-            size CAP_WIDTH  CAP_WIDTH/1.5
-            position (CAP_WIDTH / 2)  CAP_WIDTH*0.9
-        }
-    }
-}
 
 define ROPE_CAP {
     difference {
@@ -59,50 +49,10 @@ define ROPE_CAP {
     }
 }
 
-define ROPE_CAP_WTH_HOLES {
-    difference {
-        union {
-            cylinder {
-                size (ROPE_THICKNESS + CAP_WALL_THICKNESS * 2)  (CAP_LENGTH)
-            }
-            sphere {
-                size (ROPE_THICKNESS + CAP_WALL_THICKNESS * 2)
-                position 0  (CAP_LENGTH / 2)
-            }
-        }
-
-        union {
-            cylinder {
-                size (ROPE_THICKNESS)  (CAP_LENGTH)
-                position 0  -(CAP_LENGTH / 2)
-            }
-            sphere {
-                size (ROPE_THICKNESS)
-                position 0  0
-            }
-        }
-
-        // Top hole(s)
-        for i in 0 to 3 {
-            TUNNEL {
-                orientation 0  (i / 3 * 2)
-
-            }
-        }
-    }
-}
-
 //////////////////////////////////////////////////////////////////////////////
 
 ROPE_CAP {
     opacity 0.75
-}
-
-/// Extension with holes
-if not true {
-    ROPE_CAP_WTH_HOLES {
-        opacity 0.5
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
