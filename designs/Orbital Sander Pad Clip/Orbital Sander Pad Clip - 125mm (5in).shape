@@ -1,6 +1,6 @@
 // ShapeScript document
 
-/// Orbital Sander Pad Clip — 125mm (5")
+/// Orbital Sander Disc Aligner — 125mm (5")
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -9,16 +9,21 @@ rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
 
+define PI                    3.141592653589793238462643383279502884197
+
 /// Base
 define BASE_DIAMETER       125     /// mm (125 for 5" discs, 150 for 6" discs)
 define BASE_HEIGHT           3     /// mm
 define BASE_HOLE_DIAMETER   (BASE_DIAMETER / 3.5)  /// mm
+
 /// Disc
 define DISC_HOLE_DIAMETER   10     /// mm
 define DISC_HOLE_DISTANCE   55     /// mm (55 for 5" discs, ?? for 6" discs)
+
 /// Rods
 define ROD_DIAMETER         (DISC_HOLE_DIAMETER - 0.4)  /// mm
 define ROD_LENGTH           22     /// mm
+define ROD_COUNT             4     /// count
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -27,10 +32,12 @@ define HOLE {
         cylinder {
             size (BASE_HOLE_DIAMETER + BASE_HEIGHT)  BASE_HEIGHT
         }
+
         extrude {
             circle {
                 size BASE_HEIGHT
             }
+
             along circle {
                 orientation 0  0  0.5
                 size (BASE_HOLE_DIAMETER + BASE_HEIGHT)
@@ -44,21 +51,42 @@ define ROD {
         cylinder {
             size ROD_DIAMETER  ROD_LENGTH
         }
+
         difference {
             cylinder {
                 size ROD_DIAMETER  (ROD_DIAMETER / 2)
                 position 0  (ROD_LENGTH / 2 - ROD_DIAMETER / 4)
             }
+
             sphere {
                 size ROD_DIAMETER
                 position 0  (ROD_LENGTH / 2 - ROD_DIAMETER / 2)
+            }
+        }
+
+        /// Cut out to reduce friction
+        define ROD_CUTOUT {
+            cylinder {
+                detail (detail / 3)
+                size (ROD_DIAMETER / (PI / 2))  ROD_LENGTH
+            }
+        }
+        define ROD_CUTOUT_COUNT  4
+        union {
+            rotate 0  (1 / ROD_CUTOUT_COUNT)
+
+            for (i in 1 to ROD_CUTOUT_COUNT) {
+                ROD_CUTOUT {
+                    position (ROD_DIAMETER / (PI / 2))
+                }
+
+                rotate 0  (i * (1 / ROD_CUTOUT_COUNT) * 2)
             }
         }
     }
 }
 
 define PAD_CLIP {
-
     difference {
         /// Base with rods
         union {
@@ -85,31 +113,30 @@ define PAD_CLIP {
 
                 /// Cut away from the outer edge
                 union {
-                    rotate 0  0.125
+                    rotate 0  (1 / 8)
 
-                    for i in 1 to 8 {
+                    for (i in 1 to 8) {
                         HOLE {
                             position (BASE_DIAMETER / 2)
                         }
 
-                        rotate 0  (0.25 * i)
+                        rotate 0  (i * (1 / 8) * 2)
                     }
                 }
             }
 
             /// Rods
             union {
-                for i in 1 to 4 {
+                for (i in 1 to ROD_COUNT) {
                     ROD {
                         position (DISC_HOLE_DISTANCE / 2 + DISC_HOLE_DIAMETER / 2)  (BASE_HEIGHT / 2 + ROD_LENGTH / 2)
                     }
 
-                    rotate 0  (i / 2)
+                    rotate 0  (i * (1 / ROD_COUNT) * 2)
                 }
             }
         }
     }
-    
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -120,3 +147,5 @@ PAD_CLIP {
 //////////////////////////////////////////////////////////////////////////////
 
 print "[MODEL] detail: " (detail)
+print ""
+print "[ROD] count: " ROD_COUNT
