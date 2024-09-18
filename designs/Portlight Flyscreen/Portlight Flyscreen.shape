@@ -4,7 +4,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-detail 128
+detail 90
 rotate 0  0  -0.5  /// CAD mode
 
 //////////////////////////////////////////////////////////////////////////////
@@ -12,25 +12,28 @@ rotate 0  0  -0.5  /// CAD mode
 define GAP                       0.2   /// mm
 /// Portlight Variant
 define PORTLIGHT {  /// width (mm), height (mm), corner radius (mm), name (string)
-    320  117  (117 / 2)  "Lewmar Atlantic Size 32"
+    320  118  (118 / 2)  "Lewmar Atlantic Size 32"
 }
-/// Screen
-define SCREEN_THICKNESS          2     /// mm
-define SCREEN_BORDER_WIDTH       3     /// mm
+define PORTLIGHT_WIDTH          PORTLIGHT[0]  /// mm
+define PORTLIGHT_HEIGHT         PORTLIGHT[1]  /// mm
+define PORTLIGHT_CORNER_RADIUS  PORTLIGHT[2]  /// mm
+define PORTLIGHT_MODEL_NAME     PORTLIGHT[3]  /// string
+/// Flycreen
+define SCREEN_THICKNESS         3     /// mm
+define SCREEN_BORDER_WIDTH      3     /// mm
 /// Tabs
-define TABS_HEIGHT             124     /// mm
-define TABS_WIDTH              327     /// mm
-define TABS_SIZE_HORIZ          18     /// mm
-define TABS_SIZE_VERT           16     /// mm
-define TAB_WIDTH                16     /// mm
-define TAB_LENGTH                3.5   /// mm
-define TAB_THICKNESS             1     /// mm
+define TAB_WIDTH               16     /// mm
+define TAB_LENGTH               3.20  /// mm
+define TAB_THICKNESS            1.40  /// mm
 /// Mesh
-define GRILL_HOLE_SIZE           2     /// mm
-define GRILL_LINE_THICKNESS      0.5   /// mm
-define MESH_ANGLE               69     /// degrees
-define GRILL_LINE_COUNT_HORIZ   (PORTLIGHT[1] - SCREEN_THICKNESS * 2) / (GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE) / (MESH_ANGLE / 360)  /// count
-define GRILL_LINE_COUNT_VERT    (PORTLIGHT[0] - SCREEN_THICKNESS * 2) / (GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE)  /// count
+define MESH_HOLE_SIZE           1*2*3   /// mm
+define MESH_THICKNESS           2     /// mm
+define MESH_LINE_THICKNESS      0.50  /// mm
+define MESH_ANGLE              69     /// degrees
+define MESH_LINE_RATIO         true   /// boolean (either keep herizontal lines at the same thickness or not)
+define MESH_PRIVACY           100     /// % (affects vertical size of holes, 100 is the thickest, but that affects weight and reduces airflow)
+define MESH_LINE_COUNT_HORIZ   (PORTLIGHT[0] - SCREEN_BORDER_WIDTH * 2) / (MESH_LINE_THICKNESS + MESH_HOLE_SIZE)  /// count
+define MESH_LINE_COUNT_VERT    (PORTLIGHT[1] - SCREEN_BORDER_WIDTH * 2) / (MESH_LINE_THICKNESS + MESH_HOLE_SIZE) / ((90 - MESH_ANGLE) / 90)  /// count
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -39,6 +42,7 @@ define BORDER_SHAPE {
         cylinder {
             size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
             position ((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+            orientation 0  0.5  /// This is to avoid a slight bump
         }
 
         cube {
@@ -48,12 +52,14 @@ define BORDER_SHAPE {
         cylinder {
             size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
             position -((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+            orientation 0  0.5  /// This is to avoid a slight bump
         }
 
         if (PORTLIGHT[2] * 2) < PORTLIGHT[1] {
             cylinder {
                 size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
                 position ((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  -((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+                orientation 0  0.5  /// This is to avoid a slight bump
             }
 
             cube {
@@ -63,6 +69,7 @@ define BORDER_SHAPE {
             cylinder {
                 size (PORTLIGHT[2] * 2)  SCREEN_THICKNESS  (PORTLIGHT[2] * 2)
                 position -((PORTLIGHT[0] / 2 - PORTLIGHT[1] / 2) + ((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2))  0  -((PORTLIGHT[1] - PORTLIGHT[2] * 2) / 2)
+                orientation 0  0.5  /// This is to avoid a slight bump
             }
         }
     }
@@ -110,53 +117,52 @@ define BORDER {
 
             /// Tabs
             group {
-                TAB {
-                    position (PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  -(PORTLIGHT[1] / 2)
-                }
-                TAB {
-                    position -(PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  -(PORTLIGHT[1] / 2)
-                }
-                TAB {
-                    orientation 0  -1
-                    position (PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  (PORTLIGHT[1] / 2)
-                }
-                TAB {
-                    orientation 0  -1
-                    position -(PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  (PORTLIGHT[1] / 2)
+                /// Top
+                group {
+                    /// Top-left
+                    TAB {
+                        position (PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  -(PORTLIGHT[1] / 2)
+                    }
+
+                    /// Top-right
+                    TAB {
+                        position -(PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  -(PORTLIGHT[1] / 2)
+                    }
                 }
 
+                /// Bottom
+                group {
+                    /// Bottom-left
+                    TAB {
+                        orientation 0  -1
+                        position (PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  (PORTLIGHT[1] / 2)
+                    }
 
-                TAB {
-                    orientation 0  0.5
-                    position (PORTLIGHT[0] / 2)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)
+                    /// Bottom-right
+                    TAB {
+                        orientation 0  -1
+                        position -(PORTLIGHT[0] / 4)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)  (PORTLIGHT[1] / 2)
+                    }
                 }
-                TAB {
-                    orientation 0  -0.5
-                    position -(PORTLIGHT[0] / 2)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)
+
+                /// Left & right
+                group {
+                    /// Left
+                    TAB {
+                        orientation 0  0.5
+                        position (PORTLIGHT[0] / 2)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)
+                    }
+
+                    /// Right
+                    TAB {
+                        orientation 0  -0.5
+                        position -(PORTLIGHT[0] / 2)  -((SCREEN_THICKNESS - TAB_THICKNESS) / 2)
+                    }
                 }
             }
         }
 
         CUTOUT {
-        }
-    }
-}
-
-define TAB_OLD {
-    union {
-        sphere {
-            size TABS_HEIGHT  SCREEN_THICKNESS  TABS_HEIGHT
-            position (TABS_WIDTH / 2 - TABS_HEIGHT / 2)
-        }
-
-        cylinder {
-            orientation  0.5
-            size (SCREEN_THICKNESS)  (TABS_WIDTH - TABS_HEIGHT)  TABS_HEIGHT
-        }
-
-        sphere {
-            size TABS_HEIGHT  SCREEN_THICKNESS  TABS_HEIGHT
-            position -(TABS_WIDTH / 2 - TABS_HEIGHT / 2)
         }
     }
 }
@@ -177,94 +183,62 @@ define TAB {
         }
 
         cylinder {
-            size TAB_WIDTH  TAB_THICKNESS  (TAB_WIDTH * 1.5)
+            size TAB_WIDTH  TAB_THICKNESS  (TAB_WIDTH)
             position 0  0  (TAB_LENGTH)
         }
     }
 }
 
-define TABS {
-    intersection {
-        /// Base
-        difference {
-            TAB_OLD {
-                position 0  -(SCREEN_THICKNESS / 2 - 0.5)
-            }
-
-            /// Cut out hole in the middle (for the border)
-            BORDER_SHAPE {
-                size 1  10  1
-            }
-        }
-
-        /// Levers
-        union {
-            /// Horizontal
-            cylinder {
-                size TABS_SIZE_HORIZ  SCREEN_THICKNESS
-                position (PORTLIGHT[0] / 2 - TABS_SIZE_HORIZ / 10)
-            }
-            cylinder {
-                size TABS_SIZE_HORIZ  SCREEN_THICKNESS
-                position -(PORTLIGHT[0] / 2 - TABS_SIZE_HORIZ / 10)
-            }
-
-            /// Vertical
-            group {
-                cylinder {
-                    size TABS_SIZE_VERT  SCREEN_THICKNESS
-                    position (PORTLIGHT[0] / 4)  0  -(PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
-                }
-                cylinder {
-                    size TABS_SIZE_VERT  SCREEN_THICKNESS
-                    position -(PORTLIGHT[0] / 4)  0  -(PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
-                }
-                cylinder {
-                    size TABS_SIZE_VERT  SCREEN_THICKNESS
-                    position (PORTLIGHT[0] / 4)  0  (PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
-                }
-                cylinder {
-                    size TABS_SIZE_VERT  SCREEN_THICKNESS
-                    position -(PORTLIGHT[0] / 4)  0  (PORTLIGHT[1] / 2 - TABS_SIZE_VERT / 10)
-                }
-            }
-        }
-    }
-}
-
 define MESH {
-    intersection {
+    difference {
         CUTOUT {
+            size 1  (MESH_THICKNESS / SCREEN_THICKNESS)
         }
 
+        if MESH_HOLE_SIZE > 0 {
+            union {
+                for i in -round(MESH_LINE_COUNT_HORIZ / 2) to round(MESH_LINE_COUNT_HORIZ / 2) {
+                    for j in -round(MESH_LINE_COUNT_VERT / 2) to round(MESH_LINE_COUNT_VERT / 2) {
+                        cube {
+                            size MESH_HOLE_SIZE  (MESH_THICKNESS * 33)  (MESH_HOLE_SIZE * 1)
+                            orientation 0  0  -(MESH_ANGLE / 180)
+                            position (i * (MESH_LINE_THICKNESS + MESH_HOLE_SIZE))  0  (j * (MESH_HOLE_SIZE) * 3)
+                        }
+                    }
+                }
+            }
+        }
+
+/*
         union {
             group {
                 /// Horizontal lines (angled)
-                for i in -(GRILL_LINE_COUNT_HORIZ / 2) to (GRILL_LINE_COUNT_HORIZ / 2) {
+                for i in -round(MESH_LINE_COUNT_VERT / 2) to round(MESH_LINE_COUNT_VERT / 2) {
                     cube {
-                        size (PORTLIGHT[0])  (PORTLIGHT[1])  (GRILL_LINE_THICKNESS)
-                        position 0  0  (i * (GRILL_LINE_COUNT_HORIZ / PORTLIGHT[1]))
+                        size (PORTLIGHT[0])  (PORTLIGHT[1])  (MESH_LINE_THICKNESS)
+                        position 0  0  (i * (2))
                     }
                 }
 
                 orientation 0  0  -(MESH_ANGLE / 180)
                 /// Move down a little to have as many holes as possible
-                position 0  -(GRILL_HOLE_SIZE / 2 + GRILL_LINE_THICKNESS / 2)
+                position 0  -(MESH_HOLE_SIZE / 2 + MESH_LINE_THICKNESS / 2)
             }
 
             group {
                 /// Vertical lines
-                for i in -(GRILL_LINE_COUNT_VERT / 2) to (GRILL_LINE_COUNT_VERT / 2) {
+                for i in -round(MESH_LINE_COUNT_HORIZ / 2) to round(MESH_LINE_COUNT_HORIZ / 2) {
                     cube {
-                        size (GRILL_LINE_THICKNESS)  (SCREEN_THICKNESS)  (PORTLIGHT[1] - SCREEN_THICKNESS * 2)
-                        position (i * (GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE) - ((GRILL_LINE_THICKNESS + GRILL_HOLE_SIZE) / 4))
+                        size (MESH_LINE_THICKNESS)  (MESH_THICKNESS)  (PORTLIGHT[1] - MESH_THICKNESS * 2)
+                        position (i * (MESH_LINE_THICKNESS + MESH_HOLE_SIZE) - ((MESH_LINE_THICKNESS + MESH_HOLE_SIZE) / 4))
                     }
                 }
 
                 /// Move them a little to make the grill symmetrical
-                position (GRILL_HOLE_SIZE / 2 + GRILL_LINE_THICKNESS / 2)-(GRILL_HOLE_SIZE / 2 + GRILL_LINE_THICKNESS / 2)
+                position (MESH_HOLE_SIZE / 2 + MESH_LINE_THICKNESS / 2)-(MESH_HOLE_SIZE / 2 + MESH_LINE_THICKNESS / 2)
             }
         }
+*/
     }
 }
 
@@ -273,10 +247,8 @@ define PORTLIGHT_FLYSCREEN {
         BORDER {
         }
 
-        ///TABS {
-        ///}
-
         MESH {
+            position 0  -((SCREEN_THICKNESS - MESH_THICKNESS) / 2)
         }
     }
 }
@@ -289,55 +261,61 @@ if not true {
 } else {
     difference {
         name "Left Half"
-        color 100  100  100
+        color 100  100  100  0.2
 
-        union {
-            PORTLIGHT_FLYSCREEN {
-            }
-
-            /// Reinforcement in the middle (where the two halves will be glued together)
-            cube {
-                size (SCREEN_BORDER_WIDTH)  SCREEN_THICKNESS  PORTLIGHT[1]
-            }
+        PORTLIGHT_FLYSCREEN {
         }
 
         cube {
-            size (TABS_WIDTH / 2)  (SCREEN_THICKNESS)  (TABS_HEIGHT)
-            position (TABS_WIDTH / 4)
+            size ((PORTLIGHT_WIDTH + TAB_LENGTH * 2) / 2)  (SCREEN_THICKNESS)  (PORTLIGHT_HEIGHT + TAB_LENGTH * 2)
+            position ((PORTLIGHT_WIDTH + TAB_LENGTH * 2) / 4)
         }
+    }
+
+    /// Reinforcement in the middle (where the two halves will be glued together)
+    cube {
+        name "Left Half — Border"
+        color 100  100  100  0.2
+        size (SCREEN_BORDER_WIDTH / 2)  SCREEN_THICKNESS  PORTLIGHT[1]
+        position -(SCREEN_BORDER_WIDTH / 2 / 2)
     }
 
     difference {
         name "Right Half"
-        color 50  50  50
+        color 50  50  50  0.2
 
-        union {
-            PORTLIGHT_FLYSCREEN {
-            }
-
-            /// Reinforcement in the middle (where the two halves will be glued together)
-            cube {
-                size (SCREEN_BORDER_WIDTH)  SCREEN_THICKNESS  PORTLIGHT[1]
-            }
+        PORTLIGHT_FLYSCREEN {
         }
 
         cube {
-            size (TABS_WIDTH / 2)  (SCREEN_THICKNESS)  (TABS_HEIGHT)
-            position -(TABS_WIDTH / 4)
+            size ((PORTLIGHT[0] + TAB_LENGTH * 2) / 2)  (SCREEN_THICKNESS)  (PORTLIGHT[1] + TAB_LENGTH * 2)
+            position -((PORTLIGHT[0] + TAB_LENGTH * 2) / 4)
         }
+    }
+
+    /// Reinforcement in the middle (where the two halves will be glued together)
+    cube {
+        name "Right Half — Border"
+        color 50  50  50  0.2
+        size (SCREEN_BORDER_WIDTH / 2)  SCREEN_THICKNESS  PORTLIGHT[1]
+        position (SCREEN_BORDER_WIDTH / 2 / 2)
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 print "[MODEL] detail: " (detail)
-print "[MODEL] variant: " PORTLIGHT[3]
+print "[MODEL] variant: " PORTLIGHT_MODEL_NAME
 print ""
-print "[PORTLIGHT] opening width: " PORTLIGHT[0] "mm"
-print "[PORTLIGHT] opening height: " PORTLIGHT[1] "mm"
-print "[PORTLIGHT] opening corner radius: " PORTLIGHT[2] "mm"
+print "[PORTLIGHT] opening width: " PORTLIGHT_WIDTH "mm"
+print "[PORTLIGHT] opening height: " PORTLIGHT_HEIGHT "mm"
+print "[PORTLIGHT] opening corner radius: " PORTLIGHT_CORNER_RADIUS "mm"
 print ""
 print "[SCREEN] thickness: " SCREEN_THICKNESS "mm"
+print ""
+print "[MESH] hole size: " MESH_HOLE_SIZE "mm"
+print "[MESH] line thickness: " MESH_LINE_THICKNESS "mm"
+print "[MESH] angle: " MESH_ANGLE "°"
 print ""
 print "[TAB] width: " TAB_WIDTH "mm"
 print "[TAB] length: " TAB_LENGTH "mm"
