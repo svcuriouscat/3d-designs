@@ -1,0 +1,87 @@
+// ShapeScript document
+
+/// Sandpaper Clip
+
+camera {
+    position 149.9636 -205.1702 88.2792
+    orientation -0.2364 0.0034 -0.3729
+    width 1400
+    height 773
+}
+
+detail 4
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define GAP                       0.6   /// mm
+define SHOW_GHOSTS           false     /// boolean
+
+/// Sandpaper
+define SANDPAPER {  /// width (mm), length (mm), shape (string)
+    70  198  "square"  /// Mirka 198x70
+//    125  125  "round"  /// Mirka disc
+}
+define SANDPAPER_WIDTH          SANDPAPER[0]  /// mm
+define SANDPAPER_LENGTH         SANDPAPER[1]  /// mm
+
+/// Clip
+define CLIP_WALL_THICKNESS       5    /// mm
+define CLIP_HEIGHT             125    /// mm
+define CLIP_WIDTH {
+    (SANDPAPER_WIDTH + CLIP_WALL_THICKNESS * 2 + GAP * 2)
+}
+define CLIP_LENGTH {
+    (SANDPAPER_LENGTH + CLIP_WALL_THICKNESS * 2 + GAP * 2)
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+define SANDPAPER_CLIP {
+    difference {
+        cube {
+            size (CLIP_WIDTH)  (CLIP_HEIGHT)  (CLIP_LENGTH)
+        }
+
+        cube {
+            size (SANDPAPER_WIDTH + GAP * 2)  (CLIP_HEIGHT - CLIP_WALL_THICKNESS - GAP)  (SANDPAPER_LENGTH + GAP * 2)
+            position 0  ((CLIP_WALL_THICKNESS + GAP) / 2)
+        }
+
+        cube {
+            size (SANDPAPER_WIDTH + CLIP_WALL_THICKNESS * 2 + GAP * 2)  (CLIP_HEIGHT - CLIP_WALL_THICKNESS - GAP)  ((SANDPAPER_LENGTH + GAP * 2) / 4)
+            position 0  ((CLIP_WALL_THICKNESS + GAP) / 2)
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+SANDPAPER_CLIP {
+    name "Sandpaper Clip — 70mm × 198mm"
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// Ghosts
+if SHOW_GHOSTS {
+    opacity 0.2
+
+    /// Sandpaper
+    group {
+        color red
+
+        cube {
+            size SANDPAPER_WIDTH  2  SANDPAPER_LENGTH
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[DESIGN] detail: " detail
+print ""
+print "[CLIP] height: " CLIP_HEIGHT "mm"
+print "[CLIP] width: " CLIP_WIDTH "mm"
+print "[CLIP] length: " CLIP_LENGTH "mm"
+print "[CLIP] wall thickness: " CLIP_WALL_THICKNESS "mm"
