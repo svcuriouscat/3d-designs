@@ -1,0 +1,152 @@
+// ShapeScript document
+
+/// Rope Float
+
+//////////////////////////////////////////////////////////////////////////////
+
+camera {
+    position -165.5973 86.362 290.9863
+    orientation 0 0.2504 0.0796
+    width 1344
+    height 1274
+}
+
+detail 100
+rotate 0  0  -0.5  /// CAD mode
+
+//////////////////////////////////////////////////////////////////////////////
+
+define GAP                     0.2          /// mm
+define INCH_IN_MM             25.399999619  /// mm
+define SHOW_GHOSTS           not false         /// boolean
+
+/// Trap
+define TRAP_SIDE_WIDTH        168  /// mm
+define TRAP_SIDE_LENGTH       279  /// mm
+define TRAP_SIDE_THICKNESS      4  /// mm
+define TRAP_SIDES               4  /// count (the minimum is 3)
+define TRAP_OPENING_DIAMETER   (3 * INCH_IN_MM)  /// mm
+define TRAP_WALL_THICKNESS      2  /// mm
+define TRAP_ENTRANCE_DEPTH     (TRAP_SIDE_WIDTH / 2.15)  /// mm
+
+//////////////////////////////////////////////////////////////////////////////
+
+define TRAP_ENTRANCE {
+    difference {
+        hull {
+            orientation 0  0.5
+            roundrect {
+                size TRAP_SIDE_WIDTH
+                radius 0.1
+            }
+            translate 0  0  -TRAP_ENTRANCE_DEPTH
+            circle {
+                size (TRAP_OPENING_DIAMETER / 2.5 + TRAP_WALL_THICKNESS * 2)  (TRAP_OPENING_DIAMETER + TRAP_WALL_THICKNESS * 2)
+            }
+        }
+
+        hull {
+            orientation 0  0.5
+            roundrect {
+                size (TRAP_SIDE_WIDTH - TRAP_WALL_THICKNESS * 2)
+                radius 0.1
+            }
+            translate 0  0  -TRAP_ENTRANCE_DEPTH
+            circle {
+                size (TRAP_OPENING_DIAMETER / 2.5)  TRAP_OPENING_DIAMETER
+            }
+        }
+
+        define GRILL_LAYER {
+            union {
+                for i in -5 to 5 {
+                    cube {
+                        size (TRAP_SIDE_WIDTH / 30)  TRAP_SIDE_WIDTH
+                        position (TRAP_SIDE_WIDTH / 30)  0  ((TRAP_SIDE_WIDTH / 30 + TRAP_SIDE_THICKNESS) * i)
+                    }
+                }
+                for i in -5 to 5 {
+                    cube {
+                        size (TRAP_SIDE_WIDTH / 30)  TRAP_SIDE_WIDTH
+                        orientation 0  0  0.5
+                        position (TRAP_SIDE_WIDTH / 30)  ((TRAP_SIDE_WIDTH / 30 + TRAP_SIDE_THICKNESS) * i)
+                    }
+                }
+            }
+        }
+
+        union {
+            for i in -5 to 0 {
+                GRILL_LAYER {
+                    position ((TRAP_SIDE_WIDTH / pi) + (TRAP_SIDE_WIDTH / 30 + TRAP_SIDE_THICKNESS) * i)  0
+                    size (6 - i) / 10
+                }
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// Design
+TRAP_ENTRANCE {
+    name "Titanium Shrimp Trap — Entrance"
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+/// Ghosts
+if SHOW_GHOSTS {
+    opacity 0.2
+
+    /// Walls
+    group {
+        color blue
+
+        define TRAP_SIDE {
+            extrude {
+                circle {
+                    size TRAP_SIDE_THICKNESS
+                }
+                along roundrect {
+                    size (TRAP_SIDE_LENGTH - TRAP_SIDE_THICKNESS)  (TRAP_SIDE_WIDTH - TRAP_SIDE_THICKNESS)
+                    radius 0.1
+                }
+            }
+        }
+
+        TRAP_SIDE {
+            position (TRAP_SIDE_LENGTH / 2)  0  -(TRAP_SIDE_WIDTH / 2)
+        }
+
+        TRAP_SIDE {
+            position (TRAP_SIDE_LENGTH / 2)  0  (TRAP_SIDE_WIDTH / 2)
+        }
+
+        TRAP_SIDE {
+            position (TRAP_SIDE_LENGTH / 2)  -(TRAP_SIDE_WIDTH / 2)
+            orientation 0  0  0.5
+        }
+
+        TRAP_SIDE {
+            position (TRAP_SIDE_LENGTH / 2)  (TRAP_SIDE_WIDTH / 2)
+            orientation 0  0  0.5
+        }
+    }
+
+    TRAP_ENTRANCE {
+        color red
+        orientation 1
+        position TRAP_SIDE_LENGTH
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+print "[DESIGN] detail: " (detail)
+print ""
+print "[TRAP] side width: " TRAP_SIDE_WIDTH "mm"
+print "[TRAP] side thickness: " TRAP_SIDE_THICKNESS "mm"
+print ""
+print "[ENTRANCE] opening diameter: " TRAP_OPENING_DIAMETER "mm" " (" (TRAP_OPENING_DIAMETER / INCH_IN_MM) "\")"
+print "[ENTRANCE] depth: " TRAP_ENTRANCE_DEPTH "mm"
